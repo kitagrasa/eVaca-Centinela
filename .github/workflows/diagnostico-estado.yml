@@ -6,8 +6,12 @@ name: Diagnóstico de la credencial de estado
 # No envía nada a Telegram ni modifica el estado: solo mira la credencial y
 # prueba la conexión, dando un mensaje claro de qué está mal.
 #
-# NO imprime la clave privada. Solo su huella y la clave PÚBLICA derivada de
-# ella, que es justo la que tiene que estar pegada en GitHub.
+# Soporta las DOS formas de identificarse, igual que monitor.yml:
+#   1. STATE_DEPLOY_KEY  (clave SSH, deploy key)   <- tiene prioridad
+#   2. STATE_REPO_TOKEN  (token fine-grained)
+#
+# NO imprime la clave privada ni el token. De la clave solo enseña su huella y
+# la clave PÚBLICA derivada, que es la que tiene que estar pegada en GitHub.
 # ---------------------------------------------------------------------------
 on:
   workflow_dispatch:
@@ -19,29 +23,44 @@ jobs:
 
     steps:
       # ------------------------------------------------------------------
-      # 1. ¿Están los secretos?
+      # 1. ¿Están los secretos? ¿Qué credencial toca usar?
       # ------------------------------------------------------------------
       - name: ¿Están los secretos definidos?
+        id: secretos
         env:
           STATE_REPO: ${{ secrets.STATE_REPO }}
           STATE_DEPLOY_KEY: ${{ secrets.STATE_DEPLOY_KEY }}
+          STATE_REPO_TOKEN: ${{ secrets.STATE_REPO_TOKEN }}
         run: |
           echo "STATE_REPO:        $([ -n "$STATE_REPO" ] && echo "definido ($STATE_REPO)" || echo "❌ VACÍO O NO EXISTE")"
-          echo "STATE_DEPLOY_KEY:  $([ -n "$STATE_DEPLOY_KEY" ] && echo "definido (${#STATE_DEPLOY_KEY} caracteres)" || echo "❌ VACÍO O NO EXISTE")"
+          echo "STATE_DEPLOY_KEY:  $([ -n "$STATE_DEPLOY_KEY" ] && echo "definido (${#STATE_DEPLOY_KEY} caracteres)" || echo "—")"
+          echo "STATE_REPO_TOKEN:  $([ -n "$STATE_REPO_TOKEN" ] && echo "definido (${#STATE_REPO_TOKEN} caracteres)" || echo "—")"
           echo
+
           if [ -z "$STATE_REPO" ]; then
             echo "::error::Falta el secreto STATE_REPO."
             exit 1
           fi
-          if [ -z "$STATE_DEPLOY_KEY" ]; then
-            echo "::error::Falta el secreto STATE_DEPLOY_KEY."
+
+          # La deploy key tiene prioridad, igual que en monitor.yml: si están
+          # las dos, la que se usa es la clave SSH.
+          if [ -n "$STATE_DEPLOY_KEY" ]; then
+            CREDENCIAL=deploy_key
+          elif [ -n "$STATE_REPO_TOKEN" ]; then
+            CREDENCIAL=token
+          else
+            echo "::error::Falta la credencial: define STATE_DEPLOY_KEY (clave SSH) o STATE_REPO_TOKEN (token)."
             exit 1
           fi
 
+          echo "Credencial en uso: $CREDENCIAL"
+          echo "credencial=$CREDENCIAL" >> "$GITHUB_OUTPUT"
+
       # ------------------------------------------------------------------
-      # 2. ¿El contenido es una clave privada válida?
+      # 2. Solo con deploy key: ¿el contenido es una clave privada válida?
       # ------------------------------------------------------------------
       - name: ¿La clave del secreto es válida?
+        if: steps.secretos.outputs.credencial == 'deploy_key'
         env:
           STATE_DEPLOY_KEY: ${{ secrets.STATE_DEPLOY_KEY }}
         run: |
@@ -91,9 +110,10 @@ jobs:
           echo
 
       # ------------------------------------------------------------------
-      # 3. La clave PÚBLICA derivada: es la que debe estar en GitHub
+      # 3. Solo con deploy key: la clave PÚBLICA derivada
       # ------------------------------------------------------------------
       - name: Clave pública que debería estar en el repositorio de estado
+        if: steps.secretos.outputs.credencial == 'deploy_key'
         run: |
           echo "Esta es la clave pública que corresponde al secreto."
           echo "Compárala con la que pegaste en GitHub (Settings -> Deploy keys):"
@@ -104,13 +124,66 @@ jobs:
           echo "la misma pareja: hay que corregir uno de los dos."
 
       # ------------------------------------------------------------------
-      # 4. Prueba real de conexión. El mensaje de GitHub dice a qué repositorio
-      #    da acceso la clave, lo que delata si está puesta en el sitio erróneo.
+      # 4. Prueba real de conexión, con la credencial que toque.
       # ------------------------------------------------------------------
       - name: Probar la conexión con GitHub
         env:
           STATE_REPO: ${{ secrets.STATE_REPO }}
+          STATE_REPO_TOKEN: ${{ secrets.STATE_REPO_TOKEN }}
+          CREDENCIAL: ${{ steps.secretos.outputs.credencial }}
         run: |
+          if [ "$CREDENCIAL" = "token" ]; then
+            echo "=== 1) ¿El token sirve para $STATE_REPO? ==="
+            CODIGO=$(curl -sS -o /tmp/repo.json -w '%{http_code}' \
+              -H "Authorization: Bearer $STATE_REPO_TOKEN" \
+              -H "Accept: application/vnd.github+json" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              "https://api.github.com/repos/${STATE_REPO}")
+            echo "  HTTP $CODIGO"
+            echo
+
+            if [ "$CODIGO" != "200" ]; then
+              echo "::error::El token no puede acceder a $STATE_REPO (HTTP $CODIGO)."
+              echo
+              echo "  401 -> token inválido, caducado o revocado."
+              echo "  404 -> el token no incluye ese repositorio (o STATE_REPO está mal escrito)."
+              echo
+              echo "Respuesta de GitHub:"
+              head -c 300 /tmp/repo.json | sed 's/^/  /'
+              echo
+              exit 1
+            fi
+
+            echo "✅ El token puede ver $STATE_REPO"
+            if grep -q '"push": *true' /tmp/repo.json; then
+              echo "✅ El token tiene permiso de escritura."
+            else
+              echo "::error::El token NO tiene permiso de escritura sobre $STATE_REPO."
+              echo "   Falta 'Contents: Read and write' en el token (o el token está en solo lectura)."
+              exit 1
+            fi
+            echo
+
+            echo "=== 2) ¿Se puede leer el repositorio con git? ==="
+            URL="https://x-access-token:${STATE_REPO_TOKEN}@github.com/${STATE_REPO}.git"
+            if SALIDA_LS=$(git ls-remote "$URL" 2>&1); then
+              echo "✅ Se puede acceder a $STATE_REPO"
+              if [ -z "$SALIDA_LS" ]; then
+                echo "   (el repositorio está vacío todavía: es lo normal la primera vez)"
+              else
+                echo "   referencias encontradas:"
+                echo "$SALIDA_LS" | sed 's/^/     /'
+              fi
+            else
+              echo "::error::El token ve el repositorio por la API, pero git no puede leerlo."
+              echo "$SALIDA_LS" | sed 's/^/  /'
+              exit 1
+            fi
+            echo
+            exit 0
+          fi
+
+          # --- deploy key ---
           printf 'github.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl\n' > ~/.ssh/known_hosts
           printf 'github.com ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBEmKSENjQEezOmxkZMy7opKgwFB9nkt5YRrYMjNuG5N87uRgg6CLrbo5wAdT/y6v0mKV0U2w0WZ2YB/++Tpockg=\n' >> ~/.ssh/known_hosts
           chmod 600 ~/.ssh/known_hosts
@@ -183,17 +256,24 @@ jobs:
       - name: ¿Está la lista de personas en el repositorio de estado?
         env:
           STATE_REPO: ${{ secrets.STATE_REPO }}
+          STATE_REPO_TOKEN: ${{ secrets.STATE_REPO_TOKEN }}
+          CREDENCIAL: ${{ steps.secretos.outputs.credencial }}
           STATE_BRANCH: main
         run: |
           set -e
 
-          # La clave ya está en ~/.ssh/state_key_final y el known_hosts ya está
-          # escrito por el paso anterior.
-          export GIT_SSH_COMMAND="ssh -i $HOME/.ssh/state_key_final -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes"
+          if [ "$CREDENCIAL" = "deploy_key" ]; then
+            # La clave ya está en ~/.ssh/state_key_final y el known_hosts ya
+            # está escrito por el paso anterior.
+            export GIT_SSH_COMMAND="ssh -i $HOME/.ssh/state_key_final -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes"
+            URL="git@github.com:${STATE_REPO}.git"
+          else
+            URL="https://x-access-token:${STATE_REPO_TOKEN}@github.com/${STATE_REPO}.git"
+          fi
 
           TMP="$(mktemp -d)"
           git init --quiet "$TMP"
-          git -C "$TMP" remote add origin "git@github.com:${STATE_REPO}.git"
+          git -C "$TMP" remote add origin "$URL"
 
           if ! git -C "$TMP" fetch --quiet --depth 1 origin "$STATE_BRANCH"; then
             echo "::warning::No puedo leer la rama $STATE_BRANCH de $STATE_REPO (¿el repositorio está todavía vacío, o el estado vive en otra rama?). Si tu rama no es 'main', cámbiala en STATE_BRANCH al principio de monitor.yml y de este paso."

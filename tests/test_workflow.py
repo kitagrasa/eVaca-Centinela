@@ -484,3 +484,21 @@ def test_el_diagnostico_avisa_si_falta_la_lista():
     doc = cargar(RAIZ / ".github" / "workflows" / "diagnostico-estado.yml")
     texto = "\n".join(p.get("run", "") for p in pasos(doc))
     assert "watchlist.md" in texto
+
+
+def test_el_diagnostico_acepta_token_y_deploy_key():
+    """El diagnóstico tiene que servir con la credencial que uses.
+
+    Si solo mira STATE_DEPLOY_KEY, quien use token ve un error rojo que no es
+    su problema (y pierde el diagnóstico justo cuando lo necesita).
+    """
+    doc = cargar(RAIZ / ".github" / "workflows" / "diagnostico-estado.yml")
+    pasos_diag = pasos(doc)
+    texto = "\n".join(p.get("run", "") for p in pasos_diag)
+
+    assert "credencial" in texto, "no distingue con qué credencial trabaja"
+    assert "STATE_REPO_TOKEN" in texto
+    assert "STATE_DEPLOY_KEY" in texto
+    # El token se comprueba también contra la API (permiso de escritura real).
+    assert "api.github.com/repos/" in texto
+    assert "Contents: Read and write" in texto
