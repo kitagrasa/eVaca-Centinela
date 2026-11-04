@@ -142,8 +142,12 @@ jobs:
             rm -rf .state-repo
 
             # 1) ¿La credencial sirve? `ls-remote` solo lee: no escribe nada.
-            if ! git ls-remote --heads "$url" >/dev/null 2>&1; then
+            if ! SALIDA_LS=$(git ls-remote --heads "$url" 2>&1); then
               echo "::error::No puedo acceder a $STATE_REPO con la credencial configurada. Revisa: STATE_REPO (usuario/repositorio, sin https ni .git), que la credencial (STATE_DEPLOY_KEY o STATE_REPO_TOKEN) sea la correcta y siga vigente, y que la deploy key tenga 'Allow write access'. No se toca el estado a proposito: fallar aqui es mejor que empezar de cero y escribir el estado en el repositorio equivocado. El workflow 'Diagnostico de la credencial de estado' te dice cual de las dos cosas falla."
+              echo
+              echo "Lo que dice git (con la credencial tapada):"
+              echo "$SALIDA_LS" | sed -E 's#(x-access-token:|oauth2:)[^@]*#\1***#g' | head -5 | sed 's/^/  /'
+              echo
               exit 1
             fi
 
