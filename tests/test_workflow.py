@@ -475,6 +475,36 @@ def test_los_workflows_de_diagnostico_usan_ping_y_resolve():
     assert "ping" in texto and "resolve" in texto
 
 
+def test_el_checkout_no_persiste_credenciales(monitor):
+    """`actions/checkout` guarda su token en la configuración de git.
+
+    Ese token solo vale para ESTE repositorio. Con token HTTPS, git lo usa por
+    delante de la credencial del estado y GitHub responde "Repository not
+    found" al clonar el repositorio privado: fue el fallo real del primer
+    intento con token. Con deploy key no pasaba porque va por SSH.
+    """
+    checkout = [
+        p
+        for p in pasos(monitor)
+        if str(p.get("uses", "")).startswith("actions/checkout")
+    ][0]
+    assert checkout.get("with", {}).get("persist-credentials") is False
+
+
+def test_las_credenciales_del_estado_sobreviven_al_checkout(monitor):
+    """Sin credenciales persistidas, cada modo pone la suya."""
+    preparar = [
+        p for p in pasos(monitor) if "STATE_REPO" in (p.get("env") or {})
+    ][0]
+    # Token: cabecera en la config del clon, para el push y el fetch previo.
+    assert "extraheader" in preparar["run"]
+
+    guardar = [p for p in pasos(monitor) if p.get("name") == "Guardar el estado"][0]
+    # Modo local: token del workflow en la URL del remoto.
+    assert "x-access-token:${GITHUB_TOKEN}" in guardar["run"]
+    assert "GITHUB_TOKEN" in (guardar.get("env") or {})
+
+
 def test_el_diagnostico_avisa_si_falta_la_lista():
     """El diagnóstico debe distinguir «falta la lista» de «credencial rota».
 

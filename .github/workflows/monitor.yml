@@ -96,6 +96,19 @@ jobs:
     steps:
       - name: Descargar el código
         uses: actions/checkout@v4
+        with:
+          # IMPORTANTE: sin credenciales persistidas.
+          #
+          # actions/checkout guarda su token (el del workflow, que solo vale
+          # para ESTE repositorio) en la configuración de git. Cualquier git
+          # contra github.com lo usaría por delante de la credencial del
+          # estado, y con token HTTPS eso responde "Repository not found"
+          # (el token del workflow no ve el repositorio privado de estado).
+          # Con deploy key no pasaba porque va por SSH.
+          #
+          # El estado se autentica por su cuenta (STATE_REPO_TOKEN o deploy
+          # key), y el modo local usa el token del workflow explícitamente.
+          persist-credentials: false
 
       - name: Preparar Python
         uses: actions/setup-python@v5
@@ -218,7 +231,13 @@ jobs:
             echo "Estado en $STATE_REPO, con token."
             clonar_estado \
               "https://x-access-token:${STATE_REPO_TOKEN}@github.com/${STATE_REPO}.git"
-            # El token no se queda guardado en la configuración de git.
+            # La URL deja de llevar el token (no queda en ningún sitio que se
+            # pueda imprimir), pero el push y el fetch previo necesitan
+            # autenticarse: sin persist-credentials en el checkout no hay otra
+            # credencial. Se guarda como cabecera en la config de ESTE clon,
+            # que es efímero y no se commitea.
+            git -C .state-repo config http.https://github.com/.extraheader \
+              "AUTHORIZATION: basic $(printf 'x-access-token:%s' "$STATE_REPO_TOKEN" | base64 -w0)"
             git -C .state-repo remote set-url origin "https://github.com/${STATE_REPO}.git"
             echo "modo=repo_privado" >> "$GITHUB_OUTPUT"
 
@@ -320,6 +339,10 @@ jobs:
         if: always()
         env:
           MODO: ${{ steps.estado.outputs.modo }}
+          # Token automático del workflow (contents: write): es el que
+          # autentica el push en el modo local, porque el checkout ya no
+          # persiste credenciales.
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           set -e
           IDENTIDAD_NAME="eVaca-Centinela[bot]"
@@ -388,6 +411,10 @@ jobs:
             # En eventos 'workflow_dispatch' el checkout puede dejar la HEAD
             # desacoplada: se empuja explícitamente a la rama.
             BRANCH="${GITHUB_REF_NAME:-main}"
+            # El checkout no persiste credenciales, así que el push se
+            # autentica con el token del workflow puesto en la URL (efímera).
+            git remote set-url origin \
+              "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
             git fetch --quiet origin "$BRANCH" || true
             git rebase "origin/$BRANCH" >/dev/null 2>&1 || git rebase --abort >/dev/null 2>&1 || true
             git push --quiet origin "HEAD:$BRANCH"
