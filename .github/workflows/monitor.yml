@@ -48,7 +48,9 @@ name: Monitor eVaca -> Telegram
 #      Ojo: caduca, salvo que elijas "No expiration".
 #
 # Si no configuras ninguna, el estado se guarda en este mismo repositorio.
-# Eso está bien si este repositorio ya es privado.
+# Eso solo es aceptable si este repositorio es privado. Si configuras STATE_REPO
+# a medias (sin credencial, o con una que ya no vale), el workflow FALLA: no cae
+# al modo local, porque eso escribiria el estado real aqui.
 # ---------------------------------------------------------------------------
 on:
   # A propósito no hay 'schedule': lo dispara cron-job.org.
@@ -129,19 +131,36 @@ jobs:
           #             VACIO y el monitor creeria que es la primera vez en
           #             cada ejecucion: repetiria avisos sin parar.
           #
-          # Si el repositorio esta recien creado (vacio) o no tiene todavia la
-          # rama del estado, se empieza de cero en local; el primer push la
-          # creara.
+          # OJO: si la credencial falla (token caducado o revocado, clave mal
+          # puesta, repositorio renombrado) NO se empieza de cero. Empezar de
+          # cero es creer que es la primera vez: mandaria la linea base a todo
+          # el mundo y, peor, guardaria el estado real en ESTE repositorio, que
+          # es publico. Por eso primero se comprueba el acceso y, si no esta,
+          # el paso falla con un error claro.
           clonar_estado() {
+            local url="$1"
             rm -rf .state-repo
-            if git clone --quiet --depth 1 --branch "$STATE_BRANCH" "$1" .state-repo 2>/dev/null; then
+
+            # 1) ¿La credencial sirve? `ls-remote` solo lee: no escribe nada.
+            if ! git ls-remote --heads "$url" >/dev/null 2>&1; then
+              echo "::error::No puedo acceder a $STATE_REPO con la credencial configurada. Revisa: STATE_REPO (usuario/repositorio, sin https ni .git), que la credencial (STATE_DEPLOY_KEY o STATE_REPO_TOKEN) sea la correcta y siga vigente, y que la deploy key tenga 'Allow write access'. No se toca el estado a proposito: fallar aqui es mejor que empezar de cero y escribir el estado en el repositorio equivocado. El workflow 'Diagnostico de la credencial de estado' te dice cual de las dos cosas falla."
+              exit 1
+            fi
+
+            # 2) ¿Existe ya la rama del estado? Si no (repositorio recien
+            #    creado o vacio), es la primera vez: se empieza en local y el
+            #    primer push la creara.
+            if git ls-remote --heads "$url" | grep -q "refs/heads/$STATE_BRANCH$"; then
+              if ! git clone --quiet --depth 1 --branch "$STATE_BRANCH" "$url" .state-repo 2>/dev/null; then
+                echo "::error::La rama $STATE_BRANCH existe en $STATE_REPO pero no he podido clonarla. No se empieza de cero a proposito: revisa la credencial y la red, y vuelve a lanzar el workflow."
+                exit 1
+              fi
               echo "Estado descargado (solo el ultimo commit)."
             else
-              echo "Repositorio de estado vacio o sin la rama $STATE_BRANCH: empiezo de cero."
-              rm -rf .state-repo
+              echo "El repositorio de estado no tiene todavia la rama $STATE_BRANCH: empiezo de cero (primera vez)."
               mkdir -p .state-repo
               git -C .state-repo init --quiet
-              git -C .state-repo remote add origin "$1"
+              git -C .state-repo remote add origin "$url"
               git -C .state-repo checkout --quiet -B "$STATE_BRANCH"
             fi
           }
@@ -200,11 +219,15 @@ jobs:
             echo "modo=repo_privado" >> "$GITHUB_OUTPUT"
 
           else
+            # Configuracion a medias (hay STATE_REPO o una credencial, pero no
+            # la pareja): NO se sigue en modo local. Seguir escribiria el
+            # estado real (a quien sigues y sus carteras) en este repositorio,
+            # que es publico. Mejor pararse y decirlo.
             if [ -n "$STATE_REPO" ] || [ -n "$STATE_DEPLOY_KEY" ] || [ -n "$STATE_REPO_TOKEN" ]; then
-              echo "::warning::Para usar un repositorio de estado hacen falta STATE_REPO y (STATE_DEPLOY_KEY o STATE_REPO_TOKEN). Uso el estado de este repositorio."
-            else
-              echo "Sin repositorio de estado configurado: uso el de este repositorio."
+              echo "::error::Configuracion de estado a medias: STATE_REPO='${STATE_REPO:-vacio}', deploy key='$([ -n "$STATE_DEPLOY_KEY" ] && echo si || echo no)', token='$([ -n "$STATE_REPO_TOKEN" ] && echo si || echo no)'. Hacen falta STATE_REPO y UNA credencial (STATE_DEPLOY_KEY o STATE_REPO_TOKEN). No se sigue en modo local a proposito: guardaria el estado real en este repositorio, que es publico."
+              exit 1
             fi
+            echo "Sin repositorio de estado configurado: el estado se guarda en este repositorio. Si este repositorio es publico, NO es seguro."
             echo "modo=local" >> "$GITHUB_OUTPUT"
           fi
 

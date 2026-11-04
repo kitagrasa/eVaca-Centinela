@@ -251,7 +251,34 @@ def test_acepta_deploy_key_y_token(monitor):
     assert "STATE_DEPLOY_KEY" in preparar["env"], "falta soporte de deploy key"
     assert "STATE_REPO_TOKEN" in preparar["env"], "falta soporte de token"
     # La deploy key tiene prioridad (no caduca y no se puede sobre-otorgar).
-    assert preparar["run"].index("deploy_key") < preparar["run"].index("token")
+    texto = preparar["run"]
+    assert "CREDENCIAL=deploy_key" in texto
+    assert "CREDENCIAL=token" in texto
+    assert texto.index("CREDENCIAL=deploy_key") < texto.index("CREDENCIAL=token")
+
+
+def test_no_cae_al_modo_local_si_la_credencial_falla(monitor):
+    """Configurar el estado a medias no puede acabar escribiendo en este repo.
+
+    Antes, si STATE_REPO estaba puesto pero la credencial no, el workflow
+    avisaba con un warning y seguia en modo local: guardaba el estado real (a
+    quien sigues y sus carteras) en el repositorio publico. Ahora se para.
+    """
+    preparar = [
+        p for p in pasos(monitor) if "STATE_REPO" in (p.get("env") or {})
+    ][0]
+    texto = preparar["run"]
+
+    # Antes de clonar se comprueba el acceso, y si no esta, se sale.
+    assert "git ls-remote" in texto
+    assert "No puedo acceder a" in texto
+    assert "::error::" in texto
+
+    # Si el repositorio tiene la rama pero el clon falla, tampoco se empieza
+    # de cero (eso mandaria lineas base y repetiria avisos).
+    assert "no he podido clonarla" in texto
+    assert "empiezo de cero" in texto  # solo para el caso "rama no existe"
+    assert texto.index("no he podido clonarla") < texto.index("empiezo de cero")
 
 
 def test_el_clon_de_la_deploy_key_verifica_el_host(monitor):
