@@ -1,0 +1,417 @@
+"""Cliente de solo lectura sobre los endpoints PÚBLICOS de eVaca.
+
+IMPORTANTE
+----------
+Todo lo que hace este módulo es lo mismo que hace tu navegador cuando abres
+la cartera pública de alguien (`<destino>/people/<usuario>/portfolio`) sin
+haber iniciado sesión:
+
+    GET /api/logininfo/v1.1/users/<usuario>                       -> usuario -> CID
+    GET /sapi/trade-data-real/live/public/portfolios?cid=<cid>    -> cartera agregada
+    GET /sapi/trade-data-real/live/public/portfolios/exposure     -> % de cada activo
+    GET /sapi/trade-data-real/live/public/positions?cid&instrumentId
+                                                                  -> cada posición abierta
+    GET /sapi/trade-data-real/history/public/portfolios/aggregated/breakdown?cid&startTime
+                                                                  -> cierres por activo
+    GET /sapi/instrumentsmetadata/V1.1/instruments/<id>           -> nombre del activo
+
+No hay login, ni cookies de sesión, ni API key, ni KYC. Nada de esto toca
+ninguna cuenta privada: solo carteras que sus dueños han hecho públicas.
+"""
+
+from __future__ import annotations
+
+import logging
+import random
+import time
+from typing import Any, Optional
+from urllib.parse import urlencode, urlsplit
+
+import requests
+
+from . import destino
+
+log = logging.getLogger(__name__)
+
+# Si un 429 pide esperar más que esto, no se espera: se abandona la pasada.
+# El workflow de GitHub tiene 15 minutos de tope y quedaría matado a mitad.
+MAX_WAIT_RETRY_AFTER = 60.0
+
+DEFAULT_USER_AGENT = (
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+    "(KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36"
+)
+
+# eVaca pone por delante DataDome/Cloudflare. Si te pasas de rosca te
+# devuelve una página de captcha en vez de JSON. Detectamos ese caso para
+# no interpretarlo como "cartera vacía" (¡que sería catastrófico: creería
+# que el usuario ha vendido todo!).
+_CAPTCHA_MARKERS = (
+    "captcha-delivery.com",
+    "geo.captcha-delivery.com",
+    "Attention Required! | Cloudflare",
+    "Just a moment...",
+)
+
+
+class EvacaError(RuntimeError):
+    """Error genérico hablando con eVaca."""
+
+
+class UserNotFound(EvacaError):
+    """El nombre de usuario no existe."""
+
+
+class PrivatePortfolio(EvacaError):
+    """El usuario existe pero su cartera es privada."""
+
+
+class Blocked(EvacaError):
+    """El sitio (DataDome/Cloudflare) nos ha bloqueado temporalmente."""
+
+
+class DestinoNoConfigurado(EvacaError):
+    """No se sabe a qué sitio pedir: falta el secreto DESTINO_BASE.
+
+    No es un fallo del sitio ni de la red: es configuración. Se separa para que
+    el aviso diga qué hacer en vez de "HTTP 400" o una URL relativa.
+    """
+
+
+class EvacaClient:
+    """Cliente HTTP con reintentos, pausas y detección de bloqueos."""
+
+    def __init__(
+        self,
+        delay: float = 0.35,
+        timeout: float = 30.0,
+        max_retries: int = 3,
+        user_agent: str = DEFAULT_USER_AGENT,
+        session: Optional[requests.Session] = None,
+        base: Optional[str] = None,
+    ) -> None:
+        self.delay = max(0.0, delay)
+        self.timeout = timeout
+        self.max_retries = max(0, max_retries)
+        # El destino sale del entorno (secreto DESTINO_BASE en GitHub) salvo
+        # que quien construya el cliente pase otro (los tests, por ejemplo).
+        self.base = destino.base() if base is None else base.strip().rstrip("/")
+        # El host suelto también hay que taparlo: `requests` lo pone en sus
+        # excepciones (`host='…'`) y GitHub solo enmascara el valor exacto del
+        # secreto, así que sin esto el log público diría el dominio.
+        self.host = urlsplit(self.base).netloc if self.base else ""
+        self.session = session or requests.Session()
+        cabeceras = {
+            "User-Agent": user_agent,
+            "Accept": "application/json, text/plain, */*",
+            "Accept-Language": "en-US,en;q=0.9",
+        }
+        if self.base:
+            cabeceras["Referer"] = f"{self.base}/"
+        self.session.headers.update(cabeceras)
+        self.request_count = 0
+
+    # ------------------------------------------------------------------ #
+    # HTTP
+    # ------------------------------------------------------------------ #
+    def _sleep(self) -> None:
+        """Pausa con jitter para no parecer un script agresivo."""
+        if self.delay:
+            time.sleep(self.delay * (0.75 + random.random() * 0.5))
+
+    def _limpiar(self, texto: Any) -> str:
+        """Quita el destino de un texto antes de mandarlo al log.
+
+        Los logs de GitHub Actions de un repositorio público los lee cualquiera
+        y una excepción de `requests` lleva el host suelto
+        (`host='…'`), que GitHub NO enmascara (solo enmascara el valor exacto
+        del secreto). Con esto, el log dice «(destino)» en su lugar: primero la
+        URL entera y después el host, que es una parte suya.
+        """
+        texto = str(texto)
+        if self.base:
+            texto = texto.replace(self.base, "(destino)")
+        if self.host:
+            texto = texto.replace(self.host, "(destino)")
+        return texto
+
+    def _request(
+        self,
+        path: str,
+        params: Optional[dict[str, Any]] = None,
+        *,
+        allow_empty: bool = True,
+    ) -> requests.Response:
+        if path.startswith("http"):
+            url = path
+        else:
+            if not self.base:
+                raise DestinoNoConfigurado(destino.ayuda())
+            url = self.base + path
+        last_error: Optional[Exception] = None
+
+        for attempt in range(self.max_retries + 1):
+            if attempt or self.request_count:
+                self._sleep()
+            try:
+                response = self.session.get(url, params=params, timeout=self.timeout)
+            except (requests.ConnectionError, requests.Timeout) as exc:
+                last_error = exc
+                # attempt=0 es el primer intento; a partir de ahí, reintentos.
+                if attempt < self.max_retries:
+                    log.warning(
+                        "Fallo de red (%s). Reintento %s/%s",
+                        self._limpiar(exc),
+                        attempt + 1,
+                        self.max_retries,
+                    )
+                time.sleep(min(2**attempt, 8) + random.random())
+                continue
+            finally:
+                self.request_count += 1
+
+            if attempt and attempt <= self.max_retries:
+                log.info(
+                    "Reintento %s/%s correcto: %s",
+                    attempt,
+                    self.max_retries,
+                    self._limpiar(url),
+                )
+
+            status = response.status_code
+
+            # ------------------------------------------------------------
+            # eVaca nos está limitando (429). Puede pedir esperas enormes
+            # (hemos visto retry-after de 2500 s, más de 40 minutos).
+            #
+            # Esperar aquí sería un error: el workflow tiene 15 minutos de
+            # tope, así que GitHub mataría el job a mitad de espera. Es
+            # mucho mejor rendirse ya, con un mensaje claro, y dejar que la
+            # siguiente pasada del cron lo reintente.
+            # ------------------------------------------------------------
+            if status == 429:
+                pedido = _retry_after(response)
+                if pedido is not None and pedido > MAX_WAIT_RETRY_AFTER:
+                    raise Blocked(
+                        f"eVaca ha limitado las peticiones (HTTP 429). Pide esperar "
+                        f"{pedido:.0f} s (~{pedido / 60:.0f} min). Se abandona esta "
+                        f"pasada; la siguiente lo reintentará. Si se repite, baja "
+                        f"la frecuencia del cron o sube http.delay_seconds."
+                    )
+                await_s = pedido if pedido is not None else min(2**attempt, 15)
+                if attempt < self.max_retries:
+                    log.warning(
+                        "HTTP 429 en %s; espero %.0fs y reintento (%s/%s)",
+                        self._limpiar(url),
+                        await_s,
+                        attempt + 1,
+                        self.max_retries,
+                    )
+                    time.sleep(await_s + random.random())
+                    last_error = EvacaError(f"HTTP 429 en {self._limpiar(url)}")
+                    continue
+                raise Blocked(
+                    f"eVaca sigue limitando las peticiones tras "
+                    f"{self.max_retries + 1} intentos "
+                    f"(HTTP 429 en {self._limpiar(url)})"
+                )
+
+            # Errores temporales del servidor: aquí sí compensa reintentar.
+            if status in (500, 502, 503, 504):
+                if attempt < self.max_retries:
+                    wait = min(2**attempt, 8) + random.random()
+                    log.warning(
+                        "HTTP %s en %s; reintento %s/%s en %.1fs",
+                        status,
+                        self._limpiar(url),
+                        attempt + 1,
+                        self.max_retries,
+                        wait,
+                    )
+                    time.sleep(wait)
+                    last_error = EvacaError(f"HTTP {status} en {self._limpiar(url)}")
+                    continue
+                raise EvacaError(
+                    f"HTTP {status} en {self._limpiar(url)} tras "
+                    f"{self.max_retries + 1} intentos"
+                )
+
+            return response
+
+        raise EvacaError(
+            f"No se pudo completar la petición a {self._limpiar(url)}: "
+            f"{self._limpiar(last_error)}"
+        )
+
+    def _get_json(
+        self,
+        path: str,
+        params: Optional[dict[str, Any]] = None,
+        *,
+        not_found_ok: bool = False,
+        private_ok: bool = False,
+    ) -> Optional[dict[str, Any]]:
+        response = self._request(path, params)
+        status = response.status_code
+        body = response.text
+        content_type = (response.headers.get("content-type") or "").lower()
+
+        if status == 403:
+            if _looks_like_captcha(body, content_type):
+                raise Blocked(
+                    "eVaca ha devuelto un captcha (DataDome/Cloudflare). "
+                    "Baja la frecuencia o prueba más tarde."
+                )
+            if "PRIVATE" in body.upper():
+                if private_ok:
+                    return None
+                raise PrivatePortfolio(f"Cartera privada: {body[:200]}")
+            raise Blocked(f"HTTP 403 no esperado: {body[:200]}")
+
+        if status == 404:
+            if not_found_ok:
+                return None
+            raise UserNotFound(f"No encontrado: {urlencode(params or {})}")
+
+        if status != 200:
+            raise EvacaError(f"HTTP {status} en {path} -> {body[:200]}")
+
+        if _looks_like_captcha(body, content_type) or "json" not in content_type:
+            # La web devuelve el shell HTML del SPA cuando la ruta no existe.
+            raise Blocked(
+                f"Respuesta no-JSON en {path} (content-type={content_type!r}). "
+                "Puede ser un bloqueo de eVaca o un endpoint que ha cambiado."
+            )
+
+        try:
+            return response.json()
+        except ValueError as exc:  # pragma: no cover - defensivo
+            raise EvacaError(f"JSON inválido en {path}: {exc}") from exc
+
+    # ------------------------------------------------------------------ #
+    # Endpoints
+    # ------------------------------------------------------------------ #
+    def resolve_username(self, username: str) -> dict[str, Any]:
+        """Nombre de usuario -> datos públicos (incluye el CID de la cartera real)."""
+        data = self._get_json(
+            f"/api/logininfo/v1.1/users/{username.strip()}",
+            not_found_ok=True,
+        )
+        if not data:
+            raise UserNotFound(f"El usuario {username!r} no existe en eVaca")
+        return data
+
+    def get_portfolio(self, cid: int) -> dict[str, Any]:
+        """Cartera agregada por activo + espejos (mirrors)."""
+        data = self._get_json(
+            "/sapi/trade-data-real/live/public/portfolios",
+            {"format": "json", "cid": cid},
+            private_ok=True,
+        )
+        if data is None:
+            raise PrivatePortfolio(f"La cartera del CID {cid} es privada")
+        return data
+
+    def get_exposure(self, cid: int) -> dict[int, float]:
+        """Porcentaje de la cartera que ocupa cada activo (suma ~100)."""
+        data = self._get_json(
+            "/sapi/trade-data-real/live/public/portfolios/exposure",
+            {"cid": cid},
+            private_ok=True,
+        )
+        if data is None:
+            raise PrivatePortfolio(f"La exposición del CID {cid} es privada")
+        result: dict[int, float] = {}
+        for row in data.get("InstrumentIdExposurePercentageList") or []:
+            try:
+                result[int(row["InstrumentID"])] = float(row["ExposurePercentage"])
+            except (KeyError, TypeError, ValueError):
+                continue
+        return result
+
+    def get_positions(
+        self, cid: int, instrument_id: int, *, sin_cache: bool = False
+    ) -> dict[str, Any]:
+        """Todas las posiciones ABIERTAS de un activo, con su PositionID.
+
+        `sin_cache` añade un parámetro que cambia en cada llamada, para que no
+        vuelva la copia guardada en el CDN cuando se relee un activo (lo usa el
+        monitor cuando la cartera y las posiciones no cuadran).
+        """
+        params: dict[str, Any] = {"cid": cid, "instrumentId": instrument_id}
+        if sin_cache:
+            params["_"] = str(int(time.time() * 1000))
+        data = self._get_json(
+            "/sapi/trade-data-real/live/public/positions",
+            params,
+            private_ok=True,
+        )
+        return data or {}
+
+    def get_history_closes(self, cid: int, since: str) -> dict[int, int]:
+        """Cuántas posiciones se han cerrado por activo desde `since`.
+
+        Es el histórico público de cierres, agregado por cartera: **una sola
+        petición para todos los activos**, no una por activo. Devuelve
+        `{instrument_id: número de cierres}`; los activos sin cierres no
+        aparecen.
+
+        `since` va en UTC ISO (`2026-10-20T13:41:00Z`). Ojo: eVaca solo filtra
+        por `startTime`; su `endTime` se ignora (comprobado el 20/10/2026), así
+        que la ventana la cierra el monitor con su marca de agua.
+
+        No confundir con el detalle por activo
+        (`/history/public/positions?instrumentId=`), que daría la hora exacta de
+        cada cierre a cambio de una petición por activo. No lo usamos.
+        """
+        data = self._get_json(
+            "/sapi/trade-data-real/history/public/portfolios/aggregated/breakdown",
+            {
+                "cid": cid,
+                "startTime": since,
+                "pageNumber": 1,
+                "itemsPerPage": 50,
+            },
+        )
+        cierres: dict[int, int] = {}
+        for grupo in (data or {}).get("AggregatedInstrumentHistories") or []:
+            try:
+                instrument_id = int(grupo["InstrumentID"])
+                cuantos = int(grupo.get("TotalNumberOfPositions") or 0)
+            except (KeyError, TypeError, ValueError):
+                log.warning("Grupo de histórico ilegible: %s", grupo)
+                continue
+            if cuantos > 0:
+                cierres[instrument_id] = cierres.get(instrument_id, 0) + cuantos
+        return cierres
+
+    def get_instrument(self, instrument_id: int) -> Optional[dict[str, Any]]:
+        """Metadatos de un activo (nombre legible y ticker)."""
+        data = self._get_json(
+            f"/sapi/instrumentsmetadata/V1.1/instruments/{instrument_id}",
+            not_found_ok=True,
+        )
+        if not data:
+            return None
+        return data.get("InstrumentDisplayData") or None
+
+    def close(self) -> None:
+        self.session.close()
+
+
+def _retry_after(response: requests.Response) -> Optional[float]:
+    value = response.headers.get("retry-after")
+    if not value:
+        return None
+    try:
+        return max(0.0, float(value))
+    except ValueError:
+        return None
+
+
+def _looks_like_captcha(body: str, content_type: str) -> bool:
+    if "captcha-delivery.com" in body:
+        return True
+    if content_type.startswith("text/html") and any(m in body for m in _CAPTCHA_MARKERS):
+        return True
+    return False

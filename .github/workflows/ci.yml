@@ -1,0 +1,51 @@
+# ---------------------------------------------------------------------------
+# CI: los tests en cada push a main y en cada pull request.
+#
+# Los demás workflows se lanzan a mano (workflow_dispatch): monitor.yml
+# necesita los secretos y lo dispara cron-job.org desde fuera, y los test-*.yml
+# son herramientas de diagnóstico que se ejecutan cuando hay un problema. Este
+# es el único que corre siempre, y su trabajo es que los guardianes de
+# tests/test_privacidad.py y los controles de tests/test_workflow.py se
+# ejecuten sin depender de que alguien se acuerde de lanzarlos a mano.
+#
+# No usa secretos a propósito: así también vale para pull_request, y nunca
+# recibe ni el token de Telegram ni la deploy key del repositorio de estado.
+# ---------------------------------------------------------------------------
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+# Si llegan dos pushes seguidos, el segundo cancela al primero: no tiene
+# sentido gastar minutos en una versión del código que ya está obsoleta.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Descargar el código
+        uses: actions/checkout@v4
+
+      - name: Preparar Python
+        uses: actions/setup-python@v5
+        with:
+          # La misma versión que usa monitor.yml, no la última que haya.
+          python-version: "3.12"
+          cache: pip
+
+      - name: Instalar dependencias
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt pytest
+
+      - name: Ejecutar los tests
+        run: python -m pytest tests -q
