@@ -10,6 +10,7 @@ Todo se prueba con un `session` falso: **ningún test toca la red**.
 from __future__ import annotations
 
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -238,3 +239,48 @@ def test_un_error_de_usuario_si_se_avisa_por_usuario(tmp_path, sin_esperas):
     assert all(r.error for r in reports)
     # Dos avisos: son dos personas distintas, con problemas distintos
     assert len(avisos) == 2
+
+
+# ---------------------------------------------------------------------- #
+# get_gain_history: el endpoint que se portó de eVaca-PP
+# ---------------------------------------------------------------------- #
+def test_get_gain_history_pide_la_ruta_exacta(payload_simple):
+    """Una sola petición a la ruta verificada, construida sobre el destino."""
+    sesion = FakeSession([FakeResponse(200, body=json.dumps(payload_simple))])
+    client = EvacaClient(delay=0.0, max_retries=0, session=sesion)
+
+    datos = client.get_gain_history("uno")
+
+    assert datos["monthly"]
+    base = os.environ["EVACA_DESTINO_BASE"]
+    assert sesion.llamadas == [f"{base}/sapi/userstats/gain/username/uno/history"]
+    assert client.request_count == 1
+
+
+def test_get_gain_history_devuelve_el_payload(payload_simple):
+    sesion = FakeSession([FakeResponse(200, body=json.dumps(payload_simple))])
+    client = EvacaClient(delay=0.0, max_retries=0, session=sesion)
+
+    assert client.get_gain_history("uno") == payload_simple
+
+
+def test_get_gain_history_sin_monthly_es_error_sin_reintento():
+    sesion = FakeSession([FakeResponse(200, body='{"customerId": 1}')])
+    client = EvacaClient(delay=0.0, max_retries=2, session=sesion)
+
+    with pytest.raises(EvacaError) as info:
+        client.get_gain_history("uno")
+
+    assert len(sesion.llamadas) == 1
+    assert "uno" not in str(info.value)
+
+
+def test_get_gain_history_404_no_reintenta_ni_nombra_al_usuario():
+    sesion = FakeSession([FakeResponse(404, body="{}")])
+    client = EvacaClient(delay=0.0, max_retries=3, session=sesion)
+
+    with pytest.raises(UserNotFound) as info:
+        client.get_gain_history("uno")
+
+    assert len(sesion.llamadas) == 1
+    assert "uno" not in str(info.value)

@@ -13,6 +13,7 @@ haber iniciado sesión:
                                                                   -> cada posición abierta
     GET /sapi/trade-data-real/history/public/portfolios/aggregated/breakdown?cid&startTime
                                                                   -> cierres por activo
+    GET /sapi/userstats/gain/username/<usuario>/history             -> rentabilidad mensual
     GET /sapi/instrumentsmetadata/V1.1/instruments/<id>           -> nombre del activo
 
 No hay login, ni cookies de sesión, ni API key, ni KYC. Nada de esto toca
@@ -384,6 +385,30 @@ class EvacaClient:
             if cuantos > 0:
                 cierres[instrument_id] = cierres.get(instrument_id, 0) + cuantos
         return cierres
+
+    def get_gain_history(self, username: str) -> dict[str, Any]:
+        """Rentabilidad mensual pública de un trader (**1 petición**).
+
+        Es el único endpoint que se trajo de eVaca-PP: da la serie mensual con
+        la que se construye el índice base 100 (`serie.build_series`). Usa la
+        misma política de reintentos que el resto del cliente (429 y 5xx con
+        espera; 403 y 404 sin reintento) y `_limpiar` en los mensajes.
+
+        El mensaje de error no repite el nombre de usuario: el log del
+        repositorio público no puede llevarlo (quien lo necesite, que lo
+        cambie por el id opaco con `serie.serie_id`).
+        """
+        data = self._get_json(
+            f"/sapi/userstats/gain/username/{username.strip()}/history",
+            not_found_ok=True,
+        )
+        if not data:
+            raise UserNotFound("No hay histórico público para ese usuario")
+        if not isinstance(data.get("monthly"), list):
+            raise EvacaError(
+                "La respuesta del histórico no trae la lista 'monthly'"
+            )
+        return data
 
     def get_instrument(self, instrument_id: int) -> Optional[dict[str, Any]]:
         """Metadatos de un activo (nombre legible y ticker)."""

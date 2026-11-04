@@ -6,8 +6,9 @@ sitios distintos:
 * `watchlist.md`  -> **la lista de personas** que quieres seguir, una por
   línea. Es lo que se edita a mano, y vive en el **repositorio de estado**
   (privado), no aquí.
-* `watchlist.yml` -> los ajustes técnicos (pausa entre peticiones, avisos...).
-  No hace falta tocarlo; este sí va en el repositorio del código.
+* `watchlist.yml` -> los ajustes técnicos (pausa entre peticiones, avisos,
+  caché de las series...). No hace falta tocarlo; este sí va en el repositorio
+  del código.
 
 Dónde vive el `watchlist.md` lo decide quien llama: en GitHub es el del
 repositorio de estado (privado), que el workflow clona en `.state-repo` y señala
@@ -58,6 +59,20 @@ class HttpConfig:
 
 
 @dataclass
+class SeriesConfig:
+    """Ajustes del subcomando `series` (series de Portfolio Performance).
+
+    Son los mismos valores que usaba eVaca-PP y no conviene bajarlos: la web
+    se lee de una en una y no hace falta pedir más de una vez por hora.
+    """
+
+    # Segundos de espera entre peticiones reales (no entre copias de caché).
+    pause_seconds: float = 3.0
+    # Minutos que se reutiliza la respuesta guardada antes de volver a pedirla.
+    cache_minutes: int = 60
+
+
+@dataclass
 class AlertsConfig:
     # Mensaje de bienvenida la primera vez que se ve a un usuario.
     notify_on_baseline: bool = True
@@ -71,6 +86,7 @@ class Config:
     users: list[str] = field(default_factory=list)
     http: HttpConfig = field(default_factory=HttpConfig)
     alerts: AlertsConfig = field(default_factory=AlertsConfig)
+    series: SeriesConfig = field(default_factory=SeriesConfig)
     schedule: ScheduleWindow = field(default_factory=ScheduleWindow)
     source: Optional[Path] = None
     users_source: Optional[Path] = None
@@ -169,6 +185,7 @@ def load_config(
 
     http_raw = raw.get("http") or {}
     alerts_raw = raw.get("alerts") or {}
+    series_raw = raw.get("series") or {}
     schedule_raw = raw.get("schedule") or {}
     schedule = ScheduleWindow(
         enabled=bool(schedule_raw.get("enabled", True)),
@@ -190,6 +207,10 @@ def load_config(
             notify_on_baseline=bool(alerts_raw.get("notify_on_baseline", True)),
             notify_on_error=bool(alerts_raw.get("notify_on_error", True)),
             error_cooldown_minutes=int(alerts_raw.get("error_cooldown_minutes", 180)),
+        ),
+        series=SeriesConfig(
+            pause_seconds=float(series_raw.get("pause_seconds", 3.0)),
+            cache_minutes=int(series_raw.get("cache_minutes", 60)),
         ),
         schedule=schedule,
         source=config_path,

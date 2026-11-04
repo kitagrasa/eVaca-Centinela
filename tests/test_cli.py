@@ -14,12 +14,13 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from evaca_monitor.cli import _apply_defaults, build_parser  # noqa: E402
+from evaca_monitor.cli import _apply_defaults, build_parser, main  # noqa: E402
 from evaca_monitor.config import load_config  # noqa: E402
 from evaca_monitor.monitor import Monitor  # noqa: E402
 from evaca_monitor.state import State  # noqa: E402
 from evaca_monitor.models import EvacaUser  # noqa: E402
 from evaca_monitor.client import EvacaClient  # noqa: E402
+from evaca_monitor.serie import serie_id  # noqa: E402
 
 
 def parse(argv):
@@ -228,3 +229,97 @@ def test_la_poda_solo_usa_la_lista_completa(tmp_path):
     monitor = Monitor(EvacaClient(delay=0), state, notify=lambda _t: None)
     monitor._prune(["con_typo_ejemplo", "otro_ejemplo"])
     assert list(state.users) == ["con_typo_ejemplo"]
+
+
+# ---------------------------------------------------------------------- #
+# El subcomando series
+# ---------------------------------------------------------------------- #
+def _entorno_series(tmp_path, monkeypatch, *, texto="uno_ejemplo\n"):
+    """Ajustes y lista de prueba; la carpeta de datos va a tmp."""
+    yml = tmp_path / "watchlist.yml"
+    yml.write_text(
+        "users: []\nseries:\n  pause_seconds: 0.0\n  cache_minutes: 60\n",
+        encoding="utf-8",
+    )
+    md = tmp_path / "watchlist.md"
+    md.write_text(texto, encoding="utf-8")
+    monkeypatch.setenv("EVACA_DATA_DIR", str(tmp_path / "data"))
+    monkeypatch.delenv("GITHUB_ACTIONS", raising=False)
+    monkeypatch.setattr("evaca_monitor.cli._setup_logging", lambda nivel: None)
+    return ["--config", str(yml), "--users-file", str(md)]
+
+
+def test_el_subcomando_series_apunta_a_su_funcion():
+    args = parse(["series"])
+
+    assert args.func.__name__ == "cmd_series"
+    assert args.dry_run is False
+    assert args.force is False
+    assert args.ids is False
+    assert args.usuario is None
+
+
+def test_series_acepta_sus_opciones():
+    args = parse(["series", "--dry-run", "--force", "--usuario", "x", "--ids"])
+
+    assert args.dry_run is True
+    assert args.force is True
+    assert args.ids is True
+    assert args.usuario == "x"
+
+
+def test_series_dry_run_no_escribe_nada(tmp_path, monkeypatch):
+    argv = _entorno_series(tmp_path, monkeypatch)
+
+    assert main(["series", "--dry-run", *argv]) == 0
+    assert not (tmp_path / "data").exists()
+
+
+def test_series_sin_destino_no_hace_nada(tmp_path, monkeypatch):
+    argv = _entorno_series(tmp_path, monkeypatch)
+    monkeypatch.delenv("EVACA_DESTINO_BASE", raising=False)
+
+    assert main(["series", *argv]) == 2
+    assert not (tmp_path / "data").exists()
+
+
+def test_series_ids_escribe_el_mapa_y_lo_imprime_a_mano(
+    tmp_path, monkeypatch, capsys
+):
+    argv = _entorno_series(tmp_path, monkeypatch)
+
+    assert main(["series", "--ids", *argv]) == 0
+
+    mapa = tmp_path / "series-ids.md"
+    assert mapa.is_file()
+    assert "uno_ejemplo" in mapa.read_text(encoding="utf-8")
+
+    salida = capsys.readouterr().out
+    assert "uno_ejemplo" in salida
+    assert serie_id("uno_ejemplo") in salida
+
+
+def test_series_ids_no_imprime_la_tabla_en_github_actions(
+    tmp_path, monkeypatch, capsys
+):
+    argv = _entorno_series(tmp_path, monkeypatch)
+    monkeypatch.setenv("GITHUB_ACTIONS", "true")
+
+    assert main(["series", "--ids", *argv]) == 0
+
+    assert (tmp_path / "series-ids.md").is_file()
+    assert "uno_ejemplo" not in capsys.readouterr().out
+
+
+def test_series_ids_en_dry_run_no_escribe_el_mapa(tmp_path, monkeypatch):
+    argv = _entorno_series(tmp_path, monkeypatch)
+
+    assert main(["series", "--ids", "--dry-run", *argv]) == 0
+    assert not (tmp_path / "series-ids.md").exists()
+
+
+def test_series_con_lista_vacia_aborta_sin_crear_nada(tmp_path, monkeypatch):
+    argv = _entorno_series(tmp_path, monkeypatch, texto="# nada activo\n")
+
+    assert main(["series", *argv]) == 2
+    assert not (tmp_path / "data").exists()

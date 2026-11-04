@@ -1,0 +1,10 @@
+{
+  "customerId": 7654321,
+  "maxReturn": 15.9,
+  "monthly": [
+    {"start": "2025-03-16T14:53:03.533Z", "gain": 10.79, "isSimulation": false},
+    {"start": "2025-04-01T00:00:00Z", "gain": 1.00, "isSimulation": true},
+    {"start": "2025-05-01T00:00:00Z", "gain": 14.90, "isSimulation": false},
+    {"start": "2025-06-01T00:00:00Z", "gain": 3.00, "isSimulation": true}
+  ]
+}

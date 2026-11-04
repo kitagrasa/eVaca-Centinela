@@ -2,6 +2,9 @@
 
     python -m evaca_monitor check                 # revisa y avisa (uso normal)
     python -m evaca_monitor check --dry-run       # revisa sin enviar nada
+    python -m evaca_monitor series                # series base 100 para Portfolio Performance
+    python -m evaca_monitor series --dry-run      # 0 peticiones, 0 escrituras
+    python -m evaca_monitor series --ids          # regenera el mapa privado id -> usuario
     python -m evaca_monitor users                 # a quién está siguiendo
     python -m evaca_monitor show usuario_ejemplo  # imprime la cartera actual
     python -m evaca_monitor resolve usuario_ejemplo
@@ -24,6 +27,7 @@ from .config import Config, load_config
 from .cooldown import BLOCKED_KEY, STATE_ERROR_KEY, CooldownStore
 from .monitor import Monitor
 from .render import now_madrid, render_portfolio_table
+from .serie_run import RunConfig, SerieRun, en_github_actions
 from .state import RuntimeState, State, StateCorruptError, cooldown_path
 from .telegram import TelegramError, TelegramNotifier
 
@@ -253,6 +257,39 @@ def _alert_state_error(args, config, cooldown, notifier, exc: StateCorruptError)
         )
     finally:
         cliente.close()
+
+
+# ---------------------------------------------------------------------- #
+# series
+# ---------------------------------------------------------------------- #
+def cmd_series(args: argparse.Namespace) -> int:
+    """Series tipo fondo para Portfolio Performance (y mapa privado de ids)."""
+    # La lista es la MISMA del monitor: EVACA_WATCHLIST_MD o --users-file.
+    # `load_config` es quien la lee, con sus reglas (comentarios, viñetas,
+    # URL del perfil...) y con el error claro si no hay nadie a quien seguir.
+    config = load_config(args.config, getattr(args, "users_file", None))
+
+    ids_file = os.environ.get("EVACA_IDS_MD")
+    run_config = RunConfig(
+        data_dir=Path(os.environ.get("EVACA_DATA_DIR", "data")),
+        ids_path=Path(ids_file) if ids_file else None,
+        force=args.force,
+        usuario=args.usuario,
+        dry_run=args.dry_run,
+    )
+    run = SerieRun(config, run_config, build_client(config))
+    try:
+        if args.ids:
+            # El mapa solo necesita la lista: 0 peticiones. La tabla lleva
+            # nombres, así que solo se imprime cuando se lanza a mano (el log
+            # de GitHub Actions es público y no puede verlos).
+            return run.run_ids(imprimir=not en_github_actions())
+        if not destino.configurada():
+            log.error("%s", destino.ayuda())
+            return 2
+        return run.run()
+    finally:
+        run.close()
 
 
 # ---------------------------------------------------------------------- #
@@ -498,6 +535,34 @@ def build_parser() -> argparse.ArgumentParser:
         help="ignora la ventana horaria y ejecuta ahora",
     )
     check.set_defaults(func=cmd_check)
+
+    series = sub.add_parser(
+        "series",
+        parents=[common],
+        help="series base 100 para Portfolio Performance (y el mapa privado de ids)",
+    )
+    series.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="no pide nada a eVaca y no escribe nada",
+    )
+    series.add_argument(
+        "--force",
+        action="store_true",
+        help="ignora la caché y vuelve a pedir los datos",
+    )
+    series.add_argument(
+        "--usuario",
+        metavar="USUARIO",
+        default=None,
+        help="procesa solo ese trader, que debe estar activo en la lista",
+    )
+    series.add_argument(
+        "--ids",
+        action="store_true",
+        help="regenera el mapa privado id -> usuario (0 peticiones)",
+    )
+    series.set_defaults(func=cmd_series)
 
     show = sub.add_parser(
         "show", parents=[common], help="imprime la cartera actual de un usuario"

@@ -1,0 +1,310 @@
+name: Series eVaca -> Portfolio Performance
+
+# ---------------------------------------------------------------------------
+# Actualiza las series tipo fondo (índice base 100) de las personas de
+# watchlist.md y publica una tabla HTML por persona en data/prices/, que es lo
+# que descarga Portfolio Performance.
+#
+# La lista es la MISMA del monitor: el watchlist.md del repositorio de estado
+# (privado), que este workflow clona en .state-repo. En este repositorio no hay
+# lista ninguna: es público.
+#
+# Los ficheros publicados se nombran con un id opaco (serie_id), nunca con el
+# nombre del trader. El mapa id -> usuario -> URL vive SOLO en el repositorio
+# de estado (series-ids.md) y no se imprime en este log.
+#
+# NO se ejecuta por sí solo: lo dispara cron-job.org (ver README). No hace
+# login en eVaca: solo lee un endpoint público.
+# ---------------------------------------------------------------------------
+on:
+  # A propósito no hay 'schedule': lo lanza cron-job.org desde fuera.
+  workflow_dispatch:
+
+# Evita que dos ejecuciones se pisen al guardar data/.
+concurrency:
+  group: eVaca-Centinela-series
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  series:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      # Rama del repositorio de estado donde viven la lista y el mapa de ids.
+      # Si tu repositorio de estado usa 'master' en vez de 'main', cámbialo aquí.
+      STATE_BRANCH: main
+
+    steps:
+      - name: Descargar el código
+        uses: actions/checkout@v4
+        with:
+          # Sin credenciales persistidas: el token del workflow solo vale para
+          # ESTE repositorio. El repositorio de estado se autentica por su
+          # cuenta (STATE_DEPLOY_KEY o STATE_REPO_TOKEN) y el push de data/
+          # pone el token en la URL de forma explícita (es efímera).
+          persist-credentials: false
+
+      - name: Preparar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Instalar dependencias
+        run: pip install -r requirements.txt
+
+      # ------------------------------------------------------------------
+      # Trae el estado desde el repositorio privado, si está configurado.
+      # Es el mismo bloque que el del workflow del monitor: la lista de
+      # personas y el mapa de ids viven ahí.
+      # ------------------------------------------------------------------
+      - name: Preparar el estado
+        id: estado
+        env:
+          STATE_REPO: ${{ secrets.STATE_REPO || vars.STATE_REPO }}
+          STATE_DEPLOY_KEY: ${{ secrets.STATE_DEPLOY_KEY }}
+          STATE_REPO_TOKEN: ${{ secrets.STATE_REPO_TOKEN }}
+        run: |
+          set -e
+
+          # --depth 1 : baja unicamente el ultimo commit.
+          # --branch  : imprescindible. Sin esto, git trae la rama por defecto
+          #             del remoto, que puede no ser la del estado (por ejemplo
+          #             si el repositorio se creo con 'master' y el estado vive
+          #             en 'main'), y el clon saldria VACIO.
+          #
+          # Si la credencial falla NO se empieza de cero: se para con un error
+          # claro. Empezar de cero escribiria el estado real en el repositorio
+          # equivocado.
+          clonar_estado() {
+            local url="$1"
+            rm -rf .state-repo
+
+            # 1) ¿La credencial sirve? `ls-remote` solo lee: no escribe nada.
+            if ! SALIDA_LS=$(git ls-remote --heads "$url" 2>&1); then
+              echo "::error::No puedo acceder a $STATE_REPO con la credencial configurada. Revisa: STATE_REPO (usuario/repositorio, sin https ni .git), que la credencial (STATE_DEPLOY_KEY o STATE_REPO_TOKEN) sea la correcta y siga vigente, y que la deploy key tenga 'Allow write access'. No se toca el estado a proposito: fallar aqui es mejor que empezar de cero y escribir el estado en el repositorio equivocado. El workflow 'Diagnostico de la credencial de estado' te dice cual de las dos cosas falla."
+              echo
+              echo "Lo que dice git (con la credencial tapada):"
+              echo "$SALIDA_LS" | sed -E 's#(x-access-token:|oauth2:)[^@]*#\1***#g' | head -5 | sed 's/^/  /'
+              echo
+              exit 1
+            fi
+
+            # 2) ¿Existe ya la rama del estado? Si no (repositorio recien
+            #    creado o vacio), es la primera vez: se empieza en local y el
+            #    primer push la creara.
+            if git ls-remote --heads "$url" | grep -q "refs/heads/$STATE_BRANCH$"; then
+              if ! git clone --quiet --depth 1 --branch "$STATE_BRANCH" "$url" .state-repo 2>/dev/null; then
+                echo "::error::La rama $STATE_BRANCH existe en $STATE_REPO pero no he podido clonarla. No se empieza de cero a proposito: revisa la credencial y la red, y vuelve a lanzar el workflow."
+                exit 1
+              fi
+              echo "Estado descargado (solo el ultimo commit)."
+            else
+              echo "El repositorio de estado no tiene todavia la rama $STATE_BRANCH: empiezo de cero (primera vez)."
+              mkdir -p .state-repo
+              git -C .state-repo init --quiet
+              git -C .state-repo remote add origin "$url"
+              git -C .state-repo checkout --quiet -B "$STATE_BRANCH"
+            fi
+          }
+
+          if [ -n "$STATE_REPO" ] && [ -n "$STATE_DEPLOY_KEY" ]; then
+            CREDENCIAL=deploy_key
+          elif [ -n "$STATE_REPO" ] && [ -n "$STATE_REPO_TOKEN" ]; then
+            CREDENCIAL=token
+          else
+            CREDENCIAL=ninguna
+          fi
+
+          if [ "$CREDENCIAL" = "deploy_key" ]; then
+            echo "Estado en $STATE_REPO, con clave SSH (deploy key)."
+
+            # Las claves publicas de GitHub se fijan aqui a proposito, en vez
+            # de usar 'ssh-keyscan' (que acepta la clave del servidor sin
+            # comprobarla la primera vez). Son las de https://api.github.com/meta
+            mkdir -p ~/.ssh
+            chmod 700 ~/.ssh
+            cat > ~/.ssh/known_hosts <<'CLAVES_DE_GITHUB'
+          github.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl
+          github.com ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBEmKSENjQEezOmxkZMy7opKgwFB9nkt5YRrYMjNuG5N87uRgg6CLrbo5wAdT/y6v0mKV0U2w0WZ2YB/++Tpockg=
+          CLAVES_DE_GITHUB
+            chmod 600 ~/.ssh/known_hosts
+
+            # ssh se niega a usar una clave legible por otros.
+            printf '%s\n' "$STATE_DEPLOY_KEY" > ~/.ssh/state_key
+            chmod 600 ~/.ssh/state_key
+
+            # git NO usa esta clave por su cuenta: hay que decirselo.
+            export GIT_SSH_COMMAND="ssh -i $HOME/.ssh/state_key -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes"
+            clonar_estado "git@github.com:${STATE_REPO}.git"
+            unset GIT_SSH_COMMAND
+
+            # Para el push del mapa, en la configuracion de ESTE clon.
+            git -C .state-repo config core.sshCommand \
+              "ssh -i $HOME/.ssh/state_key -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes"
+            echo "modo=repo_privado" >> "$GITHUB_OUTPUT"
+
+          elif [ "$CREDENCIAL" = "token" ]; then
+            echo "Estado en $STATE_REPO, con token."
+            clonar_estado \
+              "https://x-access-token:${STATE_REPO_TOKEN}@github.com/${STATE_REPO}.git"
+            # La URL deja de llevar el token, pero el push necesita
+            # autenticarse: se guarda como cabecera en la config del clon
+            # (efimero, no se commitea).
+            git -C .state-repo config http.https://github.com/.extraheader \
+              "AUTHORIZATION: basic $(printf 'x-access-token:%s' "$STATE_REPO_TOKEN" | base64 -w0)"
+            git -C .state-repo remote set-url origin "https://github.com/${STATE_REPO}.git"
+            echo "modo=repo_privado" >> "$GITHUB_OUTPUT"
+
+          else
+            # Configuracion a medias (hay STATE_REPO o una credencial, pero no
+            # la pareja): NO se sigue en modo local, porque guardaria el estado
+            # real en este repositorio, que es publico.
+            if [ -n "$STATE_REPO" ] || [ -n "$STATE_DEPLOY_KEY" ] || [ -n "$STATE_REPO_TOKEN" ]; then
+              echo "::error::Configuracion de estado a medias: STATE_REPO='${STATE_REPO:-vacio}', deploy key='$([ -n "$STATE_DEPLOY_KEY" ] && echo si || echo no)', token='$([ -n "$STATE_REPO_TOKEN" ] && echo si || echo no)'. Hacen falta STATE_REPO y UNA credencial (STATE_DEPLOY_KEY o STATE_REPO_TOKEN). No se sigue en modo local a proposito: guardaria el estado real en este repositorio, que es publico."
+              exit 1
+            fi
+            echo "Sin repositorio de estado configurado: no hay lista de personas, asi que no se puede actualizar ninguna serie. Configura STATE_REPO y su credencial."
+            exit 1
+          fi
+
+          if [ -d .state-repo ]; then
+            [ -f .state-repo/state.json ]    || printf '{\n  "version": 3,\n  "instruments": {},\n  "users": {}\n}\n'    > .state-repo/state.json
+            [ -f .state-repo/cooldown.json ] || printf '{\n  "version": 1,\n  "sent": {}\n}\n' > .state-repo/cooldown.json
+            echo "state_path=.state-repo/state.json" >> "$GITHUB_OUTPUT"
+          else
+            echo "state_path=state/state.json" >> "$GITHUB_OUTPUT"
+          fi
+
+      # ------------------------------------------------------------------
+      # La pasada: como mucho una petición por persona, de una en una y con
+      # pausa; 0 peticiones si la copia guardada tiene menos de una hora.
+      # El log solo lleva ids y recuentos.
+      # ------------------------------------------------------------------
+      - name: Actualizar las series
+        env:
+          # La dirección del sitio que se vigila no está en el repositorio (es
+          # público): vive en el secreto DESTINO_BASE.
+          EVACA_DESTINO_BASE: ${{ secrets.DESTINO_BASE }}
+          # La lista es la del repositorio de estado, la misma del monitor.
+          EVACA_WATCHLIST_MD: .state-repo/watchlist.md
+          LOG_LEVEL: INFO
+        run: |
+          set -e
+
+          if [ -z "$EVACA_DESTINO_BASE" ]; then
+            echo "::error::Falta el secreto DESTINO_BASE. Es la direccion del sitio que se vigila (la raiz, sin barra final) y sin ella no se puede pedir la rentabilidad. Se configura en Settings -> Secrets and variables -> Actions -> New repository secret."
+            exit 1
+          fi
+
+          if [ ! -f "$EVACA_WATCHLIST_MD" ]; then
+            echo "::error::No encuentro $EVACA_WATCHLIST_MD. La lista de personas vive en el repositorio de estado (privado): revisa que STATE_REPO y su credencial (STATE_DEPLOY_KEY o STATE_REPO_TOKEN) funcionan, y que existe el fichero watchlist.md en ese repositorio."
+            exit 1
+          fi
+
+          # Sin --force: la cache de una hora evita peticiones de mas.
+          python -m evaca_monitor series
+
+      # ------------------------------------------------------------------
+      # El mapa id -> usuario -> URL es privado: se escribe en el repositorio
+      # de estado y NUNCA se imprime la tabla (el comando lo detecta solo al
+      # ejecutarse en GitHub Actions).
+      # ------------------------------------------------------------------
+      - name: Regenerar el mapa privado de ids
+        if: always()
+        env:
+          EVACA_WATCHLIST_MD: .state-repo/watchlist.md
+          EVACA_IDS_MD: .state-repo/series-ids.md
+          LOG_LEVEL: INFO
+        run: |
+          set -e
+          if [ ! -f "$EVACA_WATCHLIST_MD" ]; then
+            echo "No hay lista de seguimiento: no se regenera el mapa privado."
+            exit 0
+          fi
+          # 0 peticiones: solo lista -> ids -> URLs.
+          python -m evaca_monitor series --ids
+
+      - name: Guardar el mapa privado
+        if: always()
+        run: |
+          set -e
+          if [ ! -d .state-repo/.git ]; then
+            echo "No hay repositorio de estado: no hay mapa que guardar."
+            exit 0
+          fi
+          if [ ! -f .state-repo/series-ids.md ]; then
+            echo "No hay mapa de ids que guardar."
+            exit 0
+          fi
+
+          cd .state-repo
+
+          # La identidad se configura DENTRO del repositorio de estado: es otro
+          # repositorio y tiene su propia configuracion.
+          git config user.name  "eVaca-Centinela[bot]"
+          git config user.email "eVaca-Centinela@users.noreply.github.com"
+
+          git add -- series-ids.md
+          if git diff --cached --quiet; then
+            echo "Sin cambios en el mapa de ids."
+            exit 0
+          fi
+
+          git commit --quiet -m "series: mapa de ids ($(date -u '+%Y-%m-%d %H:%M UTC')) [skip ci]"
+
+          # Por si el monitor ha guardado el estado mientras este corria.
+          git pull --quiet --rebase --autostash origin "$STATE_BRANCH" \
+            || echo "::warning::No he podido traer los cambios del estado; se intenta el push igualmente."
+
+          if ! git push --quiet origin "HEAD:$STATE_BRANCH"; then
+            echo "::error::No he podido guardar el mapa de ids en el repositorio de estado. Revisa la credencial del estado (STATE_DEPLOY_KEY o STATE_REPO_TOKEN) y que la rama exista."
+            exit 1
+          fi
+          echo "Mapa de ids guardado en el repositorio de estado."
+
+      # ------------------------------------------------------------------
+      # Los datos publicos (data/) se commitean en ESTE repositorio. Se
+      # ejecuta aunque la pasada haya fallado: los demas traders ya estan
+      # guardados y no conviene perderlos.
+      # ------------------------------------------------------------------
+      - name: Guardar las series en el repositorio publico
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -e
+
+          if [ ! -d data ]; then
+            echo "No hay nada en data/ que guardar."
+            exit 0
+          fi
+
+          git config user.name  "eVaca-Centinela[bot]"
+          git config user.email "eVaca-Centinela@users.noreply.github.com"
+
+          git add -A data
+          if git diff --cached --quiet; then
+            echo "Sin cambios en data/."
+            exit 0
+          fi
+
+          git commit --quiet -m "series: $(date -u '+%Y-%m-%d %H:%M UTC') [skip ci]"
+
+          # El checkout no persiste credenciales, asi que el push se autentica
+          # con el token del workflow puesto en la URL (efimera).
+          BRANCH="${GITHUB_REF_NAME:-main}"
+          git remote set-url origin \
+            "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --quiet origin "$BRANCH" || true
+          git pull --quiet --rebase --autostash origin "$BRANCH" \
+            || echo "::warning::No he podido rebasar sobre el remoto; se intenta el push igualmente."
+
+          if ! git push --quiet origin "HEAD:$BRANCH"; then
+            echo "::error::No he podido subir data/ al repositorio publico. Si el repositorio tiene reglas de proteccion de la rama, revisa que el bot de Actions pueda escribir: Settings -> Actions -> General -> Workflow permissions -> Read and write."
+            exit 1
+          fi
+          echo "Series guardadas en el repositorio publico."
