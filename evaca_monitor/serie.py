@@ -5,8 +5,8 @@ devuelven las filas ordenadas. Así son fáciles de probar.
 
 El JSON guarda los datos reales: la base, el ancla del día 1 de cada mes, el
 cierre real de cada mes y los días que se capturaron. Encima, para el HTML,
-`daily_rows` añade un punto por cada día de los meses cerrados (interpolado),
-sin tocar nunca un día real.
+`daily_rows` añade un punto por cada día de los meses cerrados que no tengan
+días capturados (interpolado), sin tocar nunca un día real.
 
 El ancla del día 1 existe porque Portfolio Performance empieza a dibujar cada
 serie en su primera cotización del periodo: sin un punto el día 1, el primer
@@ -108,7 +108,7 @@ def serie_id(usuario: str) -> str:
 
     Todo lo que se publica (`data/series/<id>.json`, `data/prices/<id>` y el
     resumen de `data/state.json`) se nombra con este id: el nombre del trader
-    solo existe en la lista privada y en el mapa privado (`series-ids.md`).
+    solo existe en la lista privada y en el mapa privado (`PP-ids.md`).
 
     Es determinista a propósito: el mismo usuario da siempre el mismo id, así
     que su serie no se pierde entre pasadas. Y no se puede leer al revés: con
@@ -266,6 +266,11 @@ def daily_rows(rows: Sequence[PriceRow], today: date) -> list[PriceRow]:
     Cada tramo va de una fila real a la siguiente, así que la línea pasa
     exactamente por todos los datos de verdad: nunca se sustituye uno.
 
+    **Un mes que tenga algún día capturado (`KIND_DAY`) no se rellena**: se
+    publica solo con datos reales (el ancla, los días capturados y el cierre).
+    Así, los huecos de las ejecuciones que no se hicieron no se disfrazan de
+    dato al cerrar el mes. Los meses sin ningún día capturado sí se rellenan.
+
     El mes en curso no se rellena: su MTD todavía puede cambiar y PP no
     reescribe fechas antiguas, así que esos puntos se quedarían congelados.
 
@@ -279,6 +284,13 @@ def daily_rows(rows: Sequence[PriceRow], today: date) -> list[PriceRow]:
     inicio_mes_actual = today.replace(day=1)
     por_fecha: dict[date, PriceRow] = {fila.date: fila for fila in ordenadas}
 
+    # Meses que tienen al menos un día capturado de verdad: no se tocan.
+    meses_con_dias = {
+        (fila.date.year, fila.date.month)
+        for fila in ordenadas
+        if fila.kind == KIND_DAY
+    }
+
     for anterior, siguiente in zip(ordenadas, ordenadas[1:], strict=False):
         if siguiente.date >= inicio_mes_actual:
             continue
@@ -287,6 +299,8 @@ def daily_rows(rows: Sequence[PriceRow], today: date) -> list[PriceRow]:
             continue
         for paso in range(1, dias):
             fecha = anterior.date + timedelta(days=paso)
+            if (fecha.year, fecha.month) in meses_con_dias:
+                continue
             por_fecha[fecha] = PriceRow(
                 date=fecha,
                 close=_interpolar(anterior.close, siguiente.close, paso, dias),

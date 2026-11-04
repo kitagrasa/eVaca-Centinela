@@ -10,7 +10,7 @@ Hay tres sitios dentro de `data/`, y solo estos:
 * `data/prices/<id>`      -> tabla HTML que descarga Portfolio Performance.
 * `data/state.json`       -> resumen de la última pasada, con ids.
 
-El mapa `series-ids.md` (id, usuario y URL del feed) no se escribe aquí: es
+El mapa `PP-ids.md` (id, usuario y URL del feed) no se escribe aquí: es
 **privado** y vive en el repositorio de estado, junto al `watchlist.md`.
 """
 
@@ -32,7 +32,7 @@ DATA_FILE_VERSION = 1
 SERIES_DIRNAME = "series"
 PRICES_DIRNAME = "prices"
 STATE_FILENAME = "state.json"
-IDS_FILENAME = "series-ids.md"
+IDS_FILENAME = "PP-ids.md"
 
 # Repositorio público del código. La URL del feed apunta al fichero HTML que
 # publica el workflow, no a ninguna página del sitio que se vigila.

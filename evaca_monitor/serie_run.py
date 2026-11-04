@@ -165,7 +165,7 @@ class SerieRun:
     # El mapa privado de ids
     # ------------------------------------------------------------------
     def run_ids(self, *, imprimir: bool = True) -> int:
-        """Regenera `series-ids.md` (id, usuario y URL) y no pide nada.
+        """Regenera `PP-ids.md` (id, usuario y URL) y no pide nada.
 
         Es acumulativo: conserva las filas de quien ya no está en la lista,
         marcadas como retiradas. Con `--dry-run` no escribe el mapa.
@@ -183,7 +183,7 @@ class SerieRun:
             self._log.error(
                 "El mapa de ids es privado y no se puede escribir dentro del "
                 "repositorio público (%s). Ponlo en el repositorio de estado "
-                "(por ejemplo, .state-repo/series-ids.md).",
+                "(por ejemplo, .state-repo/PP-ids.md).",
                 ruta,
             )
             return 1
@@ -274,8 +274,9 @@ class SerieRun:
         meses = parse_monthly(payload)
         filas = build_series(meses, today=hoy, history=datos.history)
         # El JSON guarda los datos reales; el HTML añade, solo al vuelo, un
-        # punto por cada día de los meses cerrados para que PP dibuje desde el
-        # primer día de la comparativa.
+        # punto por cada día de los meses cerrados SIN días capturados (así
+        # PP dibuja desde el primer día de la comparativa sin inventar datos
+        # en los meses de los que ya hay días reales).
         diarias = daily_rows(filas, today=hoy)
 
         datos.version = serie_store.DATA_FILE_VERSION

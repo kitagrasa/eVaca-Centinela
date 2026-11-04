@@ -335,20 +335,36 @@ def test_rejilla_diaria_reparte_la_rentabilidad_con_tasa_constante(
     assert por_fecha[date(2025, 4, 16)].close == round(100.0 * 1.1 ** (15 / 29), 4)
 
 
-def test_rejilla_diaria_no_sustituye_los_dias_reales(hoy: date) -> None:
+def test_rejilla_diaria_no_rellena_un_mes_con_dias_capturados(hoy: date) -> None:
     puntos = [mes(2025, 4, 10.0)]
     historial = [fila(2025, 4, 15, 150.0, KIND_DAY)]
 
     filas = build_series(puntos, today=hoy, history=historial)
     por_fecha = {f.date: f for f in daily_rows(filas, today=hoy)}
 
-    # El día capturado se queda con su valor y su tipo.
+    # El día capturado se queda con su valor y su tipo...
     assert por_fecha[date(2025, 4, 15)] == fila(2025, 4, 15, 150.0, KIND_DAY)
-    # Los tramos de alrededor pasan por él: 1 -> 15 y 15 -> 30.
-    assert por_fecha[date(2025, 4, 14)].close == round(100.0 * 1.5 ** (13 / 14), 4)
-    assert por_fecha[date(2025, 4, 16)].close == round(
-        150.0 * (110 / 150) ** (1 / 15), 4
-    )
+    # ...y el resto del mes no se rellena: sus huecos se quedan como huecos.
+    assert date(2025, 4, 14) not in por_fecha
+    assert date(2025, 4, 16) not in por_fecha
+    assert all(f.kind != KIND_FILL for f in por_fecha.values())
+
+    # El ancla del día 1 y el cierre del mes siguen ahí (son filas reales).
+    assert por_fecha[date(2025, 4, 1)].kind == KIND_ANCHOR
+    assert por_fecha[date(2025, 4, 30)].kind == KIND_MONTH
+
+
+def test_el_mes_con_dias_no_impide_rellenar_los_demas(hoy: date) -> None:
+    puntos = [mes(2025, 4, 10.0), mes(2025, 5, 2.0)]
+    historial = [fila(2025, 4, 15, 150.0, KIND_DAY)]
+
+    diarias = daily_rows(build_series(puntos, today=hoy, history=historial), today=hoy)
+    por_fecha = {f.date: f for f in diarias}
+
+    # Abril tiene un D: no se rellena.
+    assert date(2025, 4, 2) not in por_fecha
+    # Mayo no tiene ningún D: se rellena como siempre.
+    assert por_fecha[date(2025, 5, 15)].kind == KIND_FILL
 
 
 def test_rejilla_diaria_mantiene_los_cierres_de_mes(hoy: date) -> None:

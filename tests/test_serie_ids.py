@@ -169,7 +169,7 @@ def _run(tmp_path: Path, **opciones) -> SerieRun:
     )
     return SerieRun(
         config,
-        RunConfig(ids_path=opciones.pop("ids_path", tmp_path / "series-ids.md"), **opciones),
+        RunConfig(ids_path=opciones.pop("ids_path", tmp_path / serie_store.IDS_FILENAME), **opciones),
         None,
         logger=REGISTRO,
     )
@@ -180,7 +180,7 @@ def test_ids_escribe_el_mapa_sin_pedir_nada(tmp_path: Path) -> None:
 
     assert run.run_ids(imprimir=False) == 0
 
-    filas = serie_store.load_ids_map(tmp_path / "series-ids.md")
+    filas = serie_store.load_ids_map(tmp_path / serie_store.IDS_FILENAME)
     assert [fila.id for fila in filas] == [ID_UNO]
 
 
@@ -188,14 +188,14 @@ def test_ids_no_escribe_en_dry_run(tmp_path: Path) -> None:
     run = _run(tmp_path, dry_run=True)
 
     assert run.run_ids(imprimir=False) == 0
-    assert not (tmp_path / "series-ids.md").exists()
+    assert not (tmp_path / serie_store.IDS_FILENAME).exists()
 
 
 def test_ids_sin_lista_no_escribe_el_mapa(tmp_path: Path) -> None:
     run = _run(tmp_path, usuarios=[])
 
     assert run.run_ids(imprimir=False) == 1
-    assert not (tmp_path / "series-ids.md").exists()
+    assert not (tmp_path / serie_store.IDS_FILENAME).exists()
 
 
 def test_el_mapa_no_se_escribe_dentro_del_repositorio_publico(tmp_path: Path) -> None:

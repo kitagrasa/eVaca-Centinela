@@ -1,4 +1,4 @@
-name: Series eVaca -> Portfolio Performance
+name: Monitor eVaca-PP
 
 # ---------------------------------------------------------------------------
 # Actualiza las series tipo fondo (índice base 100) de las personas de
@@ -11,7 +11,7 @@ name: Series eVaca -> Portfolio Performance
 #
 # Los ficheros publicados se nombran con un id opaco (serie_id), nunca con el
 # nombre del trader. El mapa id -> usuario -> URL vive SOLO en el repositorio
-# de estado (series-ids.md) y no se imprime en este log.
+# de estado (PP-ids.md) y no se imprime en este log.
 #
 # NO se ejecuta por sí solo: lo dispara cron-job.org (ver README). No hace
 # login en eVaca: solo lee un endpoint público.
@@ -217,7 +217,7 @@ jobs:
         if: always()
         env:
           EVACA_WATCHLIST_MD: .state-repo/watchlist.md
-          EVACA_IDS_MD: .state-repo/series-ids.md
+          EVACA_IDS_MD: .state-repo/PP-ids.md
           LOG_LEVEL: INFO
         run: |
           set -e
@@ -236,7 +236,7 @@ jobs:
             echo "No hay repositorio de estado: no hay mapa que guardar."
             exit 0
           fi
-          if [ ! -f .state-repo/series-ids.md ]; then
+          if [ ! -f .state-repo/PP-ids.md ]; then
             echo "No hay mapa de ids que guardar."
             exit 0
           fi
@@ -248,7 +248,7 @@ jobs:
           git config user.name  "eVaca-Centinela[bot]"
           git config user.email "eVaca-Centinela@users.noreply.github.com"
 
-          git add -- series-ids.md
+          git add -- PP-ids.md
           if git diff --cached --quiet; then
             echo "Sin cambios en el mapa de ids."
             exit 0
