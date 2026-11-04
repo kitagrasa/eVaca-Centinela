@@ -1,0 +1,322 @@
+{
+  "version": 1,
+  "id": "3bb27d578564",
+  "updated_at": "2026-11-04T18:10:11+00:00",
+  "fetched_at": "2026-11-04T18:10:11+00:00",
+  "last_payload": {
+    "monthly": [
+      {
+        "start": "2025-03-25T13:06:57.743Z",
+        "gain": -1.35,
+        "isSimulation": false
+      },
+      {
+        "start": "2025-04-01T00:00:00Z",
+        "gain": 1.57,
+        "isSimulation": false
+      },
+      {
+        "start": "2025-05-01T00:00:00Z",
+        "gain": 17.33,
+        "isSimulation": false
+      },
+      {
+        "start": "2025-06-01T00:00:00Z",
+        "gain": 12.28,
+        "isSimulation": false
+      },
+      {
+        "start": "2025-07-01T00:00:00Z",
+        "gain": -0.38,
+        "isSimulation": false
+      },
+      {
+        "start": "2025-08-01T00:00:00Z",
+        "gain": 3.39,
+        "isSimulation": false
+      },
+      {
+        "start": "2025-09-01T00:00:00Z",
+        "gain": 22.89,
+        "isSimulation": false
+      },
+      {
+        "start": "2025-10-01T00:00:00Z",
+        "gain": 22.68,
+        "isSimulation": false
+      },
+      {
+        "start": "2025-11-01T00:00:00Z",
+        "gain": 2.64,
+        "isSimulation": false
+      },
+      {
+        "start": "2025-12-01T00:00:00Z",
+        "gain": 5.82,
+        "isSimulation": false
+      },
+      {
+        "start": "2026-01-01T00:00:00Z",
+        "gain": 10.76,
+        "isSimulation": false
+      },
+      {
+        "start": "2026-02-01T00:00:00Z",
+        "gain": -4.33,
+        "isSimulation": false
+      },
+      {
+        "start": "2026-03-01T00:00:00Z",
+        "gain": -8.48,
+        "isSimulation": false
+      },
+      {
+        "start": "2026-04-01T00:00:00Z",
+        "gain": 25.3,
+        "isSimulation": false
+      },
+      {
+        "start": "2026-05-01T00:00:00Z",
+        "gain": 37.3,
+        "isSimulation": false
+      },
+      {
+        "start": "2026-06-01T00:00:00Z",
+        "gain": 3.37,
+        "isSimulation": false
+      },
+      {
+        "start": "2026-07-01T00:00:00Z",
+        "gain": -6.35,
+        "isSimulation": false
+      },
+      {
+        "start": "2026-08-01T00:00:00Z",
+        "gain": 8.02,
+        "isSimulation": false
+      },
+      {
+        "start": "2026-09-01T00:00:00Z",
+        "gain": 6.06,
+        "isSimulation": false
+      },
+      {
+        "start": "2026-10-01T00:00:00Z",
+        "gain": -8.61,
+        "isSimulation": false
+      },
+      {
+        "start": "2026-11-01T00:00:00Z",
+        "gain": -1.89,
+        "isSimulation": false
+      }
+    ]
+  },
+  "history": [
+    {
+      "date": "2025-03-31",
+      "close": 100.0,
+      "kind": "base"
+    },
+    {
+      "date": "2025-04-01",
+      "close": 100.0,
+      "kind": "anchor"
+    },
+    {
+      "date": "2025-04-30",
+      "close": 101.57,
+      "kind": "month"
+    },
+    {
+      "date": "2025-05-01",
+      "close": 101.57,
+      "kind": "anchor"
+    },
+    {
+      "date": "2025-05-31",
+      "close": 119.1721,
+      "kind": "month"
+    },
+    {
+      "date": "2025-06-01",
+      "close": 119.1721,
+      "kind": "anchor"
+    },
+    {
+      "date": "2025-06-30",
+      "close": 133.8064,
+      "kind": "month"
+    },
+    {
+      "date": "2025-07-01",
+      "close": 133.8064,
+      "kind": "anchor"
+    },
+    {
+      "date": "2025-07-31",
+      "close": 133.2979,
+      "kind": "month"
+    },
+    {
+      "date": "2025-08-01",
+      "close": 133.2979,
+      "kind": "anchor"
+    },
+    {
+      "date": "2025-08-31",
+      "close": 137.8167,
+      "kind": "month"
+    },
+    {
+      "date": "2025-09-01",
+      "close": 137.8167,
+      "kind": "anchor"
+    },
+    {
+      "date": "2025-09-30",
+      "close": 169.3629,
+      "kind": "month"
+    },
+    {
+      "date": "2025-10-01",
+      "close": 169.3629,
+      "kind": "anchor"
+    },
+    {
+      "date": "2025-10-31",
+      "close": 207.7744,
+      "kind": "month"
+    },
+    {
+      "date": "2025-11-01",
+      "close": 207.7744,
+      "kind": "anchor"
+    },
+    {
+      "date": "2025-11-30",
+      "close": 213.2596,
+      "kind": "month"
+    },
+    {
+      "date": "2025-12-01",
+      "close": 213.2596,
+      "kind": "anchor"
+    },
+    {
+      "date": "2025-12-31",
+      "close": 225.6713,
+      "kind": "month"
+    },
+    {
+      "date": "2026-01-01",
+      "close": 225.6713,
+      "kind": "anchor"
+    },
+    {
+      "date": "2026-01-31",
+      "close": 249.9535,
+      "kind": "month"
+    },
+    {
+      "date": "2026-02-01",
+      "close": 249.9535,
+      "kind": "anchor"
+    },
+    {
+      "date": "2026-02-28",
+      "close": 239.1305,
+      "kind": "month"
+    },
+    {
+      "date": "2026-03-01",
+      "close": 239.1305,
+      "kind": "anchor"
+    },
+    {
+      "date": "2026-03-31",
+      "close": 218.8522,
+      "kind": "month"
+    },
+    {
+      "date": "2026-04-01",
+      "close": 218.8522,
+      "kind": "anchor"
+    },
+    {
+      "date": "2026-04-30",
+      "close": 274.2218,
+      "kind": "month"
+    },
+    {
+      "date": "2026-05-01",
+      "close": 274.2218,
+      "kind": "anchor"
+    },
+    {
+      "date": "2026-05-31",
+      "close": 376.5065,
+      "kind": "month"
+    },
+    {
+      "date": "2026-06-01",
+      "close": 376.5065,
+      "kind": "anchor"
+    },
+    {
+      "date": "2026-06-30",
+      "close": 389.1948,
+      "kind": "month"
+    },
+    {
+      "date": "2026-07-01",
+      "close": 389.1948,
+      "kind": "anchor"
+    },
+    {
+      "date": "2026-07-31",
+      "close": 364.4809,
+      "kind": "month"
+    },
+    {
+      "date": "2026-08-01",
+      "close": 364.4809,
+      "kind": "anchor"
+    },
+    {
+      "date": "2026-08-31",
+      "close": 393.7123,
+      "kind": "month"
+    },
+    {
+      "date": "2026-09-01",
+      "close": 393.7123,
+      "kind": "anchor"
+    },
+    {
+      "date": "2026-09-30",
+      "close": 417.5713,
+      "kind": "month"
+    },
+    {
+      "date": "2026-10-01",
+      "close": 417.5713,
+      "kind": "anchor"
+    },
+    {
+      "date": "2026-10-31",
+      "close": 381.6184,
+      "kind": "month"
+    },
+    {
+      "date": "2026-11-01",
+      "close": 381.6184,
+      "kind": "anchor"
+    },
+    {
+      "date": "2026-11-04",
+      "close": 374.4058,
+      "kind": "day"
+    }
+  ]
+}

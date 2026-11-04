@@ -1,0 +1,442 @@
+{
+  "version": 1,
+  "id": "02f472d6a3de",
+  "updated_at": "2026-11-04T18:10:11+00:00",
+  "fetched_at": "2026-11-04T18:10:11+00:00",
+  "last_payload": {
+    "monthly": [
+      {
+        "start": "2024-07-22T07:41:02.48Z",
+        "gain": -4.43,
+        "isSimulation": false
+      },
+      {
+        "start": "2024-08-01T00:00:00Z",
+        "gain": 4.14,
+        "isSimulation": false
+      },
+      {
+        "start": "2024-09-01T00:00:00Z",
+        "gain": 9.93,
+        "isSimulation": false
+      },
+      {
+        "start": "2024-10-01T00:00:00Z",
+        "gain": 2.74,
+        "isSimulation": false
+      },
+      {
+        "start": "2024-11-01T00:00:00Z",
+        "gain": 26.88,
+        "isSimulation": false
+      },
+      {
+        "start": "2024-12-01T00:00:00Z",
+        "gain": -3.94,
+        "isSimulation": false
+      },
+      {
+        "start": "2025-01-01T00:00:00Z",
+        "gain": 0.02,
+        "isSimulation": false
+      },
+      {
+        "start": "2025-02-01T00:00:00Z",
+        "gain": -1.72,
+        "isSimulation": false
+      },
+      {
+        "start": "2025-03-01T00:00:00Z",
+        "gain": -5.47,
+        "isSimulation": false
+      },
+      {
+        "start": "2025-04-01T00:00:00Z",
+        "gain": 1.43,
+        "isSimulation": false
+      },
+      {
+        "start": "2025-05-01T00:00:00Z",
+        "gain": 11.05,
+        "isSimulation": false
+      },
+      {
+        "start": "2025-06-01T00:00:00Z",
+        "gain": 13.15,
+        "isSimulation": false
+      },
+      {
+        "start": "2025-07-01T00:00:00Z",
+        "gain": 2.84,
+        "isSimulation": false
+      },
+      {
+        "start": "2025-08-01T00:00:00Z",
+        "gain": 0.32,
+        "isSimulation": false
+      },
+      {
+        "start": "2025-09-01T00:00:00Z",
+        "gain": 5.83,
+        "isSimulation": false
+      },
+      {
+        "start": "2025-10-01T00:00:00Z",
+        "gain": 23.17,
+        "isSimulation": false
+      },
+      {
+        "start": "2025-11-01T00:00:00Z",
+        "gain": -5.4,
+        "isSimulation": false
+      },
+      {
+        "start": "2025-12-01T00:00:00Z",
+        "gain": 2.52,
+        "isSimulation": false
+      },
+      {
+        "start": "2026-01-01T00:00:00Z",
+        "gain": 3.84,
+        "isSimulation": false
+      },
+      {
+        "start": "2026-02-01T00:00:00Z",
+        "gain": -14.88,
+        "isSimulation": false
+      },
+      {
+        "start": "2026-03-01T00:00:00Z",
+        "gain": -4.59,
+        "isSimulation": false
+      },
+      {
+        "start": "2026-04-01T00:00:00Z",
+        "gain": 37.39,
+        "isSimulation": false
+      },
+      {
+        "start": "2026-05-01T00:00:00Z",
+        "gain": 36.68,
+        "isSimulation": false
+      },
+      {
+        "start": "2026-06-01T00:00:00Z",
+        "gain": 8.5,
+        "isSimulation": false
+      },
+      {
+        "start": "2026-07-01T00:00:00Z",
+        "gain": -14.36,
+        "isSimulation": false
+      },
+      {
+        "start": "2026-08-01T00:00:00Z",
+        "gain": 6.91,
+        "isSimulation": false
+      },
+      {
+        "start": "2026-09-01T00:00:00Z",
+        "gain": 8.03,
+        "isSimulation": false
+      },
+      {
+        "start": "2026-10-01T00:00:00Z",
+        "gain": -9.48,
+        "isSimulation": false
+      },
+      {
+        "start": "2026-11-01T00:00:00Z",
+        "gain": -3.97,
+        "isSimulation": false
+      }
+    ]
+  },
+  "history": [
+    {
+      "date": "2024-07-31",
+      "close": 100.0,
+      "kind": "base"
+    },
+    {
+      "date": "2024-08-01",
+      "close": 100.0,
+      "kind": "anchor"
+    },
+    {
+      "date": "2024-08-31",
+      "close": 104.14,
+      "kind": "month"
+    },
+    {
+      "date": "2024-09-01",
+      "close": 104.14,
+      "kind": "anchor"
+    },
+    {
+      "date": "2024-09-30",
+      "close": 114.4811,
+      "kind": "month"
+    },
+    {
+      "date": "2024-10-01",
+      "close": 114.4811,
+      "kind": "anchor"
+    },
+    {
+      "date": "2024-10-31",
+      "close": 117.6179,
+      "kind": "month"
+    },
+    {
+      "date": "2024-11-01",
+      "close": 117.6179,
+      "kind": "anchor"
+    },
+    {
+      "date": "2024-11-30",
+      "close": 149.2336,
+      "kind": "month"
+    },
+    {
+      "date": "2024-12-01",
+      "close": 149.2336,
+      "kind": "anchor"
+    },
+    {
+      "date": "2024-12-31",
+      "close": 143.3538,
+      "kind": "month"
+    },
+    {
+      "date": "2025-01-01",
+      "close": 143.3538,
+      "kind": "anchor"
+    },
+    {
+      "date": "2025-01-31",
+      "close": 143.3825,
+      "kind": "month"
+    },
+    {
+      "date": "2025-02-01",
+      "close": 143.3825,
+      "kind": "anchor"
+    },
+    {
+      "date": "2025-02-28",
+      "close": 140.9163,
+      "kind": "month"
+    },
+    {
+      "date": "2025-03-01",
+      "close": 140.9163,
+      "kind": "anchor"
+    },
+    {
+      "date": "2025-03-31",
+      "close": 133.2082,
+      "kind": "month"
+    },
+    {
+      "date": "2025-04-01",
+      "close": 133.2082,
+      "kind": "anchor"
+    },
+    {
+      "date": "2025-04-30",
+      "close": 135.1131,
+      "kind": "month"
+    },
+    {
+      "date": "2025-05-01",
+      "close": 135.1131,
+      "kind": "anchor"
+    },
+    {
+      "date": "2025-05-31",
+      "close": 150.0431,
+      "kind": "month"
+    },
+    {
+      "date": "2025-06-01",
+      "close": 150.0431,
+      "kind": "anchor"
+    },
+    {
+      "date": "2025-06-30",
+      "close": 169.7738,
+      "kind": "month"
+    },
+    {
+      "date": "2025-07-01",
+      "close": 169.7738,
+      "kind": "anchor"
+    },
+    {
+      "date": "2025-07-31",
+      "close": 174.5954,
+      "kind": "month"
+    },
+    {
+      "date": "2025-08-01",
+      "close": 174.5954,
+      "kind": "anchor"
+    },
+    {
+      "date": "2025-08-31",
+      "close": 175.1541,
+      "kind": "month"
+    },
+    {
+      "date": "2025-09-01",
+      "close": 175.1541,
+      "kind": "anchor"
+    },
+    {
+      "date": "2025-09-30",
+      "close": 185.3656,
+      "kind": "month"
+    },
+    {
+      "date": "2025-10-01",
+      "close": 185.3656,
+      "kind": "anchor"
+    },
+    {
+      "date": "2025-10-31",
+      "close": 228.3148,
+      "kind": "month"
+    },
+    {
+      "date": "2025-11-01",
+      "close": 228.3148,
+      "kind": "anchor"
+    },
+    {
+      "date": "2025-11-30",
+      "close": 215.9858,
+      "kind": "month"
+    },
+    {
+      "date": "2025-12-01",
+      "close": 215.9858,
+      "kind": "anchor"
+    },
+    {
+      "date": "2025-12-31",
+      "close": 221.4286,
+      "kind": "month"
+    },
+    {
+      "date": "2026-01-01",
+      "close": 221.4286,
+      "kind": "anchor"
+    },
+    {
+      "date": "2026-01-31",
+      "close": 229.9315,
+      "kind": "month"
+    },
+    {
+      "date": "2026-02-01",
+      "close": 229.9315,
+      "kind": "anchor"
+    },
+    {
+      "date": "2026-02-28",
+      "close": 195.7177,
+      "kind": "month"
+    },
+    {
+      "date": "2026-03-01",
+      "close": 195.7177,
+      "kind": "anchor"
+    },
+    {
+      "date": "2026-03-31",
+      "close": 186.7343,
+      "kind": "month"
+    },
+    {
+      "date": "2026-04-01",
+      "close": 186.7343,
+      "kind": "anchor"
+    },
+    {
+      "date": "2026-04-30",
+      "close": 256.5543,
+      "kind": "month"
+    },
+    {
+      "date": "2026-05-01",
+      "close": 256.5543,
+      "kind": "anchor"
+    },
+    {
+      "date": "2026-05-31",
+      "close": 350.6584,
+      "kind": "month"
+    },
+    {
+      "date": "2026-06-01",
+      "close": 350.6584,
+      "kind": "anchor"
+    },
+    {
+      "date": "2026-06-30",
+      "close": 380.4644,
+      "kind": "month"
+    },
+    {
+      "date": "2026-07-01",
+      "close": 380.4644,
+      "kind": "anchor"
+    },
+    {
+      "date": "2026-07-31",
+      "close": 325.8297,
+      "kind": "month"
+    },
+    {
+      "date": "2026-08-01",
+      "close": 325.8297,
+      "kind": "anchor"
+    },
+    {
+      "date": "2026-08-31",
+      "close": 348.3445,
+      "kind": "month"
+    },
+    {
+      "date": "2026-09-01",
+      "close": 348.3445,
+      "kind": "anchor"
+    },
+    {
+      "date": "2026-09-30",
+      "close": 376.3166,
+      "kind": "month"
+    },
+    {
+      "date": "2026-10-01",
+      "close": 376.3166,
+      "kind": "anchor"
+    },
+    {
+      "date": "2026-10-31",
+      "close": 340.6418,
+      "kind": "month"
+    },
+    {
+      "date": "2026-11-01",
+      "close": 340.6418,
+      "kind": "anchor"
+    },
+    {
+      "date": "2026-11-04",
+      "close": 327.1183,
+      "kind": "day"
+    }
+  ]
+}
