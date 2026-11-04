@@ -66,8 +66,12 @@ on:
         default: false
 
 # Evita que dos ejecuciones se pisen al guardar el estado.
+#
+# TEMPORAL (desatasco): cada ejecución va en su PROPIO grupo, así una que se
+# quedó en cola no bloquea a las siguientes. Cuando la cola esté vacía, volver
+# a `group: eVaca-Centinela` (sin el sufijo) para recuperar la protección.
 concurrency:
-  group: eVaca-Centinela
+  group: eVaca-Centinela-${{ github.run_id }}
   cancel-in-progress: false
 
 permissions:
