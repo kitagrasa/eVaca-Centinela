@@ -6,7 +6,7 @@ name: Diagnóstico de la credencial de estado
 # No envía nada a Telegram ni modifica el estado: solo mira la credencial y
 # prueba la conexión, dando un mensaje claro de qué está mal.
 #
-# Soporta las DOS formas de identificarse, igual que monitor.yml:
+# Soporta las DOS formas de identificarse, igual que monitorTelegram.yml:
 #   1. STATE_DEPLOY_KEY  (clave SSH, deploy key)   <- tiene prioridad
 #   2. STATE_REPO_TOKEN  (token fine-grained)
 #
@@ -42,7 +42,7 @@ jobs:
             exit 1
           fi
 
-          # La deploy key tiene prioridad, igual que en monitor.yml: si están
+          # La deploy key tiene prioridad, igual que en monitorTelegram.yml: si están
           # las dos, la que se usa es la clave SSH.
           if [ -n "$STATE_DEPLOY_KEY" ]; then
             CREDENCIAL=deploy_key
@@ -276,7 +276,7 @@ jobs:
           git -C "$TMP" remote add origin "$URL"
 
           if ! git -C "$TMP" fetch --quiet --depth 1 origin "$STATE_BRANCH"; then
-            echo "::warning::No puedo leer la rama $STATE_BRANCH de $STATE_REPO (¿el repositorio está todavía vacío, o el estado vive en otra rama?). Si tu rama no es 'main', cámbiala en STATE_BRANCH al principio de monitor.yml y de este paso."
+            echo "::warning::No puedo leer la rama $STATE_BRANCH de $STATE_REPO (¿el repositorio está todavía vacío, o el estado vive en otra rama?). Si tu rama no es 'main', cámbiala en STATE_BRANCH al principio de monitorTelegram.yml y de este paso."
             exit 0
           fi
 

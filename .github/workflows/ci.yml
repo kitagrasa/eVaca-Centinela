@@ -1,7 +1,7 @@
 # ---------------------------------------------------------------------------
 # CI: los tests en cada push a main y en cada pull request.
 #
-# Los demás workflows se lanzan a mano (workflow_dispatch): monitor.yml
+# Los demás workflows se lanzan a mano (workflow_dispatch): monitorTelegram.yml
 # necesita los secretos y lo dispara cron-job.org desde fuera, y los test-*.yml
 # son herramientas de diagnóstico que se ejecutan cuando hay un problema. Este
 # es el único que corre siempre, y su trabajo es que los guardianes de
@@ -38,7 +38,7 @@ jobs:
       - name: Preparar Python
         uses: actions/setup-python@v5
         with:
-          # La misma versión que usa monitor.yml, no la última que haya.
+          # La misma versión que usa monitorTelegram.yml, no la última que haya.
           python-version: "3.12"
           cache: pip
 
