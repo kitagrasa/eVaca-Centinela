@@ -68,13 +68,25 @@ def test_el_id_es_opaco() -> None:
 # ---------------------------------------------------------------------- #
 # La URL del feed
 # ---------------------------------------------------------------------- #
-def test_la_url_del_feed_usa_la_plantilla_y_el_id() -> None:
+def test_la_url_del_feed_usa_la_plantilla_y_el_id(monkeypatch) -> None:
+    monkeypatch.delenv("EVACA_FEED_REPO", raising=False)
+    monkeypatch.delenv("GITHUB_REPOSITORY", raising=False)
     url = serie_store.feed_url(ID_UNO, OWNER)
 
     assert url == (
         "https://raw.githubusercontent.com/"
         f"{OWNER}/eVaca-Centinela/main/data/prices/{ID_UNO}"
     )
+
+
+def test_el_repositorio_del_feed_sale_del_entorno(monkeypatch) -> None:
+    """4.4: si el repo se renombra, el feed no debe seguir apuntando al viejo."""
+    monkeypatch.delenv("EVACA_FEED_REPO", raising=False)
+    monkeypatch.setenv("GITHUB_REPOSITORY", "alguien/otro-repo")
+    assert serie_store.feed_repo() == "otro-repo"
+
+    monkeypatch.setenv("EVACA_FEED_REPO", "repo-explicito")
+    assert serie_store.feed_repo() == "repo-explicito"
 
 
 def test_la_url_del_feed_no_lleva_el_nombre() -> None:

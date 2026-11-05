@@ -34,7 +34,7 @@ def con_destino(monkeypatch):
 
 
 def test_la_variable_y_el_secreto_son_los_documentados():
-    """El README manda configurar estos nombres; si cambian, cambian los dos."""
+    """La documentación manda configurar estos nombres; si cambian, cambian los dos."""
     assert destino.VARIABLE == "EVACA_DESTINO_BASE"
     assert destino.SECRETO == "DESTINO_BASE"
 

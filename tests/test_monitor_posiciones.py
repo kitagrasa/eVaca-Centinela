@@ -25,6 +25,8 @@ USUARIO = {
     "gcid": 1111111,
     "realCid": 2222222,
     "firstName": "Usuario",
+    "lastName": "Ejemplo",
+    "allowDisplayFullName": True,
 }
 
 CARTERA = {
@@ -151,6 +153,41 @@ def test_en_los_largos_no_se_piden_posiciones(tmp_path):
     assert largo.positions == {}
     assert largo.units == 1.6, "las unidades son el Invested de la cartera"
     assert largo.invested_pct == 1.6
+
+
+def test_el_aviso_lleva_el_usuario_de_la_watchlist_no_el_nombre_real(tmp_path):
+    """05/11/2026: los avisos saludaban con el nombre real que publica el sitio.
+
+    El nombre de referencia es el de la watchlist (el usuario que escribe el
+    dueño del bot), aunque eVaca autorice mostrar el nombre completo.
+    """
+    avisos: list[str] = []
+    state = State(path=tmp_path / "state.json")
+    client = EvacaClient(delay=0.0, session=FakeSession())
+    monitor = Monitor(client, state, notify=avisos.append)
+
+    monitor.run(["usuarioejemplo"])  # línea base
+    client.close()
+
+    assert len(avisos) == 1
+    assert "usuarioejemplo" in avisos[0]
+    assert "Usuario Ejemplo" not in avisos[0], avisos[0]
+
+    # Segunda pasada con una operación: cabecera 🔔 con el nombre de referencia.
+    avisos.clear()
+    cartera = {
+        "AggregatedPositions": [
+            {"InstrumentID": 1002, "Direction": "Buy", "Invested": 2.0}
+        ]
+    }
+    client = EvacaClient(delay=0.0, session=FakeSession(cartera=cartera))
+    monitor = Monitor(client, state, notify=avisos.append)
+    monitor.run(["usuarioejemplo"])
+    client.close()
+
+    assert len(avisos) == 1
+    assert "🔔 <b>usuarioejemplo</b>" in avisos[0], avisos[0]
+    assert "Usuario Ejemplo" not in avisos[0], avisos[0]
 
 
 def test_las_posiciones_de_un_corto_si_se_leen(tmp_path):

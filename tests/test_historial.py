@@ -20,9 +20,7 @@ from evaca_monitor.historial import (  # noqa: E402
 )
 from evaca_monitor.models import Asset, EvacaUser, Position, Snapshot  # noqa: E402
 
-USER = EvacaUser(
-    username="UsuarioEjemplo", gcid=1111111, real_cid=2222222, first_name="Usuario"
-)
+USER = EvacaUser(username="UsuarioEjemplo", gcid=1111111, real_cid=2222222)
 
 
 def asset(instrument_id, *, posiciones: dict[int, float], pct: float = 5.0) -> Asset:

@@ -13,7 +13,7 @@ name: Monitor eVaca-PP
 # nombre del trader. El mapa id -> usuario -> URL vive SOLO en el repositorio
 # de estado (PP-ids.md) y no se imprime en este log.
 #
-# NO se ejecuta por sí solo: lo dispara cron-job.org (ver README). No hace
+# NO se ejecuta por sí solo: lo dispara cron-job.org (ver contexto.md). No hace
 # login en eVaca: solo lee un endpoint público.
 # ---------------------------------------------------------------------------
 on:

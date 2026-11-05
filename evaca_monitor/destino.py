@@ -48,7 +48,7 @@ def perfil(slug: str) -> str:
 
 
 def ayuda() -> str:
-    """El texto que se enseña cuando falta, en los errores y en el README."""
+    """El texto que se enseña cuando falta, en los errores y en la documentación."""
     return (
         f"Falta el destino del monitor: define el secreto {SECRETO} en GitHub "
         f"(Settings -> Secrets and variables -> Actions -> New repository "

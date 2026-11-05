@@ -12,7 +12,7 @@ state/*.runtime.json
 state/*.tmp
 state/*.bak
 
-# Claves SSH. El README (2.6, opción A) explica generarlas así:
+# Claves SSH. La documentación (contexto.md, puesta en marcha) explica generarlas así:
 #     ssh-keygen -t ed25519 -N "" -f ./clave_estado
 # Si se generan dentro del repositorio y quedan aquí, un 'git add .' las
 # publicaría: la clave privada da acceso de escritura al repositorio de estado,
@@ -23,6 +23,6 @@ id_ed25519*
 *.pem
 *.key
 
-# Si usas un repositorio privado para el estado (ver README, sección 2.6),
+# Si usas un repositorio privado para el estado (ver contexto.md),
 # el workflow clona ahí la carpeta .state-repo. No debe acabar en el repo.
 .state-repo/

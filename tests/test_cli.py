@@ -52,6 +52,23 @@ def test_valores_por_defecto():
     assert args.users_file is None
 
 
+def test_el_estado_es_explicito_solo_si_se_indica(monkeypatch):
+    monkeypatch.delenv("EVACA_STATE", raising=False)
+    assert parse(["check"]).state_explicito is False
+    assert parse(["check", "--state", "fuera.json"]).state_explicito is True
+
+    monkeypatch.setenv("EVACA_STATE", "fuera.json")
+    assert parse(["check"]).state_explicito is True
+
+
+def test_el_check_para_si_el_estado_por_defecto_cae_en_el_repo(monkeypatch):
+    """4.2: escribir el estado en el repo de código podría publicar datos."""
+    monkeypatch.delenv("EVACA_STATE", raising=False)
+    monkeypatch.chdir(Path(__file__).resolve().parents[1])
+
+    assert main(["check"]) == 2
+
+
 def test_variables_de_entorno(monkeypatch):
     monkeypatch.setenv("EVACA_CONFIG", "otro.yml")
     monkeypatch.setenv("EVACA_STATE", "otro.json")

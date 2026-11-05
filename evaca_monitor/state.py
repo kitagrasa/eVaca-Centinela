@@ -80,8 +80,6 @@ class UserState:
             "gcid": self.user.gcid,
             "real_cid": self.user.real_cid,
             "demo_cid": self.user.demo_cid,
-            "display_name": self.user.display_name,
-            "allow_display_full_name": self.user.allow_display_full_name,
             "baseline_sent": self.baseline_sent,
             "needs_positions_baseline": self.needs_positions_baseline,
             "history_since": self.history_since,
@@ -91,14 +89,15 @@ class UserState:
 
     @classmethod
     def from_dict(cls, data: dict[str, Any], *, version: int = STATE_VERSION) -> "UserState":
+        # `display_name` y `allow_display_full_name` (y los nombres reales de la
+        # API) ya no se guardan: el nombre de los avisos es el de la watchlist.
+        # Los estados viejos que aún los traigan los ignoran y desaparecen al
+        # guardar, igual que pasó con el avatar.
         user = EvacaUser(
             username=data["username"],
             gcid=int(data["gcid"]),
             real_cid=int(data["real_cid"]),
             demo_cid=data.get("demo_cid"),
-            first_name="",
-            last_name="",
-            allow_display_full_name=bool(data.get("allow_display_full_name")),
         )
         raw_assets = data.get("assets") or {}
         assets = {

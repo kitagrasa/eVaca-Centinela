@@ -127,7 +127,7 @@ RUTAS_LOCALES = re.compile(r"(/home/[a-z][a-z0-9._-]+/|/Users/[A-Za-z][A-Za-z0-9
 
 # Una clave privada pegada en un fichero: la cabecera PEM y, en la línea
 # siguiente, el cuerpo en base64. Se piden las dos cosas a propósito: la
-# cabecera sola la citan el README y el workflow de diagnóstico al explicar
+# cabecera sola la citan la documentación y el workflow de diagnóstico al explicar
 # cómo rellenar el secreto, y eso no es una fuga. Una clave de verdad siempre
 # trae cuerpo.
 CLAVE_PRIVADA = re.compile(
@@ -136,7 +136,7 @@ CLAVE_PRIVADA = re.compile(
 )
 
 # Tokens de GitHub. Con 'ghp_' van los clásicos; 'github_pat_' es el formato de
-# los fine-grained, que es justo el que recomienda el README (2.6, opción B).
+# los fine-grained, que es justo el que recomienda la documentación (opción B).
 # El de este repositorio es el que más duele: escribiría en el repositorio de
 # estado.
 TOKEN_GITHUB = re.compile(
@@ -145,7 +145,7 @@ TOKEN_GITHUB = re.compile(
 
 # Nombres de fichero que son una clave privada por sí solos, aunque el
 # contenido aún no se haya pegado en ningún sitio. `clave_estado` es el que
-# manda generar el README (2.6, opción A); si acaba commiteado, da acceso de
+# manda generar la documentación (opción A); si acaba commiteado, da acceso de
 # escritura al repositorio de estado.
 NOMBRE_DE_CLAVE = re.compile(
     r"^(?:clave_estado.*|id_rsa.*|id_ed25519.*|id_ecdsa.*|.*\.(?:pem|key|ppk))$",
@@ -191,7 +191,7 @@ def test_no_hay_tokens_de_telegram():
 def test_no_hay_claves_privadas():
     """Una clave privada en el repositorio es una credencial regalada.
 
-    El escenario real de este proyecto: el README manda generar el par con
+    El escenario real de este proyecto: la documentación manda generar el par con
     `ssh-keygen -f ./clave_estado` dentro de la carpeta del proyecto, y esa
     clave privada escribe en el repositorio de estado (la lista de personas y
     sus carteras). Un 'git add .' la publicaría, y el repositorio del código
@@ -292,8 +292,8 @@ def test_los_usuarios_que_sigo_no_se_cuelan_en_el_codigo():
 
     Si escribes tu usuario real en un comentario del código o en un test, este
     guardián lo detecta: el repositorio debe poder ser público sin revelar a
-    quién sigues. (Este test existe porque el propio README llegó a llevar un
-    usuario real como ejemplo.)
+    quién sigues. (Este test existe porque la propia documentación llegó a llevar
+    un usuario real como ejemplo.)
     """
     usuarios = _usuarios_que_sigo()
     if not usuarios:
@@ -380,7 +380,7 @@ def test_los_patrones_detectan_de_verdad():
     # La clave privada necesita cabecera Y cuerpo...
     assert CLAVE_PRIVADA.search(_clave_privada_falsa())
     # ...pero citar la cabecera al explicar el secreto no es una fuga. Así lo
-    # hacen el README (2.6) y diagnostico-estado.yml: si esto fallara, el
+    # hacen la documentación (puesta en marcha) y diagnostico-estado.yml: si esto fallara, el
     # guardián estaría denunciando su propia documentación.
     assert not CLAVE_PRIVADA.search(
         "echo \"Faltan las líneas '-----BEGIN " + "OPENSSH PRIVATE KEY-----'\"\n"
@@ -462,7 +462,7 @@ def _nombre_del_sitio() -> str:
 def test_no_aparece_el_nombre_del_sitio():
     """El repositorio no debe nombrar el sitio que se lee.
 
-    Sirve de trinquete: el nombre llegó a estar por todas partes (README,
+    Sirve de trinquete: el nombre llegó a estar por todas partes (documentación,
     comentarios, tests, workflows). Si alguien lo vuelve a escribir, esto falla
     antes de subirlo. La dirección real vive en el secreto DESTINO_BASE.
     """

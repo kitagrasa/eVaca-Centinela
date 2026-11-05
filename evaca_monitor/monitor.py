@@ -381,14 +381,14 @@ class Monitor:
     # ------------------------------------------------------------------ #
     def _resolve(self, username: str) -> EvacaUser:
         data = self.client.resolve_username(username)
+        # El nombre de referencia es el de la watchlist: no se sustituye por el
+        # que publica el sitio (05/11/2026, la cabecera mostraba el nombre real
+        # de la persona en vez de su usuario).
         return EvacaUser(
-            username=(data.get("username") or username).strip(),
+            username=username.strip(),
             gcid=int(data["gcid"]),
             real_cid=int(data["realCid"] if "realCid" in data else data["realCID"]),
             demo_cid=data.get("demoCid") or data.get("demoCID"),
-            first_name=data.get("firstName") or "",
-            last_name=data.get("lastName") or "",
-            allow_display_full_name=bool(data.get("allowDisplayFullName")),
         )
 
     def fetch_snapshot(self, user: EvacaUser) -> Snapshot:

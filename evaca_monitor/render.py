@@ -351,7 +351,7 @@ def render_portfolio_table(
 ) -> str:
     """Volcado legible de la cartera (comando `show`)."""
     lineas = [
-        f"\n{user.display_name} ({user.username}) · CID {user.real_cid}",
+        f"\n{user.username} · CID {user.real_cid}",
         f"{len(snapshot.instrument_ids)} activos\n",
         f"{'activo':<36}{'lado':>7}{'peso':>10}",
         "-" * 53,

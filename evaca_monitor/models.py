@@ -27,19 +27,24 @@ PESO_DECIMALES = 2
 
 @dataclass(frozen=True)
 class EvacaUser:
-    """Usuario de eVaca resuelto a partir de su nombre de usuario."""
+    """Usuario de eVaca resuelto a partir de su nombre de usuario.
+
+    El nombre que se enseña en los avisos es **siempre el de la watchlist**
+    (`username`), no el nombre real que publica el sitio: es el nombre con el
+    que el usuario identifica a cada trader (pedido el 05/11/2026). Por eso no
+    se leen ni se guardan `firstName`, `lastName` ni `allowDisplayFullName` de
+    la API.
+
+    A propósito tampoco se guarda la foto de perfil (`avatars` de la API): no
+    se usa en ningún mensaje y su URL lleva el dominio del sitio, justo lo que
+    el estado (privado) y el código (público) no deben arrastrar. Los estados
+    viejos pueden traer esos campos: `from_dict` los ignora.
+    """
 
     username: str
     gcid: int
     real_cid: int
     demo_cid: Optional[int] = None
-    first_name: str = ""
-    last_name: str = ""
-    allow_display_full_name: bool = False
-    # A propósito NO se guarda la foto de perfil (`avatars` de la API): no se
-    # usa en ningún mensaje y su URL lleva el dominio del sitio, justo lo que
-    # el estado (privado) y el código (público) no deben arrastrar. Los estados
-    # viejos pueden traer el campo: `from_dict` lo ignora.
 
     @property
     def slug(self) -> str:
@@ -52,10 +57,7 @@ class EvacaUser:
 
     @property
     def display_name(self) -> str:
-        if self.allow_display_full_name:
-            full = f"{self.first_name} {self.last_name}".strip()
-            if full:
-                return full
+        """El nombre de referencia: el usuario tal como está en la watchlist."""
         return self.username
 
     @property
@@ -74,9 +76,6 @@ class EvacaUser:
             "gcid": self.gcid,
             "real_cid": self.real_cid,
             "demo_cid": self.demo_cid,
-            "first_name": self.first_name,
-            "last_name": self.last_name,
-            "allow_display_full_name": self.allow_display_full_name,
         }
 
     @classmethod
@@ -86,9 +85,6 @@ class EvacaUser:
             gcid=int(data["gcid"]),
             real_cid=int(data["real_cid"]),
             demo_cid=data.get("demo_cid"),
-            first_name=data.get("first_name", ""),
-            last_name=data.get("last_name", ""),
-            allow_display_full_name=bool(data.get("allow_display_full_name")),
         )
 
 

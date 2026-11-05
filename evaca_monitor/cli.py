@@ -27,13 +27,27 @@ from .config import Config, load_config
 from .cooldown import BLOCKED_KEY, STATE_ERROR_KEY, CooldownStore
 from .monitor import Monitor
 from .render import now_madrid, render_portfolio_table
-from .serie_run import RunConfig, SerieRun, en_github_actions
+from .serie_run import RAIZ_CODIGO, RunConfig, SerieRun, en_github_actions
 from .state import RuntimeState, State, StateCorruptError, cooldown_path
 from .telegram import TelegramError, TelegramNotifier
 
 DEFAULT_STATE = "state/state.json"
 
 log = logging.getLogger("evaca_monitor")
+
+
+def _estado_dentro_del_repositorio(state_path: str | os.PathLike[str]) -> bool:
+    """¿La ruta de estado cae dentro del repositorio de código?
+
+    El estado contiene nombres y carteras. Si el fichero por defecto se escribe
+    dentro del repositorio que se sube a GitHub, esos datos podrían acabar
+    publicados. Esta comprobación permite parar antes de escribir.
+    """
+    try:
+        Path(state_path).resolve().relative_to(RAIZ_CODIGO)
+    except (ValueError, OSError):
+        return False
+    return True
 
 
 def _setup_logging(level: str) -> None:
@@ -83,6 +97,22 @@ def _make_sender(args: argparse.Namespace, notifier: TelegramNotifier):
 # check
 # ---------------------------------------------------------------------- #
 def cmd_check(args: argparse.Namespace) -> int:
+    # El estado contiene a quién sigues y sus carteras. Si no se ha indicado
+    # un fichero explícito y el valor por defecto cae dentro del repositorio
+    # de código, se para: subir esa carpeta publicaría datos privados.
+    if not getattr(args, "state_explicito", True) and _estado_dentro_del_repositorio(
+        args.state
+    ):
+        log.error(
+            "El fichero de estado por defecto (%s) está dentro del repositorio "
+            "de código, que se sube a GitHub. Ahí podrían acabar nombres y "
+            "carteras. Indica un fichero fuera del repositorio con --state o "
+            "con la variable EVACA_STATE (por ejemplo: "
+            "..\\local\\dev\\estado-prueba.json).",
+            args.state,
+        )
+        return 2
+
     users_file = getattr(args, "users_file", None)
     config = load_config(args.config, users_file)
     users = args.users or config.users
@@ -499,7 +529,11 @@ def _apply_defaults(args: argparse.Namespace) -> argparse.Namespace:
     if getattr(args, "users_file", None) is None:
         args.users_file = os.environ.get("EVACA_WATCHLIST_MD")
     if getattr(args, "state", None) is None:
-        args.state = os.environ.get("EVACA_STATE", DEFAULT_STATE)
+        env_state = os.environ.get("EVACA_STATE")
+        args.state = env_state or DEFAULT_STATE
+        args.state_explicito = bool(env_state)
+    else:
+        args.state_explicito = True
     if getattr(args, "log_level", None) is None:
         args.log_level = os.environ.get("LOG_LEVEL", "INFO")
     return args

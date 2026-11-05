@@ -27,9 +27,7 @@ from evaca_monitor.diff import (  # noqa: E402
 from evaca_monitor.models import Asset, EvacaUser, Position, Snapshot  # noqa: E402
 
 # Usuario ficticio: los tests no deben contener datos de personas reales.
-USER = EvacaUser(
-    username="UsuarioEjemplo", gcid=1111111, real_cid=2222222, first_name="Usuario"
-)
+USER = EvacaUser(username="UsuarioEjemplo", gcid=1111111, real_cid=2222222)
 
 
 def position(position_id: int, units: float) -> Position:

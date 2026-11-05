@@ -42,10 +42,11 @@ FEED_URL_TEMPLATE = (
     "https://raw.githubusercontent.com/{owner}/{repo}/{rama}/data/prices/{id}"
 )
 
-# El dueño del repositorio se puede forzar con EVACA_FEED_OWNER. Si no, en
-# GitHub Actions sale de GITHUB_REPOSITORY (owner/repo), que ya está definido.
+# El dueño y el repositorio se pueden forzar con EVACA_FEED_OWNER y
+# EVACA_FEED_REPO. Si no, en GitHub Actions salen de GITHUB_REPOSITORY.
 OWNER_POR_DEFECTO = "kitagrasa"
 VARIABLE_OWNER = "EVACA_FEED_OWNER"
+VARIABLE_REPO = "EVACA_FEED_REPO"
 
 MARCA_RETIRADO = "(retirado)"
 
@@ -287,11 +288,29 @@ def feed_owner() -> str:
     return OWNER_POR_DEFECTO
 
 
+def feed_repo() -> str:
+    """El repositorio público de los feeds.
+
+    Se puede forzar con `EVACA_FEED_REPO`. Si no, en GitHub Actions se usa el
+    nombre del repositorio de `GITHUB_REPOSITORY`; en local, el valor por
+    defecto. Así el feed sigue funcionando si el repositorio se renombra.
+    """
+    explicito = os.environ.get(VARIABLE_REPO, "").strip()
+    if explicito:
+        return explicito
+    repositorio = os.environ.get("GITHUB_REPOSITORY", "").strip()
+    if "/" in repositorio:
+        nombre = repositorio.split("/", 1)[1].strip()
+        if nombre:
+            return nombre
+    return REPO_PUBLICO
+
+
 def feed_url(serie: str, owner: str | None = None) -> str:
     """La URL completa que se pega en Portfolio Performance."""
     return FEED_URL_TEMPLATE.format(
         owner=owner or feed_owner(),
-        repo=REPO_PUBLICO,
+        repo=feed_repo(),
         rama=RAMA_FEED,
         id=serie,
     )

@@ -153,8 +153,6 @@ def test_no_hay_campos_que_crezcan_sin_limite(tmp_path):
         "gcid",
         "real_cid",
         "demo_cid",
-        "display_name",
-        "allow_display_full_name",
         "baseline_sent",
         "needs_positions_baseline",
         # Marca de agua del histórico de cierres (una fecha UTC, no una lista).

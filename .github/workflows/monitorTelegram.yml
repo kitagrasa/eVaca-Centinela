@@ -5,7 +5,7 @@ name: Monitor eVaca-Telegram
 # línea, en el repositorio de estado privado) y manda un mensaje a Telegram
 # cuando alguno compra o vende, total o parcialmente.
 #
-# NO se ejecuta por sí solo: lo dispara cron-job.org (ver README).
+# NO se ejecuta por sí solo: lo dispara cron-job.org (ver contexto.md).
 #
 # No hace login en eVaca ni requiere KYC: solo lee los endpoints públicos que
 # carga la propia web de eVaca.

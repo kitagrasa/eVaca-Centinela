@@ -23,9 +23,6 @@ USER = EvacaUser(
     username="UsuarioEjemplo",
     gcid=1111111,
     real_cid=2222222,
-    first_name="Usuario",
-    last_name="Ejemplo",
-    allow_display_full_name=True,
 )
 
 LABELS = {1002: "Alphabet (GOOG)", 6: "EUR/USD"}
@@ -265,7 +262,7 @@ def test_cabecera_solo_lleva_el_nombre_y_la_fecha():
     texto = render_user_changes(
         USER, changes, instrument_labels={1002: "A", 5712: "B"}
     )
-    assert "<b>Usuario Ejemplo</b>" in texto
+    assert "<b>UsuarioEjemplo</b>" in texto
     assert "ha movido su cartera" not in texto
     assert "operaciones en" not in texto
     assert "activos" not in texto
