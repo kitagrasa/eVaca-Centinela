@@ -627,6 +627,30 @@ def test_una_compra_que_se_ve_si_manda_mensaje(tmp_path):
     assert "11,00% → 11,50%" in avisos[0]
 
 
+def test_una_subida_proporcional_de_toda_la_cartera_no_avisa(tmp_path):
+    """05/11/2026: eVaca subió todas las unidades en el mismo factor.
+
+    Dos carteras seguidas recibieron "COMPRA PARCIAL" en todos sus activos, con
+    subidas de ~0,9% y ~2,4%. No eran compras: es el ajuste proporcional, pero
+    hacia arriba. Ahora se trata igual que el de bajada y no se avisa.
+    """
+    state = State(path=tmp_path / "state.json")
+    avisos: list[str] = []
+    _pasada_arbitro(state, avisos, GRANDE)  # línea base
+    avisos.clear()
+
+    subida = {iid: unidades * 1.009 for iid, unidades in GRANDE.items()}
+    reporte, _ = _pasada_arbitro(state, avisos, subida)
+
+    assert reporte.changes == []
+    assert reporte.adjustment is not None
+    assert abs(reporte.adjustment.factor - 1.009) < 1e-9
+    assert avisos == []
+    # La foto nueva se guarda: el ajuste no se repite en la pasada siguiente.
+    guardado = state.user("usuarioejemplo").assets["1002:Buy"].units
+    assert abs(guardado - 11.099) < 1e-9
+
+
 def test_una_compra_de_redondeo_no_estorba_a_una_compra_de_verdad(tmp_path):
     """Dos activos en la misma pasada: solo el aviso de la compra real."""
     state = State(path=tmp_path / "state.json")

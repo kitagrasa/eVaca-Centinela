@@ -312,10 +312,16 @@ def split_adjustment(
 ) -> tuple[list[Change], Optional[Adjustment]]:
     """Separa un ajuste proporcional de las operaciones reales.
 
-    La idea (heurística, pero basada en un modelo): si muchas posiciones bajan
-    en el MISMO factor, no son muchas ventas, es un solo ajuste de la cartera
-    (una retirada de efectivo, un rebalanceo...). En cambio, una venta real de
-    verdad tiene su propio factor y no explica al resto.
+    La idea (heurística, pero basada en un modelo): si muchas posiciones
+    cambian en el MISMO factor, no son muchas compras o ventas, es un solo
+    ajuste de la cartera (una retirada o un ingreso de efectivo, un rebalanceo,
+    una normalización de eVaca...). En cambio, una operación real de verdad
+    tiene su propio factor y no explica al resto.
+
+    Da igual la dirección: un ajuste puede **bajar** todas las posiciones (una
+    retirada, el caso del 19/10 y el 20/10) o **subirlas** (un ingreso o una
+    normalización; el 05/11/2026 llegaron 35 COMPRA PARCIAL falsas en dos
+    carteras porque solo se filtraban las bajadas).
 
     Para no confundir una venta grande de UN solo activo con un ajuste, se
     exigen dos cosas más:
@@ -327,7 +333,7 @@ def split_adjustment(
 
     No hay un tamaño mínimo: un recorte del 0,05% en toda la cartera es tan
     ajuste como uno del 0,30%. Lo que decide es que sea proporcional y que
-    coja a la cartera entera, no cuánto baja.
+    coja a la cartera entera, no cuánto cambia.
 
     Y el número de cambios exigido es un **máximo**: en una cartera de 3
     posiciones solo se pueden cambiar 3, así que se piden 3 (no 4).
@@ -374,15 +380,15 @@ def split_adjustment(
         return changes, None
 
     factor = statistics.median(ratio for _, ratio in candidatos)
-    # Solo tiene sentido para bajadas: una subida proporcional es una compra
-    # (o algo raro), y no queremos silenciarla.
+    # Vale para las dos direcciones: el 19/10 y el 20/10 fueron bajadas (un
+    # recorte de eVaca); el 05/11 fue una subida proporcional en dos carteras
+    # que llegó como 35 "COMPRA PARCIAL" falsas. En ambos casos es un ajuste de
+    # la cartera, no operaciones que copiar.
     #
-    # No hay un mínimo de bajada: da igual que el factor sea 0,997 (lo que se
-    # vio el 19/10) o 0,9995 (el 20/10, un recorte del 0,05% en las 36
-    # posiciones de una cartera). Antes había un mínimo del 0,05% y estos
-    # recortes pequeños se colaban como una venta parcial por posición.
-    if factor >= 1.0:
-        return changes, None
+    # No hay un mínimo: da igual que el factor sea 0,997 (lo que se vio el
+    # 19/10) o 0,9995 (el 20/10, un recorte del 0,05% en las 36 posiciones de
+    # una cartera). Antes había un mínimo del 0,05% y estos recortes pequeños
+    # se colaban como una venta parcial por posición.
 
     dentro = [
         (change, ratio)

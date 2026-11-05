@@ -328,13 +328,17 @@ KIND_ORDER = {"opened": 0, "increased": 1, "reduced": 2, "closed": 3}
 class Adjustment:
     """Un ajuste proporcional de la cartera, no una operación.
 
-    eVaca (o una retirada de efectivo, o un rebalanceo) a veces reduce TODAS
-    las posiciones en el mismo factor: por ejemplo, un 0,30% en las 143
-    posiciones a la vez. Eso no son 143 ventas: es un solo ajuste. Se detecta
-    porque muchas posiciones cambian con el mismo factor (ver
-    `diff.split_adjustment`), y se resume en una línea o no se avisa.
+    eVaca (o una retirada o un ingreso de efectivo, o un rebalanceo) a veces
+    cambia TODAS las posiciones en el mismo factor: por ejemplo, un 0,30% en las
+    143 posiciones a la vez. Eso no son 143 ventas (ni 143 compras): es un solo
+    ajuste. Se detecta porque muchas posiciones cambian con el mismo factor
+    (ver `diff.split_adjustment`), y se resume en una línea o no se avisa.
 
-    `factor` es el multiplicador (0,997 = bajar un 0,30%).
+    Vale en las dos direcciones: una bajada (recorte/retirada) o una subida
+    (ingreso/normalización). El 05/11/2026 una subida proporcional en dos
+    carteras se coló como 35 "COMPRA PARCIAL" falsas.
+
+    `factor` es el multiplicador (0,997 = bajar un 0,30%; 1,009 = subir un 0,9%).
     `positions` es cuántos elementos entraron en el ajuste (activos, desde que se
     compara el total de cada uno).
     """
@@ -344,6 +348,6 @@ class Adjustment:
 
     @property
     def percentage(self) -> float:
-        """La bajada en %, para el mensaje (0,30)."""
-        return (1.0 - self.factor) * 100.0
+        """La variación en %, sin signo, para el mensaje (0,30)."""
+        return abs(1.0 - self.factor) * 100.0
 

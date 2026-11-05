@@ -298,13 +298,23 @@ def test_cambios_de_tamanos_distintos_no_son_un_ajuste():
     assert len(operaciones) == 5
 
 
-def test_una_subida_proporcional_no_se_filtra_son_compras():
-    changes = diff_snapshots(snap(_muchas(1.0)), snap(_muchas(1.003)))
+def test_una_subida_proporcional_tambien_es_un_ajuste():
+    """05/11/2026: toda la cartera subió un 0,9% de golpe, sin compras.
+
+    Es el ajuste proporcional en el otro sentido (un ingreso, una
+    normalización de eVaca): no son compras y no se avisa. Antes solo se
+    filtraban las bajadas, y aquel día llegaron 35 "COMPRA PARCIAL" falsas en
+    dos carteras.
+    """
+    changes = diff_snapshots(snap(_muchas(1.0)), snap(_muchas(1.009)))
     operaciones, ajuste = split_adjustment(
         changes, total_positions=12, total_assets=1
     )
-    assert ajuste is None
-    assert len(operaciones) == 12
+    assert operaciones == []
+    assert ajuste is not None
+    assert ajuste.positions == 12
+    assert abs(ajuste.factor - 1.009) < 1e-9
+    assert abs(ajuste.percentage - 0.9) < 1e-9
 
 
 def test_las_altas_y_las_bajas_de_posicion_se_mantienen():
