@@ -259,7 +259,10 @@ def test_marca_los_dias_calibrados_con_c_y_su_rentab() -> None:
 def test_leyenda_de_la_cabecera_antes_de_la_tabla() -> None:
     html = render(ID, filas_de_ejemplo())
 
-    leyenda = "M = Mes stats · D = Diario chart · A = Automático · C = Calibrado"
+    leyenda = (
+        "M = Mes stats · D = Diario chart sin calibrar · "
+        "A = Automático · C = Calibrado"
+    )
     assert f"<p>{leyenda}</p>" in html
     assert html.index(leyenda) < html.index("<table>")
     # La leyenda está fuera de la tabla: PP solo importa las celdas.

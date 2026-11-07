@@ -1125,9 +1125,46 @@ def test_un_mes_cerrado_con_chart_sale_calibrado(
     assert cierre["close"] == 104.5
 
     html = (entorno.datos / "prices" / ID_UNO).read_text(encoding="utf-8")
-    assert "M = Mes stats · D = Diario chart · A = Automático · C = Calibrado" in html
+    assert (
+        "M = Mes stats · D = Diario chart sin calibrar · "
+        "A = Automático · C = Calibrado" in html
+    )
     assert 'data-kind=   "C"' in html
     assert 'data-kind=   "M"' in html
+
+
+def test_un_mes_que_no_necesita_calibracion_sale_como_d(
+    tmp_path: Path,
+) -> None:
+    """Primera importación: si el chart ya cuadra con stats, los días son `D`."""
+    entorno = entorno_base(tmp_path)
+    payload = payload_meses({"2025-04": 0.0})
+    chart = payload_chart(
+        puntos_diarios(date(2025, 3, 31), date(2025, 4, 30))
+    )
+
+    codigo = ejecutar(
+        entorno,
+        ClienteFalso({"uno": payload}, charts={"uno": chart}),
+        usuarios=["uno"],
+        reloj=lambda: instante(2025, 5, 2),
+    )
+
+    assert codigo == 0
+    datos = leer_json(entorno.datos / "series" / f"{ID_UNO}.json")
+    abril = [
+        fila for fila in datos["history"] if fila["date"].startswith("2025-04")
+    ]
+    assert any(fila["kind"] == "day" for fila in abril)
+    assert all(fila["kind"] != "c" for fila in abril)
+    cierre = next(fila for fila in abril if fila["date"] == "2025-04-30")
+    assert cierre["kind"] == "month"
+    assert cierre["close"] == 100.0
+
+    html = (entorno.datos / "prices" / ID_UNO).read_text(encoding="utf-8")
+    assert "D = Diario chart sin calibrar" in html
+    assert 'data-kind=   "D"' in html
+    assert 'data-kind=   "C"' not in html
 
 
 def test_el_mes_actual_sale_del_chart_aunque_stats_no_lo_traiga(
@@ -1175,7 +1212,16 @@ def test_un_mes_ya_calibrado_se_conserva_cuando_el_chart_avanza(
         }
     )
     completo = payload_chart(
-        puntos_diarios(date(2024, 12, 31), date(2025, 4, 30))
+        puntos_diarios(
+            date(2024, 12, 31),
+            date(2025, 4, 30),
+            {
+                date(2025, 1, 10): 1.01,
+                date(2025, 2, 10): 1.01,
+                date(2025, 3, 10): 1.01,
+                date(2025, 4, 10): 1.01,
+            },
+        )
     )
     ejecutar(
         entorno,
@@ -1192,7 +1238,11 @@ def test_un_mes_ya_calibrado_se_conserva_cuando_el_chart_avanza(
 
     # El chart de la siguiente pasada ya solo llega a marzo.
     parcial = payload_chart(
-        puntos_diarios(date(2025, 3, 1), date(2025, 4, 30))
+        puntos_diarios(
+            date(2025, 3, 1),
+            date(2025, 4, 30),
+            {date(2025, 3, 10): 1.01, date(2025, 4, 10): 1.01},
+        )
     )
     ejecutar(
         entorno,

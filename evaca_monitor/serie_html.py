@@ -29,8 +29,8 @@ from .serie import (
 # Portfolio Performance solo importa las celdas <td> y una columna extra haría
 # que descartara la fila entera.
 #   M = cierre mensual de la rentabilidad de stats (también en meses calibrados)
-#   D = día del chart del mes en curso, sin calibrar
-#   C = día de un mes cerrado, calibrado para acabar en la M de stats
+#   D = día del chart sin calibrar (mes en curso o mes que ya coincidía con stats)
+#   C = día de un mes cerrado realmente calibrado con el cierre de stats
 #   A = base, ancla o relleno (generado por el programa)
 KIND_MARKERS = {
     KIND_MONTH: "M",
@@ -43,7 +43,10 @@ KIND_MARKERS = {
 
 # Leyenda de la cabecera. PP ignora todo lo que no sea la tabla, así que puede
 # ir como párrafo antes de ella.
-LEYENDA = "M = Mes stats · D = Diario chart · A = Automático · C = Calibrado"
+LEYENDA = (
+    "M = Mes stats · D = Diario chart sin calibrar · "
+    "A = Automático · C = Calibrado"
+)
 
 # Ancho mínimo del valor de rentab entre comillas. Los valores habituales
 # (-3.97, 0.00, -9.48...) caben aquí; si alguno es más largo, el ancho se

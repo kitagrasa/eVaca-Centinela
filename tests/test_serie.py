@@ -805,8 +805,10 @@ def test_daily_rows_no_rellena_un_mes_con_c(hoy: date) -> None:
 def test_daily_rows_rellena_el_hueco_inicial_del_mes_frontera(
     hoy: date,
 ) -> None:
-    estadistica = [mes(2025, 4, 0.0)]
-    chart = serie_diaria(date(2025, 4, 15), date(2025, 4, 30))
+    estadistica = [mes(2025, 4, 2.5)]
+    chart = serie_diaria(
+        date(2025, 4, 15), date(2025, 4, 30), {date(2025, 4, 20): 1.02}
+    )
 
     filas = build_series_full(estadistica, today=hoy, chart=chart).rows
     diarias = {fila.date: fila for fila in daily_rows(filas, today=hoy)}
@@ -821,3 +823,23 @@ def test_daily_rows_rellena_el_hueco_inicial_del_mes_frontera(
         for dia, fila in diarias.items()
         if dia >= date(2025, 4, 15)
     )
+
+
+def test_un_mes_sin_adaptacion_conserva_los_dias_de_chart(hoy: date) -> None:
+    """Si el chart ya coincide con stats (factor 1), los días son `D`."""
+    estadistica = [mes(2025, 4, 0.0)]
+    chart = serie_diaria(date(2025, 3, 31), date(2025, 4, 30))
+
+    resultado = build_series_full(estadistica, today=hoy, chart=chart)
+
+    assert resultado.months["2025-04"]["status"] == "calibrated"
+    assert resultado.months["2025-04"]["factor"] == 1.0
+    abril = [
+        fila
+        for fila in resultado.rows
+        if (fila.date.year, fila.date.month) == (2025, 4)
+    ]
+    assert all(fila.kind == KIND_DAY for fila in abril[:-1])
+    assert abril[-1].kind == KIND_MONTH
+    assert abril[-1].close == 100.0
+    assert all(fila.kind != KIND_CALIBRATED for fila in resultado.rows)

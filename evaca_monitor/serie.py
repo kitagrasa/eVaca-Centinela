@@ -10,11 +10,13 @@ Hay dos fuentes:
 * el **chart diario** público de los dos últimos años: da los días. Los meses
   cerrados que caben en el chart se calibran para que su producto acabe
   exactamente en la rentabilidad mensual; el mes en curso se publica tal cual.
+  Un mes cuyo chart ya coincide con la rentabilidad mensual no se calibra: sus
+  días quedan como datos de chart (`D`), igual que los del mes en curso.
 
 El JSON guarda los datos reales: la base, el ancla del día 1 de cada mes, el
-cierre exacto de cada mes, los días de chart calibrados, los del mes en curso
-y los meses antiguos que solo tienen rentabilidad mensual. Encima, para el
-HTML, `daily_rows` rellena los huecos de los meses que no tienen días de chart.
+cierre exacto de cada mes, los días de chart calibrados o sin adaptar y los
+meses antiguos que solo tienen rentabilidad mensual. Encima, para el HTML,
+`daily_rows` rellena los huecos de los meses que no tienen días de chart.
 
 El ancla del día 1 existe para los meses que no tienen chart: Portfolio
 Performance empieza a dibujar cada serie en su primera cotización del periodo,
@@ -38,11 +40,14 @@ from typing import Any
 # Tipos de fila admitidos en el histórico.
 KIND_BASE = "base"
 KIND_MONTH = "month"
+# Día de chart sin calibrar: el mes en curso o un mes cerrado que aún no se ha
+# adaptado (chart y stats ya coinciden, factor 1).
 KIND_DAY = "day"
 KIND_ANCHOR = "anchor"
-# Día de un mes cerrado calibrado con el cierre mensual. Se marca aparte de
-# `day` para que un fallo del chart no lo confunda con una muestra del mes en
-# curso y para que `daily_rows` sepa que ese mes ya tiene rejilla propia.
+# Día de un mes cerrado realmente calibrado con el cierre mensual: el factor
+# aplicado no es 1. Se marca aparte de `day` para que un fallo del chart no lo
+# confunda con una muestra sin adaptar y para que `daily_rows` sepa que ese mes
+# ya tiene rejilla propia.
 KIND_CALIBRATED = "c"
 KINDS = (KIND_BASE, KIND_MONTH, KIND_DAY, KIND_ANCHOR, KIND_CALIBRATED)
 
@@ -349,6 +354,8 @@ def build_series_full(
     * los días con movimiento se multiplican por un factor constante para que
       el producto del mes acabe en ese cierre, aunque el chart se desvíe o
       vaya en sentido contrario;
+    * si el factor es 1 (el chart ya acaba en el cierre de stats), no hay
+      adaptación: los días se guardan como `D` (dato de chart sin calibrar);
     * los días con retorno 0 se quedan en 0;
     * solo se marca `rejected` si no hay forma matemática de repartir el
       cierre (ningún día con movimiento y un mes que no es plano, o un factor
@@ -437,7 +444,12 @@ def build_series_full(
             )
             continue
 
-        # Mes calibrado: un punto por día del chart. El primer punto de una
+        # Un factor de 1 significa que el chart ya cuadraba con stats: no se
+        # ha adaptado ningún día. Se publican como `D` (dato de chart sin
+        # calibrar), no como `C`.
+        tipo_dia = KIND_DAY if factor == 1.0 else KIND_CALIBRATED
+
+        # Mes con chart: un punto por día del chart. El primer punto de una
         # ventana es el cierre del primer día (no se usa el nivel inicial del
         # chart); cuando no hay cierre del mes anterior, ese primer día se
         # deja plano y los días anteriores se rellenan con `A`.
@@ -459,7 +471,7 @@ def build_series_full(
             filas[punto.date] = PriceRow(
                 date=punto.date,
                 close=cierre,
-                kind=KIND_CALIBRATED,
+                kind=tipo_dia,
                 gain=_gain_from_close(cierre, cierre_anterior),
             )
             cierre_anterior = cierre
