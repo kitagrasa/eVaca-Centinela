@@ -6,7 +6,7 @@
 </head>
 <body>
   <h1>eVaca - 7b92a5d9125c</h1>
-  <p>M = Mes stats · D = Diario chart · A = Automático · C = Calibrado</p>
+  <p>M = Mes stats · D = Diario chart sin calibrar · A = Automático · C = Calibrado</p>
   <table>
     <thead>
       <tr><th>Date</th><th>Close</th></tr>
