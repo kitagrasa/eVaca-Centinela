@@ -26,12 +26,15 @@ alerts:
 # Series para Portfolio Performance (subcomando `series`).
 #
 # Usan la MISMA lista de personas que el monitor: el watchlist.md del
-# repositorio de estado. Aquí solo van los ajustes de mínimo impacto; no
-# conviene bajar ninguno de los dos valores.
+# repositorio de estado. Aquí solo van los ajustes de la pasada: la pausa, los
+# umbrales de aviso/calibración y los días de lectura de la rentabilidad.
 # ---------------------------------------------------------------------------
 series:
   pause_seconds: 3.0     # espera entre peticiones reales (de una en una)
-  cache_minutes: 60      # copia guardada reutilizable: 0 peticiones dentro de la hora
+  alert_pp: 0.2          # desviación (pp) que dispara el aviso por Telegram
+  cap_pp: 0.5            # desviación (pp) para considerar el chart poco fiable
+  stats_days: [5, 12]    # día 5 (un reintento el 6) y día 12; cada lectura revisa 3 meses atrás
+  chart_window: lastTwoYears  # ventana del chart diario
 
 # ---------------------------------------------------------------------------
 # Horario en el que el monitor puede actuar (en hora de Madrid).

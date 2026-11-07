@@ -340,3 +340,23 @@ def test_series_con_lista_vacia_aborta_sin_crear_nada(tmp_path, monkeypatch):
 
     assert main(["series", *argv]) == 2
     assert not (tmp_path / "data").exists()
+
+
+def test_la_configuracion_de_series_lee_los_umbrales(tmp_path):
+    yml = tmp_path / "watchlist.yml"
+    yml.write_text(
+        "users: [uno_ejemplo]\n"
+        "series:\n"
+        "  alert_pp: 0.3\n"
+        "  cap_pp: 0.7\n"
+        "  stats_days: [4, 11]\n"
+        "  chart_window: lastYear\n",
+        encoding="utf-8",
+    )
+
+    config = load_config(yml)
+
+    assert config.series.alert_pp == 0.3
+    assert config.series.cap_pp == 0.7
+    assert config.series.stats_days == [4, 11]
+    assert config.series.chart_window == "lastYear"

@@ -27,7 +27,8 @@ from typing import Any
 from .serie import PriceRow, serie_id
 
 # Versión del formato de data/series/<id>.json.
-DATA_FILE_VERSION = 1
+# v2 añade el chart crudo, la auditoría de cada mes y `chart_fetched_at`.
+DATA_FILE_VERSION = 2
 
 SERIES_DIRNAME = "series"
 PRICES_DIRNAME = "prices"
@@ -152,6 +153,9 @@ class SerieData:
         fetched_at: str | None = None,
         last_payload: dict[str, Any] | None = None,
         history: list[PriceRow] | None = None,
+        chart: dict[str, Any] | None = None,
+        months: dict[str, dict[str, Any]] | None = None,
+        chart_fetched_at: str | None = None,
     ) -> None:
         self.serie = serie
         self.version = version
@@ -159,6 +163,14 @@ class SerieData:
         self.fetched_at = fetched_at
         self.last_payload = last_payload
         self.history = list(history or [])
+        # Chart crudo de la última lectura: permite recalibrar cuando cambia
+        # la rentabilidad mensual sin volver a pedir el chart.
+        self.chart = chart
+        # Auditoría por mes: stats_pct, chart_pct, factor, status y checked_at.
+        self.months = dict(months or {})
+        # Momento de la última lectura del chart, separado de `fetched_at`
+        # (que sigue siendo el de la rentabilidad mensual).
+        self.chart_fetched_at = chart_fetched_at
 
     def to_dict(self) -> dict[str, Any]:
         """Serializa el archivo completo de la serie.
@@ -173,21 +185,38 @@ class SerieData:
             "id": self.serie,
             "updated_at": self.updated_at,
             "fetched_at": self.fetched_at,
+            "chart_fetched_at": self.chart_fetched_at,
             "last_payload": self.last_payload,
+            "chart": self.chart,
+            "months": self.months,
             "history": [fila.to_dict() for fila in filas],
         }
 
     @classmethod
     def from_dict(cls, raw: Any, serie: str) -> "SerieData":
-        """Reconstruye el archivo de la serie tolerando datos incompletos."""
+        """Reconstruye el archivo de la serie tolerando datos incompletos.
+
+        Los archivos v1 no tienen `chart`, `months` ni `chart_fetched_at`:
+        se cargan igual y el chart se regenera en la primera pasada.
+        """
         datos = cls(serie=serie)
         if not isinstance(raw, dict):
             return datos
         datos.version = int(raw.get("version") or DATA_FILE_VERSION)
         datos.updated_at = _texto(raw.get("updated_at"))
         datos.fetched_at = _texto(raw.get("fetched_at"))
+        datos.chart_fetched_at = _texto(raw.get("chart_fetched_at"))
         payload = raw.get("last_payload")
         datos.last_payload = payload if isinstance(payload, dict) else None
+        chart = raw.get("chart")
+        datos.chart = chart if isinstance(chart, dict) else None
+        months = raw.get("months")
+        if isinstance(months, dict):
+            datos.months = {
+                clave: valor
+                for clave, valor in months.items()
+                if isinstance(clave, str) and isinstance(valor, dict)
+            }
         historial = raw.get("history")
         if isinstance(historial, list):
             for fila in historial:
@@ -216,10 +245,16 @@ def load_state(ruta: Path) -> dict[str, Any]:
     if not isinstance(datos, dict):
         datos = {}
     resultados = datos.get("results")
-    return {
+    estado = {
         "last_run": datos.get("last_run"),
         "results": resultados if isinstance(resultados, dict) else {},
     }
+    # v2: último mes avisado por id. Solo se devuelve si existe, para que un
+    # state.json antiguo siga teniendo la misma estructura mínima.
+    avisos = datos.get("alerts")
+    if isinstance(avisos, dict):
+        estado["alerts"] = avisos
+    return estado
 
 
 def save_state(ruta: Path, estado: dict[str, Any]) -> None:
@@ -246,9 +281,9 @@ def upsert_rows(
 class IdRow:
     """Una fila del mapa privado.
 
-    Se guarda la marca de retirado para no perder la fila cuando alguien sale
-    de la lista: así el histórico del mapa es acumulativo y se puede volver a
-    usar la misma URL si esa persona regresa.
+    `retirado` solo se conserva para poder leer mapas antiguos. Al fusionar,
+    las filas de quien ya no está en la lista se descartan: el mapa solo lleva
+    traders activos.
     """
 
     __slots__ = ("id", "usuario", "retirado")
@@ -341,12 +376,12 @@ def parse_ids_map(texto: str) -> list[IdRow]:
 
 
 def merge_ids(previas: list[IdRow], usuarios: list[str]) -> list[IdRow]:
-    """Fusiona el mapa anterior con la lista actual, sin perder filas.
+    """Fusiona el mapa anterior con la lista actual, solo con los activos.
 
-    - Las filas antiguas se conservan en su orden; si su id ya no está en la
-      lista, se marcan como retiradas (y su URL sigue disponible).
+    - Las filas de quien sigue en la lista se conservan en su orden.
+    - Quien ya no está desaparece del mapa (sus datos de series también se
+      borran en la pasada).
     - Las personas nuevas se añaden al final, en el orden de la lista.
-    - Si alguien vuelve a la lista, su fila deja de estar retirada.
     """
     actuales = {serie_id(usuario): usuario for usuario in usuarios}
     filas: list[IdRow] = []
@@ -357,16 +392,14 @@ def merge_ids(previas: list[IdRow], usuarios: list[str]) -> list[IdRow]:
             continue
         vistos.add(fila.id)
         if fila.id in actuales:
-            filas.append(IdRow(fila.id, actuales[fila.id], retirado=False))
-        else:
-            filas.append(IdRow(fila.id, fila.usuario, retirado=True))
+            filas.append(IdRow(fila.id, actuales[fila.id]))
 
     for usuario in usuarios:
         identificador = serie_id(usuario)
         if identificador in vistos:
             continue
         vistos.add(identificador)
-        filas.append(IdRow(identificador, usuario, retirado=False))
+        filas.append(IdRow(identificador, usuario))
 
     return filas
 
@@ -379,15 +412,16 @@ def render_ids_map(filas: list[IdRow], owner: str | None = None) -> str:
         "> Fichero **privado**: no se sube al repositorio del código, ni al log",
         "> del workflow, ni a los datos publicados. Lo genera",
         "> `python -m evaca_monitor series --ids`; no se edita a mano.",
-        "> Las filas de quien ya no está en la lista se quedan marcadas como",
-        "> retiradas, con su URL, por si vuelve.",
+        "> Solo aparecen los traders activos: al borrar uno de la lista, su fila",
+        "> desaparece.",
         "",
         "| id | usuario | url |",
         "| --- | --- | --- |",
     ]
     for fila in filas:
-        usuario = f"{fila.usuario} {MARCA_RETIRADO}" if fila.retirado else fila.usuario
-        lineas.append(f"| {fila.id} | {usuario} | {feed_url(fila.id, owner)} |")
+        if fila.retirado:
+            continue
+        lineas.append(f"| {fila.id} | {fila.usuario} | {feed_url(fila.id, owner)} |")
     return "\n".join(lineas) + "\n"
 
 

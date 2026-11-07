@@ -51,9 +51,11 @@ class FakeSession:
         self.headers = {}
         self._respuestas = list(respuestas)
         self.llamadas = []
+        self.cabeceras = []
 
-    def get(self, url, params=None, timeout=None):
+    def get(self, url, params=None, timeout=None, headers=None):
         self.llamadas.append(url)
+        self.cabeceras.append(headers or {})
         if self._respuestas:
             return self._respuestas.pop(0)
         raise AssertionError("se pidieron más respuestas de las previstas")
@@ -284,3 +286,87 @@ def test_get_gain_history_404_no_reintenta_ni_nombra_al_usuario():
 
     assert len(sesion.llamadas) == 1
     assert "uno" not in str(info.value)
+
+
+# ----------------------------------------------------------------------
+# get_chart: la fuente diaria
+# ----------------------------------------------------------------------
+def _payload_chart() -> dict:
+    return {
+        "simulation": {
+            "lastTwoYears": {
+                "chart": [
+                    {
+                        "timestamp": "2025-04-01T00:00:00Z",
+                        "equity": 100.0,
+                    }
+                ]
+            }
+        }
+    }
+
+
+def test_get_chart_pide_la_ruta_y_las_cabeceras():
+    sesion = FakeSession([FakeResponse(200, body=json.dumps(_payload_chart()))])
+    client = EvacaClient(delay=0.0, max_retries=0, session=sesion)
+
+    datos = client.get_chart("uno")
+
+    base = os.environ["EVACA_DESTINO_BASE"]
+    assert sesion.llamadas == [
+        f"{base}/sapi/trade-data-real/chart/public/uno/lastTwoYears/1"
+    ]
+    assert sesion.cabeceras[0]["Accept"] == "application/json"
+    assert sesion.cabeceras[0]["Referer"] == f"{base}/people/uno/chart"
+    assert "User-Agent" in sesion.headers
+    assert datos["simulation"]["lastTwoYears"]["chart"]
+
+
+def test_get_chart_acepta_otra_ventana_valida():
+    sesion = FakeSession([FakeResponse(200, body=json.dumps(_payload_chart()))])
+    client = EvacaClient(delay=0.0, max_retries=0, session=sesion)
+
+    client.get_chart("uno", "lastYear")
+
+    assert sesion.llamadas[0].endswith("/chart/public/uno/lastYear/1")
+
+
+def test_get_chart_ventana_invalida_no_pide():
+    sesion = FakeSession([])
+    client = EvacaClient(delay=0.0, max_retries=0, session=sesion)
+
+    with pytest.raises(EvacaError):
+        client.get_chart("uno", "inventada")
+
+    assert sesion.llamadas == []
+
+
+def test_get_chart_400_no_reintenta_ni_nombra_al_usuario():
+    sesion = FakeSession([FakeResponse(400, body='{"error": "bad"}')])
+    client = EvacaClient(delay=0.0, max_retries=3, session=sesion)
+
+    with pytest.raises(EvacaError) as info:
+        client.get_chart("uno")
+
+    assert len(sesion.llamadas) == 1
+    assert "uno" not in str(info.value)
+
+
+def test_get_chart_403_es_bloqueo():
+    sesion = FakeSession([FakeResponse(403, body='{"error": "forbidden"}')])
+    client = EvacaClient(delay=0.0, max_retries=0, session=sesion)
+
+    with pytest.raises(EvacaError):
+        client.get_chart("uno")
+
+
+def test_get_chart_5xx_reintenta_y_acaba_en_error():
+    sesion = FakeSession(
+        [FakeResponse(500), FakeResponse(502), FakeResponse(503)]
+    )
+    client = EvacaClient(delay=0.0, max_retries=1, session=sesion)
+
+    with pytest.raises(EvacaError):
+        client.get_chart("uno")
+
+    assert len(sesion.llamadas) == 2

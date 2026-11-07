@@ -180,9 +180,11 @@ jobs:
           fi
 
       # ------------------------------------------------------------------
-      # La pasada: como mucho una petición por persona, de una en una y con
-      # pausa; 0 peticiones si la copia guardada tiene menos de una hora.
-      # El log solo lleva ids y recuentos.
+      # La pasada: una petición al chart por persona y pasada, de una en una
+      # y con pausa. La rentabilidad mensual solo se pide los días 5 (con un
+      # reintento el 6) y 12; cada lectura contrasta los tres meses anteriores
+      # con la web y el día 12 también el que se cierra. El log solo lleva ids
+      # y recuentos.
       # ------------------------------------------------------------------
       - name: Actualizar las series
         env:
@@ -191,6 +193,9 @@ jobs:
           EVACA_DESTINO_BASE: ${{ secrets.DESTINO_BASE }}
           # La lista es la del repositorio de estado, la misma del monitor.
           EVACA_WATCHLIST_MD: .state-repo/watchlist.md
+          # Avisos cuando un mes cerrado se desvía del cierre de stats.
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           LOG_LEVEL: INFO
         run: |
           set -e
@@ -205,7 +210,8 @@ jobs:
             exit 1
           fi
 
-          # Sin --force: la cache de una hora evita peticiones de mas.
+          # Sin --force: el chart se pide siempre y la rentabilidad solo en
+          # los días 5 (con un reintento el 6) y 12.
           python -m evaca_monitor series
 
       # ------------------------------------------------------------------

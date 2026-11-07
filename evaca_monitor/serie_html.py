@@ -17,6 +17,7 @@ from collections.abc import Iterable
 from .serie import (
     KIND_ANCHOR,
     KIND_BASE,
+    KIND_CALIBRATED,
     KIND_DAY,
     KIND_FILL,
     KIND_MONTH,
@@ -27,16 +28,22 @@ from .serie import (
 # qué es relleno. Va como atributo del <tr>, nunca como una tercera columna:
 # Portfolio Performance solo importa las celdas <td> y una columna extra haría
 # que descartara la fila entera.
-#   M = cierre mensual (rentabilidad original de la web)
-#   D = día capturado (MTD original de la web)
+#   M = cierre mensual de la rentabilidad de stats (también en meses calibrados)
+#   D = día del chart del mes en curso, sin calibrar
+#   C = día de un mes cerrado, calibrado para acabar en la M de stats
 #   A = base, ancla o relleno (generado por el programa)
 KIND_MARKERS = {
     KIND_MONTH: "M",
     KIND_DAY: "D",
+    KIND_CALIBRATED: "C",
     KIND_BASE: "A",
     KIND_ANCHOR: "A",
     KIND_FILL: "A",
 }
+
+# Leyenda de la cabecera. PP ignora todo lo que no sea la tabla, así que puede
+# ir como párrafo antes de ella.
+LEYENDA = "M = Mes stats · D = Diario chart · A = Automático · C = Calibrado"
 
 # Ancho mínimo del valor de rentab entre comillas. Los valores habituales
 # (-3.97, 0.00, -9.48...) caben aquí; si alguno es más largo, el ancho se
@@ -54,10 +61,11 @@ def render(serie: str, rows: Iterable[PriceRow]) -> str:
     El orden descendente es solo de presentación: PP vuelve a ordenar las
     filas por fecha antes de importarlas, así que no cambia nada en el valor.
 
-    Las filas M y D llevan además `rentab` con la rentabilidad original en %
-    (dos decimales, sin el signo %); las A no lo llevan. Las columnas se
-    rellenan con espacios para que todos los datos empiecen en la misma
-    posición vertical; PP recorta esos espacios al importar.
+    Las filas M, C y D llevan además `rentab` con la rentabilidad calculada
+    del cierre anterior en % (dos decimales, sin el signo %); las A no lo
+    llevan. Las columnas se rellenan con espacios para que todos los datos
+    empiecen en la misma posición vertical; PP recorta esos espacios al
+    importar.
     """
     nombre = html.escape(serie)
     filas = sorted(rows, key=lambda fila: fila.date, reverse=True)
@@ -77,6 +85,7 @@ def render(serie: str, rows: Iterable[PriceRow]) -> str:
         "</head>\n"
         "<body>\n"
         f"  <h1>eVaca - {nombre}</h1>\n"
+        f"  <p>{LEYENDA}</p>\n"
         "  <table>\n"
         "    <thead>\n"
         "      <tr><th>Date</th><th>Close</th></tr>\n"
@@ -116,8 +125,11 @@ def _render_row(
 
 
 def _quoted_gain(fila: PriceRow) -> str | None:
-    """Rentabilidad entre comillas si la fila es M o D y tiene dato."""
-    if fila.kind in (KIND_MONTH, KIND_DAY) and fila.gain is not None:
+    """Rentabilidad entre comillas si la fila es M, C o D y tiene dato."""
+    if (
+        fila.kind in (KIND_MONTH, KIND_CALIBRATED, KIND_DAY)
+        and fila.gain is not None
+    ):
         return f'"{_format_gain(fila.gain)}"'
     return None
 

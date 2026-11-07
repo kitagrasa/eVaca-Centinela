@@ -12,7 +12,13 @@ from datetime import UTC, date, datetime
 from pathlib import Path
 
 from evaca_monitor import serie_store
-from evaca_monitor.serie import KIND_BASE, KIND_DAY, KIND_MONTH, PriceRow
+from evaca_monitor.serie import (
+    KIND_BASE,
+    KIND_CALIBRATED,
+    KIND_DAY,
+    KIND_MONTH,
+    PriceRow,
+)
 from evaca_monitor.serie_store import SerieData
 
 
@@ -195,3 +201,101 @@ def test_el_archivo_guardado_no_ordena_mal_las_filas(tmp_path: Path) -> None:
     guardado = json.loads(ruta.read_text(encoding="utf-8"))
     fechas = [fila["date"] for fila in guardado["history"]]
     assert fechas == ["2026-10-30", "2026-10-31"]
+
+
+# ----------------------------------------------------------------------
+# Versión 2: chart, meses y días calibrados
+# ----------------------------------------------------------------------
+def test_las_filas_calibradas_sobreviven_al_ida_y_vuelta(
+    tmp_path: Path,
+) -> None:
+    ruta = tmp_path / "uno.json"
+    datos = SerieData(
+        serie="uno",
+        history=[
+            PriceRow(date(2026, 10, 1), 100.0, KIND_CALIBRATED, gain=0.0),
+            PriceRow(date(2026, 10, 2), 101.0, KIND_CALIBRATED, gain=1.0),
+            PriceRow(date(2026, 10, 31), 110.0, KIND_MONTH, gain=10.0),
+        ],
+    )
+
+    serie_store.save_serie(ruta, datos)
+    recuperado = serie_store.load_serie(ruta, "uno")
+
+    assert [fila.kind for fila in recuperado.history] == [
+        KIND_CALIBRATED,
+        KIND_CALIBRATED,
+        KIND_MONTH,
+    ]
+    assert recuperado.history[0].date == date(2026, 10, 1)
+
+
+def test_guarda_y_recupera_chart_y_auditoria(tmp_path: Path) -> None:
+    ruta = tmp_path / "uno.json"
+    datos = SerieData(
+        serie="uno",
+        fetched_at="2026-11-05T00:30:00+00:00",
+        chart_fetched_at="2026-11-07T00:30:00+00:00",
+        chart={
+            "window": "lastTwoYears",
+            "fetched_at": "2026-11-07T00:30:00+00:00",
+            "points": [["2026-10-01", 100.0], ["2026-10-02", 101.0]],
+        },
+        months={
+            "2026-10": {
+                "stats_pct": 2.4,
+                "chart_pct": 2.4,
+                "factor": 1.0,
+                "status": "calibrated",
+                "checked_at": "2026-11-07T00:30:00+00:00",
+            }
+        },
+    )
+
+    serie_store.save_serie(ruta, datos)
+    recuperado = serie_store.load_serie(ruta, "uno")
+
+    assert recuperado.version == 2
+    assert recuperado.fetched_at == "2026-11-05T00:30:00+00:00"
+    assert recuperado.chart_fetched_at == "2026-11-07T00:30:00+00:00"
+    assert recuperado.chart == datos.chart
+    assert recuperado.months == datos.months
+
+
+def test_un_archivo_v1_sin_chart_se_carga(tmp_path: Path) -> None:
+    ruta = tmp_path / "uno.json"
+    ruta.write_text(
+        json.dumps(
+            {
+                "version": 1,
+                "id": "uno",
+                "fetched_at": "2025-04-01T00:00:00+00:00",
+                "last_payload": {"monthly": []},
+                "history": [
+                    {"date": "2025-04-30", "close": 110.0, "kind": "month"}
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    datos = serie_store.load_serie(ruta, "uno")
+
+    assert datos.version == 1
+    assert datos.chart is None
+    assert datos.months == {}
+    assert datos.chart_fetched_at is None
+    assert len(datos.history) == 1
+
+
+def test_el_state_guarda_el_ultimo_mes_avisado_por_id(tmp_path: Path) -> None:
+    ruta = tmp_path / "state.json"
+    estado = {
+        "last_run": "2026-11-02T00:30:00+00:00",
+        "results": {},
+        "alerts": {"0f1e2d3c4b5a": {"month": "2026-10", "stats_pct": 2.4}},
+    }
+
+    serie_store.save_state(ruta, estado)
+
+    assert serie_store.load_state(ruta) == estado

@@ -31,6 +31,7 @@ from urllib.parse import urlencode, urlsplit
 import requests
 
 from . import destino
+from .serie import CHART_PERIODS, CHART_WINDOW
 
 log = logging.getLogger(__name__)
 
@@ -142,6 +143,7 @@ class EvacaClient:
         params: Optional[dict[str, Any]] = None,
         *,
         allow_empty: bool = True,
+        headers: Optional[dict[str, str]] = None,
     ) -> requests.Response:
         if path.startswith("http"):
             url = path
@@ -155,7 +157,12 @@ class EvacaClient:
             if attempt or self.request_count:
                 self._sleep()
             try:
-                response = self.session.get(url, params=params, timeout=self.timeout)
+                response = self.session.get(
+                    url,
+                    params=params,
+                    timeout=self.timeout,
+                    headers=headers,
+                )
             except (requests.ConnectionError, requests.Timeout) as exc:
                 last_error = exc
                 # attempt=0 es el primer intento; a partir de ahí, reintentos.
@@ -251,8 +258,9 @@ class EvacaClient:
         *,
         not_found_ok: bool = False,
         private_ok: bool = False,
+        headers: Optional[dict[str, str]] = None,
     ) -> Optional[dict[str, Any]]:
-        response = self._request(path, params)
+        response = self._request(path, params, headers=headers)
         status = response.status_code
         body = response.text
         content_type = (response.headers.get("content-type") or "").lower()
@@ -398,16 +406,47 @@ class EvacaClient:
         repositorio público no puede llevarlo (quien lo necesite, que lo
         cambie por el id opaco con `serie.serie_id`).
         """
-        data = self._get_json(
-            f"/sapi/userstats/gain/username/{username.strip()}/history",
-            not_found_ok=True,
-        )
+        usuario = username.strip()
+        try:
+            data = self._get_json(
+                f"/sapi/userstats/gain/username/{usuario}/history",
+                not_found_ok=True,
+            )
+        except EvacaError as exc:
+            raise type(exc)(_sin_usuario(str(exc), usuario)) from None
         if not data:
             raise UserNotFound("No hay histórico público para ese usuario")
         if not isinstance(data.get("monthly"), list):
             raise EvacaError(
                 "La respuesta del histórico no trae la lista 'monthly'"
             )
+        return data
+
+    def get_chart(
+        self, username: str, window: str = CHART_WINDOW
+    ) -> dict[str, Any]:
+        """Chart diario público de un trader (**1 petición**).
+
+        Devuelve la respuesta cruda de la ventana pedida; el parseo y las
+        reglas de los niveles viven en `serie.parse_chart`. El mensaje de
+        error no repite el nombre de usuario: el log del repositorio público
+        no puede llevarlo.
+        """
+        if window not in CHART_PERIODS:
+            raise EvacaError(f"Periodo de chart no válido: {window!r}")
+        usuario = username.strip()
+        cabeceras = {"Accept": "application/json"}
+        if self.base:
+            cabeceras["Referer"] = f"{self.base}/people/{usuario}/chart"
+        try:
+            data = self._get_json(
+                f"/sapi/trade-data-real/chart/public/{usuario}/{window}/1",
+                headers=cabeceras,
+            )
+        except EvacaError as exc:
+            raise type(exc)(_sin_usuario(str(exc), usuario)) from None
+        if not isinstance(data, dict):
+            raise EvacaError("La respuesta del chart no es un objeto JSON")
         return data
 
     def get_instrument(self, instrument_id: int) -> Optional[dict[str, Any]]:
@@ -422,6 +461,13 @@ class EvacaClient:
 
     def close(self) -> None:
         self.session.close()
+
+
+def _sin_usuario(texto: str, usuario: str) -> str:
+    """Sustituye el nombre del trader por `(usuario)` en un mensaje de error."""
+    if not usuario:
+        return texto
+    return texto.replace(usuario, "(usuario)")
 
 
 def _retry_after(response: requests.Response) -> Optional[float]:

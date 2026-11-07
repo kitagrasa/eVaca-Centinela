@@ -307,7 +307,12 @@ def cmd_series(args: argparse.Namespace) -> int:
         usuario=args.usuario,
         dry_run=args.dry_run,
     )
-    run = SerieRun(config, run_config, build_client(config))
+    run = SerieRun(
+        config,
+        run_config,
+        build_client(config),
+        notifier=_notifier(),
+    )
     try:
         if args.ids:
             # El mapa solo necesita la lista: 0 peticiones. La tabla lleva
@@ -583,7 +588,7 @@ def build_parser() -> argparse.ArgumentParser:
     series.add_argument(
         "--force",
         action="store_true",
-        help="ignora la caché y vuelve a pedir los datos",
+        help="fuerza la lectura de la rentabilidad mensual cualquier día",
     )
     series.add_argument(
         "--usuario",

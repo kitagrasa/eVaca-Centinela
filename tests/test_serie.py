@@ -5,21 +5,29 @@ Portados de eVaca-PP: las reglas de la serie son las mismas y no se reescriben.
 
 from __future__ import annotations
 
-from datetime import date
+import math
+import statistics
+from datetime import date, timedelta
 
 import pytest
 from evaca_monitor.serie import (
     KIND_ANCHOR,
     KIND_BASE,
+    KIND_CALIBRATED,
     KIND_DAY,
     KIND_FILL,
     KIND_MONTH,
+    ChartPoint,
     MonthGain,
     PriceRow,
     SeriesError,
     build_series,
+    build_series_full,
     clean_monthly,
     daily_rows,
+    monthly_returns,
+    parse_chart,
+    parse_chart_points,
     parse_monthly,
 )
 
@@ -32,6 +40,40 @@ def mes(anio: int, numero: int, ganancia: float, simulacion: bool = False) -> Mo
 def fila(anio: int, numero: int, dia: int, cierre: float, tipo: str) -> PriceRow:
     """Crea una fila de histórico de prueba."""
     return PriceRow(date(anio, numero, dia), cierre, tipo)
+
+
+def payload_chart(
+    puntos: list[tuple[date, float]], ventana: str = "lastTwoYears"
+) -> dict:
+    """Respuesta sintética del chart con la forma real."""
+    return {
+        "simulation": {
+            ventana: {
+                "chart": [
+                    {
+                        "timestamp": f"{dia.isoformat()}T00:00:00Z",
+                        "equity": nivel,
+                    }
+                    for dia, nivel in puntos
+                ]
+            }
+        }
+    }
+
+
+def serie_diaria(
+    desde: date, hasta: date, movimientos: dict[date, float] | None = None
+) -> list[ChartPoint]:
+    """Puntos diarios desde `desde` hasta `hasta`, con niveles acumulados."""
+    movimientos = movimientos or {}
+    puntos: list[ChartPoint] = []
+    nivel = 100.0
+    dia = desde
+    while dia <= hasta:
+        nivel *= movimientos.get(dia, 1.0)
+        puntos.append(ChartPoint(dia, nivel))
+        dia += timedelta(days=1)
+    return puntos
 
 
 def como_tuplas(filas: list[PriceRow]) -> list[tuple[date, float, str]]:
@@ -509,3 +551,273 @@ def test_parse_monthly_sin_lista_es_error() -> None:
 
     with pytest.raises(SeriesError):
         parse_monthly([])
+
+
+# ----------------------------------------------------------------------
+# Chart: parseo de la respuesta
+# ----------------------------------------------------------------------
+def test_parse_chart_valido() -> None:
+    payload = payload_chart(
+        [(date(2025, 3, 31), 100.0), (date(2025, 4, 1), 101.0)]
+    )
+
+    puntos = parse_chart(payload)
+
+    assert puntos == [
+        ChartPoint(date(2025, 3, 31), 100.0),
+        ChartPoint(date(2025, 4, 1), 101.0),
+    ]
+
+
+def test_parse_chart_vacio_es_error() -> None:
+    with pytest.raises(SeriesError):
+        parse_chart(payload_chart([]))
+
+
+def test_parse_chart_duplicado_es_error() -> None:
+    with pytest.raises(SeriesError):
+        parse_chart(
+            payload_chart(
+                [(date(2025, 4, 1), 100.0), (date(2025, 4, 1), 101.0)]
+            )
+        )
+
+
+def test_parse_chart_no_creciente_es_error() -> None:
+    with pytest.raises(SeriesError):
+        parse_chart(
+            payload_chart(
+                [(date(2025, 4, 2), 100.0), (date(2025, 4, 1), 101.0)]
+            )
+        )
+
+
+@pytest.mark.parametrize("nivel", [0.0, -1.0])
+def test_parse_chart_nivel_no_positivo_es_error(nivel: float) -> None:
+    with pytest.raises(SeriesError):
+        parse_chart(
+            payload_chart(
+                [(date(2025, 4, 1), 100.0), (date(2025, 4, 2), nivel)]
+            )
+        )
+
+
+def test_parse_chart_estructura_rota_es_error() -> None:
+    with pytest.raises(SeriesError):
+        parse_chart({"simulation": {}})
+    with pytest.raises(SeriesError):
+        parse_chart({"simulation": {"lastTwoYears": {}}})
+    with pytest.raises(SeriesError):
+        parse_chart({"simulation": {"lastTwoYears": {"chart": {}}}})
+    with pytest.raises(SeriesError):
+        parse_chart(payload_chart([(date(2025, 4, 1), 100.0)]), window="otra")
+
+
+def test_parse_chart_points_guardados() -> None:
+    puntos = parse_chart_points(
+        [["2025-04-01", 100.0], ["2025-04-02", 101.0]]
+    )
+
+    assert puntos == [
+        ChartPoint(date(2025, 4, 1), 100.0),
+        ChartPoint(date(2025, 4, 2), 101.0),
+    ]
+
+
+# ----------------------------------------------------------------------
+# Retorno mensual cierre-contra-cierre
+# ----------------------------------------------------------------------
+def test_retorno_mensual_28_30_31_y_cambio_de_anio() -> None:
+    puntos = [
+        ChartPoint(date(2025, 1, 31), 100.0),
+        ChartPoint(date(2025, 2, 28), 105.0),
+        ChartPoint(date(2025, 3, 31), 110.0),
+        ChartPoint(date(2025, 4, 30), 99.0),
+        ChartPoint(date(2025, 5, 31), 100.0),
+        ChartPoint(date(2025, 12, 31), 120.0),
+        ChartPoint(date(2026, 1, 31), 132.0),
+    ]
+
+    retornos = monthly_returns(puntos)
+
+    assert retornos[(2025, 2)] == pytest.approx(5.0)
+    assert retornos[(2025, 4)] == pytest.approx(-10.0)
+    assert retornos[(2025, 5)] == pytest.approx(100 / 99 * 100 - 100)
+    assert retornos[(2026, 1)] == pytest.approx(10.0)
+    # El primer mes del chart no tiene cierre anterior dentro de la ventana.
+    assert (2025, 1) not in retornos
+
+
+# ----------------------------------------------------------------------
+# Calibración exacta
+# ----------------------------------------------------------------------
+def test_calibracion_producto_exacto_y_cierre_m_exacto(hoy: date) -> None:
+    estadistica = [mes(2025, 4, 4.5)]
+    chart = serie_diaria(
+        date(2025, 3, 31),
+        date(2025, 4, 30),
+        {date(2025, 4, 10): 1.02, date(2025, 4, 20): 1.02},
+    )
+
+    resultado = build_series_full(estadistica, today=hoy, chart=chart)
+    abril = [
+        fila
+        for fila in resultado.rows
+        if (fila.date.year, fila.date.month) == (2025, 4)
+    ]
+
+    assert resultado.months["2025-04"]["status"] == "calibrated"
+    assert resultado.months["2025-04"]["stats_pct"] == 4.5
+    assert resultado.months["2025-04"]["chart_pct"] == pytest.approx(4.04)
+    assert all(fila.kind == KIND_CALIBRATED for fila in abril[:-1])
+    assert abril[-1].kind == KIND_MONTH
+    assert abril[-1].close == 104.5
+    assert abril[-1].gain == 4.5
+    producto = 1.0
+    for anterior, actual in zip(abril, abril[1:], strict=False):
+        producto *= actual.close / anterior.close
+    assert producto == pytest.approx(1.045, abs=1e-4)
+
+
+def test_calibracion_no_mueve_los_dias_de_retorno_cero(hoy: date) -> None:
+    estadistica = [mes(2025, 4, 4.5)]
+    chart = serie_diaria(
+        date(2025, 3, 31),
+        date(2025, 4, 30),
+        {date(2025, 4, 10): 1.02, date(2025, 4, 20): 1.02},
+    )
+
+    resultado = build_series_full(estadistica, today=hoy, chart=chart)
+    filas = {fila.date: fila for fila in resultado.rows}
+
+    assert filas[date(2025, 4, 2)].close == filas[date(2025, 4, 1)].close
+    assert filas[date(2025, 4, 2)].gain == 0.0
+    # El día con movimiento sí cambia.
+    assert filas[date(2025, 4, 10)].close > filas[date(2025, 4, 9)].close
+
+
+def test_calibracion_no_cambia_la_dispersion_de_los_log_retornos(
+    hoy: date,
+) -> None:
+    originales = {
+        date(2025, 4, 5): 1.01,
+        date(2025, 4, 12): 1.02,
+        date(2025, 4, 19): 0.995,
+    }
+    chart = serie_diaria(date(2025, 3, 31), date(2025, 4, 30), originales)
+    chart_pct = ((1 + 0.01) * (1 + 0.02) * (1 - 0.005) - 1) * 100
+    estadistica = [mes(2025, 4, chart_pct + 0.1)]
+
+    resultado = build_series_full(estadistica, today=hoy, chart=chart)
+    filas = {fila.date: fila for fila in resultado.rows}
+
+    logs_originales = [math.log(1.01), math.log(1.02), math.log(0.995)]
+    logs_calibrados = [
+        math.log(filas[dia].close / filas[dia - timedelta(days=1)].close)
+        for dia in originales
+    ]
+
+    assert resultado.months["2025-04"]["status"] == "calibrated"
+    assert statistics.pstdev(logs_calibrados) == pytest.approx(
+        statistics.pstdev(logs_originales), abs=1e-4
+    )
+
+
+# ----------------------------------------------------------------------
+# Stats manda: se calibra aunque el chart se aleje
+# ----------------------------------------------------------------------
+def test_calibra_aunque_se_aleje_mas_del_cap(hoy: date) -> None:
+    estadistica = [mes(2025, 4, 5.0)]
+    chart = serie_diaria(
+        date(2025, 3, 31),
+        date(2025, 4, 30),
+        {date(2025, 4, 10): 1.02, date(2025, 4, 20): 1.02},
+    )
+
+    resultado = build_series_full(estadistica, today=hoy, chart=chart)
+    abril = [
+        fila
+        for fila in resultado.rows
+        if (fila.date.year, fila.date.month) == (2025, 4)
+    ]
+
+    assert resultado.months["2025-04"]["status"] == "calibrated"
+    assert any(fila.kind == KIND_CALIBRATED for fila in abril)
+    assert abril[-1].kind == KIND_MONTH
+    assert abril[-1].close == 105.0
+    producto = 1.0
+    for anterior, actual in zip(abril, abril[1:], strict=False):
+        producto *= actual.close / anterior.close
+    assert producto == pytest.approx(1.05, abs=1e-4)
+
+
+def test_calibra_signos_opuestos(hoy: date) -> None:
+    estadistica = [mes(2025, 4, 0.2)]
+    chart = serie_diaria(
+        date(2025, 3, 31),
+        date(2025, 4, 30),
+        {date(2025, 4, 10): 0.999},
+    )
+
+    resultado = build_series_full(estadistica, today=hoy, chart=chart)
+
+    assert resultado.months["2025-04"]["status"] == "calibrated"
+    assert any(
+        fila.kind == KIND_CALIBRATED
+        for fila in resultado.rows
+        if (fila.date.year, fila.date.month) == (2025, 4)
+    )
+
+
+def test_rechaza_solo_si_no_hay_dias_con_movimiento(hoy: date) -> None:
+    """Sin ningún día con retorno no hay forma de repartir el cierre."""
+    estadistica = [mes(2025, 4, 2.0)]
+    chart = serie_diaria(date(2025, 3, 31), date(2025, 4, 30))
+
+    resultado = build_series_full(estadistica, today=hoy, chart=chart)
+
+    assert resultado.months["2025-04"]["status"] == "rejected"
+    assert all(
+        fila.kind != KIND_CALIBRATED
+        for fila in resultado.rows
+        if (fila.date.year, fila.date.month) == (2025, 4)
+    )
+
+
+# ----------------------------------------------------------------------
+# Rejilla diaria con meses de chart
+# ----------------------------------------------------------------------
+def test_daily_rows_no_rellena_un_mes_con_c(hoy: date) -> None:
+    estadistica = [mes(2025, 4, 2.1)]
+    chart = serie_diaria(
+        date(2025, 3, 31),
+        date(2025, 4, 30),
+        {date(2025, 4, 10): 1.02},
+    )
+
+    filas = build_series_full(estadistica, today=hoy, chart=chart).rows
+    diarias = daily_rows(filas, today=hoy)
+
+    assert all(fila.kind != KIND_FILL for fila in diarias)
+    assert len(diarias) == 31  # del 31 de marzo al 30 de abril
+
+
+def test_daily_rows_rellena_el_hueco_inicial_del_mes_frontera(
+    hoy: date,
+) -> None:
+    estadistica = [mes(2025, 4, 0.0)]
+    chart = serie_diaria(date(2025, 4, 15), date(2025, 4, 30))
+
+    filas = build_series_full(estadistica, today=hoy, chart=chart).rows
+    diarias = {fila.date: fila for fila in daily_rows(filas, today=hoy)}
+
+    assert diarias[date(2025, 4, 1)].kind == KIND_ANCHOR
+    assert diarias[date(2025, 4, 14)].kind == KIND_FILL
+    assert diarias[date(2025, 4, 15)].kind == KIND_CALIBRATED
+    assert diarias[date(2025, 4, 16)].kind == KIND_CALIBRATED
+    # Después del primer C no se inventa nada: ya hay un punto por día.
+    assert all(
+        fila.kind != KIND_FILL
+        for dia, fila in diarias.items()
+        if dia >= date(2025, 4, 15)
+    )

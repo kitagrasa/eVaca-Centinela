@@ -68,8 +68,21 @@ class SeriesConfig:
 
     # Segundos de espera entre peticiones reales (no entre copias de caché).
     pause_seconds: float = 3.0
-    # Minutos que se reutiliza la respuesta guardada antes de volver a pedirla.
+    # Legado: ya no se usa. La rentabilidad mensual se lee los días de
+    # `stats_days` y el chart se pide en cada pasada diaria.
     cache_minutes: int = 60
+    # Desviación (pp) a partir de la cual se avisa por Telegram. También es la
+    # que decide si el día 12 se vuelve a avisar si cambia la rentabilidad.
+    alert_pp: float = 0.2
+    # Desviación (pp) a partir de la cual el chart se considera poco fiable
+    # para el aviso y la recomendación. No impide calibrar: stats manda
+    # siempre y los días se ajustan a su cierre.
+    cap_pp: float = 0.5
+    # Días del mes en que se lee la rentabilidad: el primero (con reintentos
+    # los tres días siguientes) y el segundo (segunda lectura).
+    stats_days: list[int] = field(default_factory=lambda: [5, 12])
+    # Ventana del chart diario.
+    chart_window: str = "lastTwoYears"
 
 
 @dataclass
@@ -211,6 +224,12 @@ def load_config(
         series=SeriesConfig(
             pause_seconds=float(series_raw.get("pause_seconds", 3.0)),
             cache_minutes=int(series_raw.get("cache_minutes", 60)),
+            alert_pp=float(series_raw.get("alert_pp", 0.2)),
+            cap_pp=float(series_raw.get("cap_pp", 0.5)),
+            stats_days=_parse_stats_days(series_raw.get("stats_days")),
+            chart_window=str(
+                series_raw.get("chart_window") or "lastTwoYears"
+            ),
         ),
         schedule=schedule,
         source=config_path,
@@ -219,6 +238,21 @@ def load_config(
             users_source.name if users_source else "desconocido"
         ),
     )
+
+
+def _parse_stats_days(valor: Any) -> list[int]:
+    """Días de lectura de stats: enteros 1..28, ordenados y sin repetir."""
+    if not isinstance(valor, (list, tuple)):
+        return [5, 12]
+    dias: list[int] = []
+    for dia in valor:
+        try:
+            numero = int(dia)
+        except (TypeError, ValueError):
+            continue
+        if 1 <= numero <= 28 and numero not in dias:
+            dias.append(numero)
+    return sorted(dias) or [5, 12]
 
 
 def _default_users_path(config_path: Path) -> Path:

@@ -12,6 +12,7 @@ from datetime import date
 from evaca_monitor.serie import (
     KIND_ANCHOR,
     KIND_BASE,
+    KIND_CALIBRATED,
     KIND_DAY,
     KIND_FILL,
     KIND_MONTH,
@@ -234,3 +235,41 @@ def test_cada_fila_tiene_dos_celdas_y_su_marca_m_d_o_a() -> None:
     assert all(linea.count("<td>") == 2 for linea in lineas)
     marcas = [re.search(r'data-kind=\s+"([MDA])"', linea).group(1) for linea in lineas]
     assert set(marcas) == {"M", "D", "A"}
+
+
+# ----------------------------------------------------------------------
+# Meses calibrados y leyenda
+# ----------------------------------------------------------------------
+def test_marca_los_dias_calibrados_con_c_y_su_rentab() -> None:
+    filas = [
+        PriceRow(date(2025, 4, 30), 104.5, KIND_MONTH, gain=4.5),
+        PriceRow(date(2025, 4, 10), 102.2252, KIND_CALIBRATED, gain=2.23),
+        PriceRow(date(2025, 4, 1), 100.0, KIND_CALIBRATED, gain=0.0),
+    ]
+
+    html = render(ID, filas)
+    por_fecha = {fecha_de(linea): linea for linea in lineas_de_datos(html)}
+
+    assert 'data-kind=   "C"' in por_fecha["2025-04-10"]
+    assert rentab_de(por_fecha["2025-04-10"]) == "2.23"
+    assert rentab_de(por_fecha["2025-04-01"]) == "0.00"
+    assert rentab_de(por_fecha["2025-04-30"]) == "4.50"
+
+
+def test_leyenda_de_la_cabecera_antes_de_la_tabla() -> None:
+    html = render(ID, filas_de_ejemplo())
+
+    leyenda = "M = Mes stats · D = Diario chart · A = Automático · C = Calibrado"
+    assert f"<p>{leyenda}</p>" in html
+    assert html.index(leyenda) < html.index("<table>")
+    # La leyenda está fuera de la tabla: PP solo importa las celdas.
+    assert html.count("<td>") == 3 * 2
+
+
+def test_la_leyenda_no_añade_columnas() -> None:
+    html = render(ID, filas_de_ejemplo())
+
+    tabla = html[html.index("<table>") : html.index("</table>")]
+    assert "M = Mes stats" not in tabla
+    assert tabla.count("<th>") == 2
+    assert tabla.count("<td>") == 6

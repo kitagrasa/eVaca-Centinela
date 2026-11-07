@@ -1,8 +1,8 @@
 """Tests de la identidad opaca y del mapa privado de ids.
 
 Aquí se comprueba lo que hace privado el repositorio del código: los ids son
-estables, no se pueden leer al revés, el mapa acumula filas (con los traders
-retirados marcados) y nunca se escribe dentro del repositorio público.
+estables, no se pueden leer al revés, el mapa solo mantiene a los traders
+activos y nunca se escribe dentro del repositorio público.
 """
 
 from __future__ import annotations
@@ -106,7 +106,7 @@ def test_el_duenio_sale_del_entorno_o_del_repositorio(monkeypatch) -> None:
 
 
 # ---------------------------------------------------------------------- #
-# El mapa: tres columnas, acumulativo y con retirados
+# El mapa: tres columnas y solo traders activos
 # ---------------------------------------------------------------------- #
 def test_el_mapa_tiene_tres_columnas() -> None:
     filas = [serie_store.IdRow(ID_UNO, "uno")]
@@ -118,23 +118,19 @@ def test_el_mapa_tiene_tres_columnas() -> None:
     assert celdas[0] == [ID_UNO, "uno", serie_store.feed_url(ID_UNO, OWNER)]
 
 
-def test_el_mapa_es_acumulativo_y_marca_los_retirados() -> None:
+def test_el_mapa_elimina_las_filas_de_quien_ya_no_esta() -> None:
     id_viejo = serie_id("viejo")
     previas = [serie_store.IdRow(id_viejo, "viejo")]
 
     filas = serie_store.merge_ids(previas, ["uno"])
 
-    assert [fila.id for fila in filas] == [id_viejo, ID_UNO]
-    assert filas[0].retirado is True
-    assert filas[0].usuario == "viejo"
-    assert filas[1].retirado is False
-
+    assert [fila.id for fila in filas] == [ID_UNO]
     texto = serie_store.render_ids_map(filas, OWNER)
-    assert "viejo (retirado)" in texto
-    assert "uno (retirado)" not in texto
+    assert "viejo" not in texto
+    assert "uno" in texto
 
 
-def test_si_alguien_vuelve_deja_de_estar_retirado() -> None:
+def test_si_alguien_vuelve_se_queda_una_sola_fila_activa() -> None:
     id_viejo = serie_id("viejo")
     previas = [serie_store.IdRow(id_viejo, "viejo", retirado=True)]
 
@@ -156,12 +152,29 @@ def test_el_mapa_se_guarda_y_se_vuelve_a_leer(tmp_path: Path) -> None:
     ruta = tmp_path / serie_store.IDS_FILENAME
     filas = [
         serie_store.IdRow(ID_UNO, "uno"),
-        serie_store.IdRow(serie_id("viejo"), "viejo", retirado=True),
+        serie_store.IdRow(serie_id("dos"), "dos"),
     ]
 
     assert serie_store.write_ids_map(ruta, filas, OWNER) is True
     assert serie_store.write_ids_map(ruta, filas, OWNER) is False  # sin cambios
     assert serie_store.load_ids_map(ruta) == filas
+
+
+def test_al_borrar_un_trader_su_fila_desaparece_del_mapa(
+    tmp_path: Path,
+) -> None:
+    ruta = tmp_path / serie_store.IDS_FILENAME
+    borrado = serie_store.IdRow(serie_id("trader_borrado"), "trader_borrado")
+    serie_store.write_ids_map(
+        ruta, [serie_store.IdRow(ID_UNO, "uno"), borrado], OWNER
+    )
+
+    run = _run(tmp_path, usuarios=["uno"])
+
+    assert run.run_ids(imprimir=False) == 0
+    filas = serie_store.load_ids_map(ruta)
+    assert [fila.id for fila in filas] == [ID_UNO]
+    assert "trader_borrado" not in ruta.read_text(encoding="utf-8")
 
 
 def test_sin_mapa_anterior_no_hay_filas(tmp_path: Path) -> None:

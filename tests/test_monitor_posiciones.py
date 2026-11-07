@@ -102,7 +102,7 @@ class FakeSession:
             else posiciones
         )
 
-    def get(self, url, params=None, timeout=None):
+    def get(self, url, params=None, timeout=None, headers=None):
         self.llamadas.append(url)
         params = params or {}
         if "logininfo" in url:
