@@ -663,10 +663,10 @@ def test_calibracion_producto_exacto_y_cierre_m_exacto(hoy: date) -> None:
     assert producto == pytest.approx(1.045, abs=1e-4)
 
 
-def test_un_mes_sin_el_ultimo_dia_del_chart_queda_incompleto(
+def test_un_mes_sin_el_ultimo_dia_del_chart_no_se_calibra(
     hoy: date,
 ) -> None:
-    """Sin el último día del chart, el mes se calibra y se marca incompleto."""
+    """Sin el cierre del mes no hay periodo comparable: no se calibra."""
     estadistica = [mes(2025, 4, 4.5)]
     chart = serie_diaria(
         date(2025, 3, 31),
@@ -676,19 +676,22 @@ def test_un_mes_sin_el_ultimo_dia_del_chart_queda_incompleto(
 
     resultado = build_series_full(estadistica, today=hoy, chart=chart)
 
-    assert resultado.months["2025-04"]["status"] == "calibrated"
+    assert resultado.months["2025-04"]["status"] == "not_comparable"
     assert resultado.months["2025-04"]["complete"] is False
     abril = [
         fila
         for fila in resultado.rows
         if (fila.date.year, fila.date.month) == (2025, 4)
     ]
+    # Los días del chart se publican tal cual y stats pone el cierre.
+    assert abril[-2].kind == KIND_DAY
+    assert abril[-2].close == 104.04
     assert abril[-1].kind == KIND_MONTH
     assert abril[-1].close == 104.5
 
 
-def test_un_mes_incompleto_con_stats_intermedio_no_calibra_el_chart() -> None:
-    """Stats entre el último punto y el siguiente completa el hueco."""
+def test_un_mes_sin_el_cierre_no_se_calibra_y_stats_completa_el_hueco() -> None:
+    """Sin el cierre del mes, los días son `D` y stats pone el `M`."""
     chart = [
         ChartPoint(date(2025, 8, 31), 100.0),
         *[ChartPoint(date(2025, 9, dia), 100.0) for dia in range(1, 27)],
@@ -702,7 +705,7 @@ def test_un_mes_incompleto_con_stats_intermedio_no_calibra_el_chart() -> None:
     filas = {fila.date: fila for fila in resultado.rows}
 
     assert resultado.months["2025-09"]["complete"] is False
-    assert resultado.months["2025-09"]["intermediate"] is True
+    assert resultado.months["2025-09"]["status"] == "not_comparable"
     assert resultado.months["2025-09"]["factor"] == 1.0
     # El chart no se adapta: el 27 de septiembre sigue en 102.
     assert filas[date(2025, 9, 27)].close == 102.0
@@ -715,8 +718,8 @@ def test_un_mes_incompleto_con_stats_intermedio_no_calibra_el_chart() -> None:
     assert filas[date(2025, 10, 2)].close == 106.0
 
 
-def test_un_mes_incompleto_con_stats_fuera_del_hueco_calibra_el_chart() -> None:
-    """Si stats queda fuera, manda stats y el chart del mes se adapta."""
+def test_un_mes_sin_el_cierre_no_se_calibra_aunque_stats_quede_fuera() -> None:
+    """Sin el cierre del mes no se adapta el chart aunque stats no encaje."""
     chart = [
         ChartPoint(date(2025, 8, 31), 100.0),
         *[ChartPoint(date(2025, 9, dia), 100.0) for dia in range(1, 27)],
@@ -730,14 +733,14 @@ def test_un_mes_incompleto_con_stats_fuera_del_hueco_calibra_el_chart() -> None:
     filas = {fila.date: fila for fila in resultado.rows}
 
     assert resultado.months["2025-09"]["complete"] is False
-    assert resultado.months["2025-09"]["intermediate"] is False
-    assert resultado.months["2025-09"]["factor"] != 1.0
-    # El 27 de septiembre se ha adaptado para acabar en el 8 %.
-    assert filas[date(2025, 9, 27)].close == 108.0
-    assert filas[date(2025, 9, 27)].kind == KIND_CALIBRATED
+    assert resultado.months["2025-09"]["status"] == "not_comparable"
+    assert resultado.months["2025-09"]["factor"] == 1.0
+    # El 27 de septiembre se queda con el valor del chart.
+    assert filas[date(2025, 9, 27)].close == 102.0
+    assert filas[date(2025, 9, 27)].kind == KIND_DAY
+    # El cierre del mes es el de stats.
     assert filas[date(2025, 9, 30)].close == 108.0
-    # El mes siguiente se mide desde el M y conserva el 6 % del 2 de octubre,
-    # aunque eso implique una bajada desde el 108.
+    # El mes siguiente se mide desde el M y conserva el 6 % del 2 de octubre.
     assert filas[date(2025, 10, 2)].close == 106.0
 
 
@@ -915,6 +918,31 @@ def test_recalibra_los_dias_d_de_un_mes_sin_chart(hoy: date) -> None:
     assert abril[-1].close == 104.0
 
 
+def test_un_mes_sin_periodo_comparable_no_se_recalibra_sin_chart(
+    hoy: date,
+) -> None:
+    """Si el mes era `not_comparable`, sin chart solo se mueve el cierre."""
+    chart = serie_diaria(
+        date(2025, 4, 15), date(2025, 4, 30), {date(2025, 4, 20): 1.02}
+    )
+    primera = build_series_full([mes(2025, 4, 2.5)], today=hoy, chart=chart)
+    assert primera.months["2025-04"]["status"] == "not_comparable"
+    antes = {fila.date: fila for fila in primera.rows}
+
+    segunda = build_series_full(
+        [mes(2025, 4, 4.0)],
+        today=hoy,
+        history=primera.rows,
+        chart=None,
+        prev_months=primera.months,
+    )
+    filas = {fila.date: fila for fila in segunda.rows}
+
+    # El día del chart se queda tal cual; solo cambia el cierre `M`.
+    assert filas[date(2025, 4, 20)].close == antes[date(2025, 4, 20)].close
+    assert filas[date(2025, 4, 30)].close == 104.0
+
+
 def test_rehace_un_mes_con_chart_desde_el_chart_nuevo(hoy: date) -> None:
     """Con chart disponible, los días salen del chart de la web."""
     primero = serie_diaria(
@@ -966,6 +994,32 @@ def test_un_c_que_ya_coincide_con_el_chart_se_queda_en_d(hoy: date) -> None:
     assert abril[-1].close == 102.0
 
 
+def test_la_tolerancia_para_no_calibrar_es_de_una_decima(hoy: date) -> None:
+    """Dentro de 0,1 pp el chart vale como `D`; por encima se calibra."""
+    chart = [
+        ChartPoint(date(2025, 3, 31), 100.0),
+        *[ChartPoint(date(2025, 4, dia), 100.0) for dia in range(1, 30)],
+        ChartPoint(date(2025, 4, 30), 104.0),
+    ]
+    cerca = build_series_full([mes(2025, 4, 4.05)], today=hoy, chart=chart)
+    lejos = build_series_full([mes(2025, 4, 4.2)], today=hoy, chart=chart)
+    abril_cerca = [
+        fila
+        for fila in cerca.rows
+        if (fila.date.year, fila.date.month) == (2025, 4)
+    ]
+    abril_lejos = [
+        fila
+        for fila in lejos.rows
+        if (fila.date.year, fila.date.month) == (2025, 4)
+    ]
+
+    assert cerca.months["2025-04"]["factor"] == 1.0
+    assert all(fila.kind == KIND_DAY for fila in abril_cerca[:-1])
+    assert lejos.months["2025-04"]["factor"] != 1.0
+    assert any(fila.kind == KIND_CALIBRATED for fila in abril_lejos)
+
+
 def test_no_toca_nada_si_los_stats_no_cambian(hoy: date) -> None:
     chart = serie_diaria(
         date(2025, 3, 31), date(2025, 4, 30), {date(2025, 4, 10): 1.02}
@@ -1002,14 +1056,12 @@ def test_la_recalibracion_conserva_lo_que_no_depende_de_los_dias(
             "2025-04": {
                 "chart_pct": 2.0,
                 "complete": False,
-                "intermediate": True,
             }
         },
     )
     info = segunda.months["2025-04"]
 
     assert info["complete"] is False
-    assert info["intermediate"] is True
     assert info["chart_pct"] == 2.0
 
 
@@ -1046,7 +1098,7 @@ def test_daily_rows_no_rellena_un_mes_con_c(hoy: date) -> None:
     assert len(diarias) == 31  # del 31 de marzo al 30 de abril
 
 
-def test_daily_rows_rellena_el_hueco_inicial_del_mes_frontera(
+def test_un_mes_frontera_sin_calibrar_no_rellena_el_hueco(
     hoy: date,
 ) -> None:
     estadistica = [mes(2025, 4, 2.5)]
@@ -1057,16 +1109,13 @@ def test_daily_rows_rellena_el_hueco_inicial_del_mes_frontera(
     filas = build_series_full(estadistica, today=hoy, chart=chart).rows
     diarias = {fila.date: fila for fila in daily_rows(filas, today=hoy)}
 
-    assert diarias[date(2025, 4, 1)].kind == KIND_FILL
-    assert diarias[date(2025, 4, 14)].kind == KIND_FILL
-    assert diarias[date(2025, 4, 15)].kind == KIND_CALIBRATED
-    assert diarias[date(2025, 4, 16)].kind == KIND_CALIBRATED
-    # Después del primer C no se inventa nada: ya hay un punto por día.
-    assert all(
-        fila.kind != KIND_FILL
-        for dia, fila in diarias.items()
-        if dia >= date(2025, 4, 15)
-    )
+    # Sin el cierre del mes anterior no se calibra: los días son `D` y el
+    # hueco inicial no se rellena (PP une el cierre anterior con el primero).
+    assert date(2025, 4, 1) not in diarias
+    assert date(2025, 4, 14) not in diarias
+    assert diarias[date(2025, 4, 15)].kind == KIND_DAY
+    assert diarias[date(2025, 4, 16)].kind == KIND_DAY
+    assert all(fila.kind != KIND_FILL for fila in diarias.values())
 
 
 def test_un_mes_sin_adaptacion_conserva_los_dias_de_chart(hoy: date) -> None:

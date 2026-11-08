@@ -14,9 +14,11 @@ Diseño de la pasada:
   anterior. `--force` fuerza la lectura cualquier día. Solo se usan **meses
   cerrados**: el mes en curso es MTD, no se guarda ni se publica. Cada lectura
   contrasta **todos** los meses guardados con los de la web y corrige los que
-  no coinciden con las valoraciones diarias de ese mes: un mes `A` se rehace,
-  uno `D` o `C` se recalibra (desde el chart de la web si aún trae ese mes; si
-  no, con la forma de los días guardados);
+  no coinciden con las valoraciones diarias de ese mes: un mes `A` se rehace;
+  uno `D` o `C` se recalibra desde el chart si trae el mes entero (los dos
+  cierres) y, si el chart ya no trae ese mes, con la forma de los días
+  guardados; si el chart lo trae pero le falta un cierre, no hay periodo
+  comparable y sus días se dejan tal cual (`D`);
 * un fallo del chart no borra lo publicado: se conservan los días `C` y `D`
   guardados; un fallo de la rentabilidad mensual no toca los ficheros de ese
   trader y se reintenta en la siguiente pasada;
@@ -601,7 +603,6 @@ class SerieRun:
             stats_pct=stats_pct,
             chart_pct=chart_pct,
             estado=str(info.get("status") or ""),
-            intermedio=bool(info.get("intermediate")),
             poco_fiable=diferencia > cap_pp,
             cap_pp=cap_pp,
             rechazados=_rechazados_ultimos_12(auditoria, hoy, cap_pp),
@@ -866,7 +867,6 @@ def _mensaje_aviso(
     stats_pct: float,
     chart_pct: float,
     estado: str,
-    intermedio: bool,
     poco_fiable: bool,
     cap_pp: float,
     rechazados: int,
@@ -888,10 +888,11 @@ def _mensaje_aviso(
             "El mes no se ha calibrado: se publica como cierre mensual "
             "+ relleno."
         )
-    elif intermedio:
+    elif estado == "not_comparable":
         lineas.append(
-            "El chart no llega al cierre del mes: stats completa el hueco "
-            "y el chart no se ha adaptado."
+            "El chart no tiene cotización en el cierre del mes o en el del "
+            "anterior: no se puede comparar el mismo periodo y sus días se "
+            "publican sin calibrar."
         )
     else:
         lineas.append(
@@ -929,13 +930,18 @@ def _rechazados_ultimos_12(
 
     Incluye los que no se pudieron calibrar (`rejected`) y los que sí se
     calibraron pero se alejan más de `cap_pp` de stats. Los meses con el chart
-    incompleto quedan fuera de la recomendación, aunque sí puedan avisar.
+    incompleto o sin periodo comparable (`not_comparable`) quedan fuera de la
+    recomendación, aunque sí puedan avisar: su rentabilidad no es comparable.
     """
     total = 0
     for clave, info in auditoria.items():
         if not isinstance(info, dict):
             continue
         if info.get("complete") is False:
+            continue
+        if info.get("status") == "not_comparable":
+            continue
+        if info.get("intermediate") is True:
             continue
         try:
             anio, mes = (int(parte) for parte in clave.split("-", 1))
