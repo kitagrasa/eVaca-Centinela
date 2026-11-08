@@ -1,9 +1,9 @@
 {
   "version": 2,
   "id": "7fd536b6ff74",
-  "updated_at": "2026-11-07T21:16:09+00:00",
+  "updated_at": "2026-11-08T12:54:19+00:00",
   "fetched_at": "2026-11-06T18:47:22+00:00",
-  "chart_fetched_at": "2026-11-07T21:16:09+00:00",
+  "chart_fetched_at": "2026-11-08T12:54:19+00:00",
   "last_payload": {
     "monthly": [
       {
@@ -235,17 +235,12 @@
         "start": "2026-10-01T00:00:00Z",
         "gain": 3.3,
         "isSimulation": false
-      },
-      {
-        "start": "2026-11-01T00:00:00Z",
-        "gain": -0.24,
-        "isSimulation": false
       }
     ]
   },
   "chart": {
     "window": "lastTwoYears",
-    "fetched_at": "2026-11-07T21:16:09+00:00",
+    "fetched_at": "2026-11-08T12:54:19+00:00",
     "points": [
       [
         "2024-01-01",
@@ -4406,6 +4401,14 @@
       [
         "2026-11-05",
         36297.97
+      ],
+      [
+        "2026-11-06",
+        36479.46
+      ],
+      [
+        "2026-11-07",
+        36479.46
       ]
     ]
   },
@@ -4415,238 +4418,306 @@
       "chart_pct": -0.8839,
       "factor": 1.000002,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2024-02": {
       "stats_pct": -1.2,
       "chart_pct": -1.1812,
       "factor": 0.999991,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2024-03": {
       "stats_pct": -0.19,
       "chart_pct": -0.1876,
       "factor": 0.999999,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2024-04": {
       "stats_pct": -0.7,
       "chart_pct": -0.6794,
       "factor": 0.999991,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2024-05": {
       "stats_pct": -0.11,
       "chart_pct": -0.0998,
       "factor": 0.999996,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2024-06": {
       "stats_pct": -2.06,
       "chart_pct": -2.0539,
       "factor": 0.999997,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2024-07": {
       "stats_pct": 1.32,
       "chart_pct": 1.3076,
       "factor": 1.000006,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2024-08": {
       "stats_pct": 1.22,
       "chart_pct": 1.2006,
       "factor": 1.000009,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2024-09": {
       "stats_pct": 6.17,
       "chart_pct": 6.158,
       "factor": 1.000005,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2024-10": {
       "stats_pct": 1.79,
       "chart_pct": 1.7968,
       "factor": 0.999997,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2024-11": {
       "stats_pct": 11.84,
       "chart_pct": 11.8321,
       "factor": 1.000003,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2024-12": {
       "stats_pct": -5.32,
       "chart_pct": -5.3233,
       "factor": 1.000002,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2025-01": {
       "stats_pct": 8.08,
       "chart_pct": 8.0674,
       "factor": 1.000006,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2025-02": {
       "stats_pct": 5.92,
       "chart_pct": 5.9317,
       "factor": 0.999995,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2025-03": {
       "stats_pct": -2.64,
       "chart_pct": -2.6288,
       "factor": 0.999995,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2025-04": {
       "stats_pct": 1.19,
       "chart_pct": -7.2685,
       "factor": 1.003976,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2025-05": {
       "stats_pct": 5.32,
       "chart_pct": 5.3087,
       "factor": 1.000005,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2025-06": {
       "stats_pct": 12.18,
       "chart_pct": 12.1879,
       "factor": 0.999997,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2025-07": {
       "stats_pct": -4.78,
       "chart_pct": -4.7885,
       "factor": 1.000004,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2025-08": {
       "stats_pct": 11.56,
       "chart_pct": 11.5548,
       "factor": 1.000002,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2025-09": {
       "stats_pct": 19.01,
       "chart_pct": 19.0394,
       "factor": 0.999988,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2025-10": {
       "stats_pct": 11.39,
       "chart_pct": 11.3796,
       "factor": 1.000004,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2025-11": {
       "stats_pct": 0.2,
       "chart_pct": 0.1791,
       "factor": 1.00001,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2025-12": {
       "stats_pct": -0.19,
       "chart_pct": -0.1945,
       "factor": 1.000002,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2026-01": {
       "stats_pct": 16.3,
       "chart_pct": 16.3155,
       "factor": 0.999994,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2026-02": {
       "stats_pct": -0.69,
       "chart_pct": -0.6968,
       "factor": 1.000003,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2026-03": {
       "stats_pct": -3.14,
       "chart_pct": -3.1453,
       "factor": 1.000003,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2026-04": {
       "stats_pct": 44.54,
       "chart_pct": 44.6135,
       "factor": 0.999976,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2026-05": {
       "stats_pct": 6.61,
       "chart_pct": 6.6072,
       "factor": 1.000001,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2026-06": {
       "stats_pct": -0.65,
       "chart_pct": -0.6354,
       "factor": 0.999994,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2026-07": {
       "stats_pct": 4.59,
       "chart_pct": 4.5953,
       "factor": 0.999998,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2026-08": {
       "stats_pct": 6.43,
       "chart_pct": 6.4219,
       "factor": 1.000003,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2026-09": {
       "stats_pct": -3.65,
       "chart_pct": -3.6653,
       "factor": 1.000007,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2026-10": {
       "stats_pct": 3.3,
       "chart_pct": 3.3125,
       "factor": 0.999995,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     }
   },
   "history": [
@@ -4656,19 +4727,9 @@
       "kind": "base"
     },
     {
-      "date": "2023-02-01",
-      "close": 100.0,
-      "kind": "anchor"
-    },
-    {
       "date": "2023-02-28",
       "close": 100.33,
       "kind": "month"
-    },
-    {
-      "date": "2023-03-01",
-      "close": 100.33,
-      "kind": "anchor"
     },
     {
       "date": "2023-03-31",
@@ -4676,19 +4737,9 @@
       "kind": "month"
     },
     {
-      "date": "2023-04-01",
-      "close": 103.8315,
-      "kind": "anchor"
-    },
-    {
       "date": "2023-04-30",
       "close": 99.9378,
       "kind": "month"
-    },
-    {
-      "date": "2023-05-01",
-      "close": 99.9378,
-      "kind": "anchor"
     },
     {
       "date": "2023-05-31",
@@ -4696,19 +4747,9 @@
       "kind": "month"
     },
     {
-      "date": "2023-06-01",
-      "close": 99.7179,
-      "kind": "anchor"
-    },
-    {
       "date": "2023-06-30",
       "close": 101.3632,
       "kind": "month"
-    },
-    {
-      "date": "2023-07-01",
-      "close": 101.3632,
-      "kind": "anchor"
     },
     {
       "date": "2023-07-31",
@@ -4716,19 +4757,9 @@
       "kind": "month"
     },
     {
-      "date": "2023-08-01",
-      "close": 106.1678,
-      "kind": "anchor"
-    },
-    {
       "date": "2023-08-31",
       "close": 97.8442,
       "kind": "month"
-    },
-    {
-      "date": "2023-09-01",
-      "close": 97.8442,
-      "kind": "anchor"
     },
     {
       "date": "2023-09-30",
@@ -4736,29 +4767,14 @@
       "kind": "month"
     },
     {
-      "date": "2023-10-01",
-      "close": 94.1457,
-      "kind": "anchor"
-    },
-    {
       "date": "2023-10-31",
       "close": 91.7826,
       "kind": "month"
     },
     {
-      "date": "2023-11-01",
-      "close": 91.7826,
-      "kind": "anchor"
-    },
-    {
       "date": "2023-11-30",
       "close": 93.6641,
       "kind": "month"
-    },
-    {
-      "date": "2023-12-01",
-      "close": 93.6641,
-      "kind": "anchor"
     },
     {
       "date": "2023-12-31",
@@ -9963,6 +9979,16 @@
     {
       "date": "2026-11-05",
       "close": 379.5234,
+      "kind": "day"
+    },
+    {
+      "date": "2026-11-06",
+      "close": 381.421,
+      "kind": "day"
+    },
+    {
+      "date": "2026-11-07",
+      "close": 381.421,
       "kind": "day"
     }
   ]

@@ -1,9 +1,9 @@
 {
   "version": 2,
   "id": "7b92a5d9125c",
-  "updated_at": "2026-11-07T21:16:09+00:00",
+  "updated_at": "2026-11-08T12:54:19+00:00",
   "fetched_at": "2026-11-06T18:47:22+00:00",
-  "chart_fetched_at": "2026-11-07T21:16:09+00:00",
+  "chart_fetched_at": "2026-11-08T12:54:19+00:00",
   "last_payload": {
     "monthly": [
       {
@@ -405,17 +405,12 @@
         "start": "2026-10-01T00:00:00Z",
         "gain": 1.76,
         "isSimulation": false
-      },
-      {
-        "start": "2026-11-01T00:00:00Z",
-        "gain": 0.69,
-        "isSimulation": false
       }
     ]
   },
   "chart": {
     "window": "lastTwoYears",
-    "fetched_at": "2026-11-07T21:16:09+00:00",
+    "fetched_at": "2026-11-08T12:54:19+00:00",
     "points": [
       [
         "2024-01-01",
@@ -4576,6 +4571,14 @@
       [
         "2026-11-05",
         21977.4
+      ],
+      [
+        "2026-11-06",
+        21832.35
+      ],
+      [
+        "2026-11-07",
+        21834.53
       ]
     ]
   },
@@ -4585,238 +4588,306 @@
       "chart_pct": 4.8851,
       "factor": 1.000002,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2024-02": {
       "stats_pct": 3.72,
       "chart_pct": 5.1717,
       "factor": 0.999305,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2024-03": {
       "stats_pct": 2.37,
       "chart_pct": 2.3754,
       "factor": 0.999997,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2024-04": {
       "stats_pct": -2.67,
       "chart_pct": -2.6741,
       "factor": 1.000002,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2024-05": {
       "stats_pct": 2.83,
       "chart_pct": 2.8408,
       "factor": 0.999995,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2024-06": {
       "stats_pct": 2.27,
       "chart_pct": 2.2702,
       "factor": 1.0,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2024-07": {
       "stats_pct": -7.31,
       "chart_pct": -7.3318,
       "factor": 1.000011,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2024-08": {
       "stats_pct": 5.84,
       "chart_pct": 5.899,
       "factor": 0.999975,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2024-09": {
       "stats_pct": 0.98,
       "chart_pct": 1.0103,
       "factor": 0.999985,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2024-10": {
       "stats_pct": 1.53,
       "chart_pct": 1.5196,
       "factor": 1.000004,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2024-11": {
       "stats_pct": 6.84,
       "chart_pct": 6.8425,
       "factor": 0.999999,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2024-12": {
       "stats_pct": -3.89,
       "chart_pct": -3.9046,
       "factor": 1.000005,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2025-01": {
       "stats_pct": 7.59,
       "chart_pct": 7.5984,
       "factor": 0.999997,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2025-02": {
       "stats_pct": 0.39,
       "chart_pct": 0.4026,
       "factor": 0.999995,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2025-03": {
       "stats_pct": -3.41,
       "chart_pct": -3.4333,
       "factor": 1.00001,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2025-04": {
       "stats_pct": 2.45,
       "chart_pct": 2.4678,
       "factor": 0.999992,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2025-05": {
       "stats_pct": 5.21,
       "chart_pct": 5.1982,
       "factor": 1.000005,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2025-06": {
       "stats_pct": 6.76,
       "chart_pct": 6.7939,
       "factor": 0.999987,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2025-07": {
       "stats_pct": -2.98,
       "chart_pct": -2.9651,
       "factor": 0.999993,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2025-08": {
       "stats_pct": 0.28,
       "chart_pct": 0.2727,
       "factor": 1.000003,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2025-09": {
       "stats_pct": 5.28,
       "chart_pct": 5.2915,
       "factor": 0.999995,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2025-10": {
       "stats_pct": 3.92,
       "chart_pct": 3.923,
       "factor": 0.999999,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2025-11": {
       "stats_pct": -0.44,
       "chart_pct": -0.4201,
       "factor": 0.999991,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2025-12": {
       "stats_pct": -1.52,
       "chart_pct": -1.5244,
       "factor": 1.000002,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2026-01": {
       "stats_pct": -1.1,
       "chart_pct": -1.0947,
       "factor": 0.999998,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2026-02": {
       "stats_pct": -0.28,
       "chart_pct": -0.278,
       "factor": 0.999999,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2026-03": {
       "stats_pct": 4.96,
       "chart_pct": 5.2404,
       "factor": 0.999901,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2026-04": {
       "stats_pct": 4.3,
       "chart_pct": 4.2884,
       "factor": 1.000004,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2026-05": {
       "stats_pct": 14.19,
       "chart_pct": 14.5874,
       "factor": 0.999866,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2026-06": {
       "stats_pct": -1.21,
       "chart_pct": -1.2379,
       "factor": 1.000011,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2026-07": {
       "stats_pct": 8.53,
       "chart_pct": 8.5028,
       "factor": 1.00001,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2026-08": {
       "stats_pct": 7.62,
       "chart_pct": 7.6189,
       "factor": 1.0,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2026-09": {
       "stats_pct": 3.72,
       "chart_pct": 3.713,
       "factor": 1.000002,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     },
     "2026-10": {
       "stats_pct": 1.76,
       "chart_pct": 1.8973,
       "factor": 0.999952,
       "status": "calibrated",
-      "checked_at": "2026-11-07T21:16:09+00:00"
+      "complete": true,
+      "intermediate": false,
+      "checked_at": "2026-11-08T12:54:19+00:00"
     }
   },
   "history": [
@@ -4826,19 +4897,9 @@
       "kind": "base"
     },
     {
-      "date": "2020-04-01",
-      "close": 100.0,
-      "kind": "anchor"
-    },
-    {
       "date": "2020-04-30",
       "close": 114.9,
       "kind": "month"
-    },
-    {
-      "date": "2020-05-01",
-      "close": 114.9,
-      "kind": "anchor"
     },
     {
       "date": "2020-05-31",
@@ -4846,19 +4907,9 @@
       "kind": "month"
     },
     {
-      "date": "2020-06-01",
-      "close": 115.486,
-      "kind": "anchor"
-    },
-    {
       "date": "2020-06-30",
       "close": 119.2855,
       "kind": "month"
-    },
-    {
-      "date": "2020-07-01",
-      "close": 119.2855,
-      "kind": "anchor"
     },
     {
       "date": "2020-07-31",
@@ -4866,19 +4917,9 @@
       "kind": "month"
     },
     {
-      "date": "2020-08-01",
-      "close": 117.7825,
-      "kind": "anchor"
-    },
-    {
       "date": "2020-08-31",
       "close": 129.5843,
       "kind": "month"
-    },
-    {
-      "date": "2020-09-01",
-      "close": 129.5843,
-      "kind": "anchor"
     },
     {
       "date": "2020-09-30",
@@ -4886,19 +4927,9 @@
       "kind": "month"
     },
     {
-      "date": "2020-10-01",
-      "close": 122.1462,
-      "kind": "anchor"
-    },
-    {
       "date": "2020-10-31",
       "close": 115.7824,
       "kind": "month"
-    },
-    {
-      "date": "2020-11-01",
-      "close": 115.7824,
-      "kind": "anchor"
     },
     {
       "date": "2020-11-30",
@@ -4906,19 +4937,9 @@
       "kind": "month"
     },
     {
-      "date": "2020-12-01",
-      "close": 135.3265,
-      "kind": "anchor"
-    },
-    {
       "date": "2020-12-31",
       "close": 141.9034,
       "kind": "month"
-    },
-    {
-      "date": "2021-01-01",
-      "close": 141.9034,
-      "kind": "anchor"
     },
     {
       "date": "2021-01-31",
@@ -4926,19 +4947,9 @@
       "kind": "month"
     },
     {
-      "date": "2021-02-01",
-      "close": 137.5895,
-      "kind": "anchor"
-    },
-    {
       "date": "2021-02-28",
       "close": 149.7662,
       "kind": "month"
-    },
-    {
-      "date": "2021-03-01",
-      "close": 149.7662,
-      "kind": "anchor"
     },
     {
       "date": "2021-03-31",
@@ -4946,19 +4957,9 @@
       "kind": "month"
     },
     {
-      "date": "2021-04-01",
-      "close": 150.9044,
-      "kind": "anchor"
-    },
-    {
       "date": "2021-04-30",
       "close": 154.1639,
       "kind": "month"
-    },
-    {
-      "date": "2021-05-01",
-      "close": 154.1639,
-      "kind": "anchor"
     },
     {
       "date": "2021-05-31",
@@ -4966,19 +4967,9 @@
       "kind": "month"
     },
     {
-      "date": "2021-06-01",
-      "close": 157.8947,
-      "kind": "anchor"
-    },
-    {
       "date": "2021-06-30",
       "close": 159.9947,
       "kind": "month"
-    },
-    {
-      "date": "2021-07-01",
-      "close": 159.9947,
-      "kind": "anchor"
     },
     {
       "date": "2021-07-31",
@@ -4986,19 +4977,9 @@
       "kind": "month"
     },
     {
-      "date": "2021-08-01",
-      "close": 155.9628,
-      "kind": "anchor"
-    },
-    {
       "date": "2021-08-31",
       "close": 153.8573,
       "kind": "month"
-    },
-    {
-      "date": "2021-09-01",
-      "close": 153.8573,
-      "kind": "anchor"
     },
     {
       "date": "2021-09-30",
@@ -5006,19 +4987,9 @@
       "kind": "month"
     },
     {
-      "date": "2021-10-01",
-      "close": 152.1033,
-      "kind": "anchor"
-    },
-    {
       "date": "2021-10-31",
       "close": 162.4007,
       "kind": "month"
-    },
-    {
-      "date": "2021-11-01",
-      "close": 162.4007,
-      "kind": "anchor"
     },
     {
       "date": "2021-11-30",
@@ -5026,19 +4997,9 @@
       "kind": "month"
     },
     {
-      "date": "2021-12-01",
-      "close": 151.7797,
-      "kind": "anchor"
-    },
-    {
       "date": "2021-12-31",
       "close": 162.6319,
       "kind": "month"
-    },
-    {
-      "date": "2022-01-01",
-      "close": 162.6319,
-      "kind": "anchor"
     },
     {
       "date": "2022-01-31",
@@ -5046,19 +5007,9 @@
       "kind": "month"
     },
     {
-      "date": "2022-02-01",
-      "close": 166.7302,
-      "kind": "anchor"
-    },
-    {
       "date": "2022-02-28",
       "close": 170.3316,
       "kind": "month"
-    },
-    {
-      "date": "2022-03-01",
-      "close": 170.3316,
-      "kind": "anchor"
     },
     {
       "date": "2022-03-31",
@@ -5066,19 +5017,9 @@
       "kind": "month"
     },
     {
-      "date": "2022-04-01",
-      "close": 180.1938,
-      "kind": "anchor"
-    },
-    {
       "date": "2022-04-30",
       "close": 180.5181,
       "kind": "month"
-    },
-    {
-      "date": "2022-05-01",
-      "close": 180.5181,
-      "kind": "anchor"
     },
     {
       "date": "2022-05-31",
@@ -5086,19 +5027,9 @@
       "kind": "month"
     },
     {
-      "date": "2022-06-01",
-      "close": 182.1608,
-      "kind": "anchor"
-    },
-    {
       "date": "2022-06-30",
       "close": 168.0069,
       "kind": "month"
-    },
-    {
-      "date": "2022-07-01",
-      "close": 168.0069,
-      "kind": "anchor"
     },
     {
       "date": "2022-07-31",
@@ -5106,19 +5037,9 @@
       "kind": "month"
     },
     {
-      "date": "2022-08-01",
-      "close": 168.8973,
-      "kind": "anchor"
-    },
-    {
       "date": "2022-08-31",
       "close": 161.4489,
       "kind": "month"
-    },
-    {
-      "date": "2022-09-01",
-      "close": 161.4489,
-      "kind": "anchor"
     },
     {
       "date": "2022-09-30",
@@ -5126,19 +5047,9 @@
       "kind": "month"
     },
     {
-      "date": "2022-10-01",
-      "close": 149.0496,
-      "kind": "anchor"
-    },
-    {
       "date": "2022-10-31",
       "close": 166.0263,
       "kind": "month"
-    },
-    {
-      "date": "2022-11-01",
-      "close": 166.0263,
-      "kind": "anchor"
     },
     {
       "date": "2022-11-30",
@@ -5146,19 +5057,9 @@
       "kind": "month"
     },
     {
-      "date": "2022-12-01",
-      "close": 166.2753,
-      "kind": "anchor"
-    },
-    {
       "date": "2022-12-31",
       "close": 161.8357,
       "kind": "month"
-    },
-    {
-      "date": "2023-01-01",
-      "close": 161.8357,
-      "kind": "anchor"
     },
     {
       "date": "2023-01-31",
@@ -5166,19 +5067,9 @@
       "kind": "month"
     },
     {
-      "date": "2023-02-01",
-      "close": 167.0468,
-      "kind": "anchor"
-    },
-    {
       "date": "2023-02-28",
       "close": 166.3452,
       "kind": "month"
-    },
-    {
-      "date": "2023-03-01",
-      "close": 166.3452,
-      "kind": "anchor"
     },
     {
       "date": "2023-03-31",
@@ -5186,19 +5077,9 @@
       "kind": "month"
     },
     {
-      "date": "2023-04-01",
-      "close": 170.0381,
-      "kind": "anchor"
-    },
-    {
       "date": "2023-04-30",
       "close": 169.0349,
       "kind": "month"
-    },
-    {
-      "date": "2023-05-01",
-      "close": 169.0349,
-      "kind": "anchor"
     },
     {
       "date": "2023-05-31",
@@ -5206,19 +5087,9 @@
       "kind": "month"
     },
     {
-      "date": "2023-06-01",
-      "close": 168.0207,
-      "kind": "anchor"
-    },
-    {
       "date": "2023-06-30",
       "close": 176.5393,
       "kind": "month"
-    },
-    {
-      "date": "2023-07-01",
-      "close": 176.5393,
-      "kind": "anchor"
     },
     {
       "date": "2023-07-31",
@@ -5226,19 +5097,9 @@
       "kind": "month"
     },
     {
-      "date": "2023-08-01",
-      "close": 184.36,
-      "kind": "anchor"
-    },
-    {
       "date": "2023-08-31",
       "close": 185.8718,
       "kind": "month"
-    },
-    {
-      "date": "2023-09-01",
-      "close": 185.8718,
-      "kind": "anchor"
     },
     {
       "date": "2023-09-30",
@@ -5246,29 +5107,14 @@
       "kind": "month"
     },
     {
-      "date": "2023-10-01",
-      "close": 182.2845,
-      "kind": "anchor"
-    },
-    {
       "date": "2023-10-31",
       "close": 179.4773,
       "kind": "month"
     },
     {
-      "date": "2023-11-01",
-      "close": 179.4773,
-      "kind": "anchor"
-    },
-    {
       "date": "2023-11-30",
       "close": 196.6892,
       "kind": "month"
-    },
-    {
-      "date": "2023-12-01",
-      "close": 196.6892,
-      "kind": "anchor"
     },
     {
       "date": "2023-12-31",
@@ -10473,6 +10319,16 @@
     {
       "date": "2026-11-05",
       "close": 436.1767,
+      "kind": "day"
+    },
+    {
+      "date": "2026-11-06",
+      "close": 433.2979,
+      "kind": "day"
+    },
+    {
+      "date": "2026-11-07",
+      "close": 433.3412,
       "kind": "day"
     }
   ]
