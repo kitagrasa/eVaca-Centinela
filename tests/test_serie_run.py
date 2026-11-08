@@ -507,9 +507,9 @@ def test_dry_run_con_datos_guardados_no_modifica_nada(
 
 
 # ----------------------------------------------------------------------
-# Mes en curso
+# Mes en curso: sus stats (MTD) no se guardan ni se publican
 # ----------------------------------------------------------------------
-def test_el_mes_en_curso_escribe_el_dia_de_hoy(
+def test_el_mes_en_curso_solo_cuenta_su_chart(
     tmp_path: Path, payload_simple: dict
 ) -> None:
     entorno = entorno_base(tmp_path)
@@ -522,24 +522,35 @@ def test_el_mes_en_curso_escribe_el_dia_de_hoy(
     codigo = ejecutar(entorno, ClienteFalso({"uno": payload}), usuarios=["uno"])
 
     assert codigo == 0
-    html = (entorno.datos / "prices" / ID_UNO).read_text(encoding="utf-8")
-    fila = fila_html(html, "2026-11-02")
-    assert 'data-kind=   "D"' in fila
-    assert rentab_html(fila) == "2.51"
-    assert "116.5355" in fila
-
     datos = leer_json(entorno.datos / "series" / f"{ID_UNO}.json")
-    assert datos["history"][-1] == {
-        "date": "2026-11-02",
-        "close": 116.5355,
-        "kind": "day",
-    }
+
+    # El mes en curso no se guarda en los stats ni se convierte en un día.
+    assert all(
+        not mes["start"].startswith("2026-11")
+        for mes in datos["last_payload"]["monthly"]
+    )
+    assert all(not fila["date"].startswith("2026-11") for fila in datos["history"])
+    html = (entorno.datos / "prices" / ID_UNO).read_text(encoding="utf-8")
+    assert not any("2026-11" in linea for linea in lineas_html(html))
+
+
+def test_un_trader_sin_meses_cerrados_no_es_un_fallo(tmp_path: Path) -> None:
+    """Un trader nuevo solo tiene el MTD: se espera al primer cierre."""
+    entorno = entorno_base(tmp_path)
+    solo_actual = payload_meses({"2026-11": 2.51})
+
+    codigo = ejecutar(entorno, ClienteFalso({"uno": solo_actual}), usuarios=["uno"])
+
+    assert codigo == 0
+    assert not (entorno.datos / "series" / f"{ID_UNO}.json").exists()
+    estado = leer_json(entorno.datos / "state.json")
+    assert estado["results"][ID_UNO]["status"] == "sin_datos"
 
 
 # ----------------------------------------------------------------------
-# Ancla del día 1: el HTML tiene un punto al empezar cada mes
+# Día 1 de cada mes: se rellena, no se copia el cierre anterior
 # ----------------------------------------------------------------------
-def test_el_html_lleva_ancla_el_dia_1_de_cada_mes(
+def test_el_html_rellena_el_dia_1_sin_copiar_el_cierre(
     tmp_path: Path, payload_simple: dict
 ) -> None:
     entorno = entorno_base(tmp_path)
@@ -552,17 +563,15 @@ def test_el_html_lleva_ancla_el_dia_1_de_cada_mes(
     fila_abril = fila_html(html, "2025-04-01")
     fila_mayo = fila_html(html, "2025-05-01")
 
+    # El día 1 es relleno (`A`) y ya no vale lo mismo que el cierre anterior.
     assert 'data-kind=   "A"' in fila_abril
-    assert "100.0000" in fila_abril
+    assert "100.0000" not in fila_abril
     assert 'data-kind=   "A"' in fila_mayo
-    assert "114.9000" in fila_mayo
+    assert "114.9000" not in fila_mayo
     assert [fila["kind"] for fila in datos["history"]] == [
         "base",
-        "anchor",
         "month",
-        "anchor",
         "month",
-        "anchor",
         "month",
     ]
 
@@ -612,7 +621,7 @@ def test_el_json_sigue_ascendente_y_el_html_baja(
     assert fechas_html == sorted(fechas_html, reverse=True)
 
 
-def test_los_dias_reales_se_conservan_al_cerrar_el_mes(
+def test_el_mes_en_curso_no_deja_dias_y_al_cerrar_llega_su_m(
     tmp_path: Path, payload_simple: dict
 ) -> None:
     entorno = entorno_base(tmp_path)
@@ -638,6 +647,14 @@ def test_los_dias_reales_se_conservan_al_cerrar_el_mes(
         usuarios=["uno"],
         reloj=lambda: datetime(2026, 10, 15, 0, 30, tzinfo=UTC),
     )
+    abierto = leer_json(entorno.datos / "series" / f"{ID_UNO}.json")
+    # El MTD de octubre (2,5 %) no se guarda ni se publica.
+    assert all(not fila["date"].startswith("2026-10") for fila in abierto["history"])
+    assert all(
+        not mes["start"].startswith("2026-10")
+        for mes in abierto["last_payload"]["monthly"]
+    )
+
     ejecutar(
         entorno,
         ClienteFalso({"uno": octubre_cerrado}),
@@ -649,26 +666,14 @@ def test_los_dias_reales_se_conservan_al_cerrar_el_mes(
     datos = leer_json(entorno.datos / "series" / f"{ID_UNO}.json")
     tipos = {fila["date"]: fila["kind"] for fila in datos["history"]}
 
-    assert tipos["2026-10-15"] == "day"
     assert tipos["2026-10-31"] == "month"
-
-    capturado = next(
-        fila for fila in datos["history"] if fila["date"] == "2026-10-15"
-    )
+    assert "2026-10-15" not in tipos
     html = (entorno.datos / "prices" / ID_UNO).read_text(encoding="utf-8")
-
-    # El día capturado se publica tal cual: la rejilla no lo sustituye.
-    cierre = f"{capturado['close']:.4f}"
-    fila_dia = fila_html(html, "2026-10-15")
-    assert 'data-kind=   "D"' in fila_dia
-    assert rentab_html(fila_dia) == "2.50"
-    assert cierre in fila_dia
-    # Y el mes cerrado sigue completo, con su ancla del día 1.
-    fila_ancla = fila_html(html, "2026-10-01")
-    assert 'data-kind=   "A"' in fila_ancla
     fila_mes = fila_html(html, "2026-10-31")
     assert 'data-kind=   "M"' in fila_mes
     assert rentab_html(fila_mes) == "5.00"
+    # Sin días guardados, los días del mes son relleno `A`.
+    assert 'data-kind=   "A"' in fila_html(html, "2026-10-15")
 
 
 # ----------------------------------------------------------------------
@@ -854,13 +859,56 @@ def test_los_reintentos_no_aceptan_un_cierre_parcial_como_bueno(
     assert cliente.pedidos == []
 
 
-def test_la_lectura_de_stats_revisa_y_actualiza_los_tres_meses_anteriores(
+def test_el_primer_cierre_de_un_mes_cuenta_como_nuevo(
     tmp_path: Path,
 ) -> None:
-    """El 5 de noviembre se revisan octubre, septiembre, agosto y julio."""
+    """El cierre que aparece por primera vez no es una corrección."""
+    entorno = entorno_base(tmp_path)
+    parcial = payload_meses(
+        {
+            "2025-01": 1.0,
+            "2025-02": 2.0,
+            "2025-03": 3.0,
+            "2025-04": 2.0,
+        }
+    )
+    ejecutar(
+        entorno,
+        ClienteFalso({"uno": parcial}),
+        usuarios=["uno"],
+        reloj=lambda: instante(2025, 4, 15),
+    )
+
+    registro = Registro()
+    final = payload_meses(
+        {
+            "2025-01": 1.0,
+            "2025-02": 2.0,
+            "2025-03": 3.0,
+            "2025-04": 4.5,
+        }
+    )
+    ejecutar(
+        entorno,
+        ClienteFalso({"uno": final}),
+        usuarios=["uno"],
+        reloj=lambda: instante(2025, 5, 5),
+        logger=registro.logger,
+    )
+
+    texto = "\n".join(registro.mensajes)
+    assert "nuevos: 2025-04" in texto
+    assert "cambio" not in texto
+
+
+def test_la_lectura_de_stats_revisa_y_actualiza_todos_los_meses(
+    tmp_path: Path,
+) -> None:
+    """El 5 de noviembre se contrasta todo el histórico, no tres meses."""
     entorno = entorno_base(tmp_path)
     inicial = payload_meses(
         {
+            "2025-01": 1.0,
             "2025-07": 7.0,
             "2025-08": 8.0,
             "2025-09": 9.0,
@@ -875,6 +923,11 @@ def test_la_lectura_de_stats_revisa_y_actualiza_los_tres_meses_anteriores(
     )
     ruta = entorno.datos / "series" / f"{ID_UNO}.json"
     antes = leer_json(ruta)
+    cierre_enero_antes = next(
+        fila["close"]
+        for fila in antes["history"]
+        if fila["date"] == "2025-01-31"
+    )
     cierre_septiembre_antes = next(
         fila["close"]
         for fila in antes["history"]
@@ -884,6 +937,7 @@ def test_la_lectura_de_stats_revisa_y_actualiza_los_tres_meses_anteriores(
     registro = Registro()
     corregido = payload_meses(
         {
+            "2025-01": 1.5,
             "2025-07": 7.0,
             "2025-08": 8.0,
             "2025-09": 9.5,
@@ -902,16 +956,74 @@ def test_la_lectura_de_stats_revisa_y_actualiza_los_tres_meses_anteriores(
     assert cliente.pedidos == ["uno"]
     texto = "\n".join(registro.mensajes)
     assert "revisión de stats" in texto
+    assert "2025-01" in texto
     assert "2025-09" in texto
-    assert "cambio" in texto
+    assert "2 cambio(s)" in texto
 
     despues = leer_json(ruta)
+    cierre_enero_despues = next(
+        fila["close"]
+        for fila in despues["history"]
+        if fila["date"] == "2025-01-31"
+    )
     cierre_septiembre_despues = next(
         fila["close"]
         for fila in despues["history"]
         if fila["date"] == "2025-09-30"
     )
+    assert cierre_enero_despues != cierre_enero_antes
     assert cierre_septiembre_despues != cierre_septiembre_antes
+
+
+def test_un_mes_calibrado_fuera_del_chart_se_recalibra_al_cambiar_stats(
+    tmp_path: Path,
+) -> None:
+    """Un `C` que el chart ya no trae se recalibra con sus días guardados."""
+    entorno = entorno_base(tmp_path)
+    enero_payload = payload_meses({"2025-01": 3.0, "2025-02": 2.0})
+    chart = payload_chart(
+        puntos_diarios(
+            date(2024, 12, 31),
+            date(2025, 2, 28),
+            {date(2025, 1, 10): 1.02, date(2025, 2, 10): 1.02},
+        )
+    )
+    ejecutar(
+        entorno,
+        ClienteFalso({"uno": enero_payload}, charts={"uno": chart}),
+        usuarios=["uno"],
+        reloj=lambda: instante(2025, 3, 5),
+    )
+    ruta = entorno.datos / "series" / f"{ID_UNO}.json"
+    antes = leer_json(ruta)
+    dias_c = [fila for fila in antes["history"] if fila["kind"] == "c"]
+    enero_10_antes = next(
+        fila["close"] for fila in antes["history"] if fila["date"] == "2025-01-10"
+    )
+    assert dias_c
+
+    # El chart nuevo ya no llega a enero y stats cambia el cierre de enero.
+    corregido = payload_meses({"2025-01": 5.0, "2025-02": 2.0})
+    chart_febrero = payload_chart(
+        puntos_diarios(date(2025, 2, 1), date(2025, 2, 28))
+    )
+    ejecutar(
+        entorno,
+        ClienteFalso({"uno": corregido}, charts={"uno": chart_febrero}),
+        usuarios=["uno"],
+        reloj=lambda: instante(2025, 3, 12),
+    )
+
+    despues = leer_json(ruta)
+    tipos = {fila["date"]: fila["kind"] for fila in despues["history"]}
+    cierres = {fila["date"]: fila["close"] for fila in despues["history"]}
+
+    assert tipos["2025-01-31"] == "month"
+    assert cierres["2025-01-31"] == 105.0
+    assert len([f for f in despues["history"] if f["kind"] == "c"]) == len(dias_c)
+    assert cierres["2025-01-10"] != enero_10_antes
+    assert despues["months"]["2025-01"]["stats_pct"] == 5.0
+    assert despues["months"]["2025-01"]["factor"] != 1.0
 
 
 def test_el_dia_12_revisa_tambien_el_mes_que_se_cierra(
@@ -1306,10 +1418,10 @@ def test_un_fallo_del_chart_conserva_los_dias_calibrados(
     assert 'data-kind=   "C"' in html
 
 
-def test_los_dias_del_mes_en_curso_se_sustituyen_por_los_calibrados(
+def test_el_mes_cerrado_se_calibra_con_el_chart(
     tmp_path: Path,
 ) -> None:
-    """Migración: los `D` del MTD viejo se van al llegar el chart del mes."""
+    """El mes en curso no deja días; al cerrar, el chart lo calibra."""
     entorno = entorno_base(tmp_path)
     parcial = payload_meses(
         {
@@ -1326,10 +1438,7 @@ def test_los_dias_del_mes_en_curso_se_sustituyen_por_los_calibrados(
         reloj=lambda: instante(2025, 4, 15),
     )
     antes = leer_json(entorno.datos / "series" / f"{ID_UNO}.json")
-    assert any(
-        fila["date"] == "2025-04-15" and fila["kind"] == "day"
-        for fila in antes["history"]
-    )
+    assert all(not fila["date"].startswith("2025-04") for fila in antes["history"])
 
     final = payload_meses(
         {
@@ -1358,7 +1467,6 @@ def test_los_dias_del_mes_en_curso_se_sustituyen_por_los_calibrados(
     abril = [
         fila for fila in despues["history"] if fila["date"].startswith("2025-04")
     ]
-    assert all(fila["kind"] != "day" for fila in abril)
     assert any(fila["kind"] == "c" for fila in abril)
     assert any(
         fila["date"] == "2025-04-30" and fila["kind"] == "month"
@@ -1369,7 +1477,7 @@ def test_los_dias_del_mes_en_curso_se_sustituyen_por_los_calibrados(
 def test_antes_del_dia_5_no_se_usa_el_mes_parcial_como_cierre(
     tmp_path: Path,
 ) -> None:
-    """El mes que era actual al leer stats no vale como cierre al cambiar de mes."""
+    """El MTD leído durante el mes no vale como cierre al cambiar de mes."""
     entorno = entorno_base(tmp_path)
     parcial = payload_meses(
         {
@@ -1386,8 +1494,8 @@ def test_antes_del_dia_5_no_se_usa_el_mes_parcial_como_cierre(
         reloj=lambda: instante(2025, 4, 15),
     )
 
-    # 2 de mayo: todavía no toca leer stats. No debe aparecer un cierre de
-    # abril con el 2 % parcial del día 15.
+    # 2 de mayo: todavía no toca leer stats. No debe aparecer ni un cierre de
+    # abril con el 2 % parcial del día 15 ni un día inventado con ese MTD.
     ejecutar(
         entorno,
         ClienteFalso({}),
@@ -1396,15 +1504,7 @@ def test_antes_del_dia_5_no_se_usa_el_mes_parcial_como_cierre(
     )
 
     datos = leer_json(entorno.datos / "series" / f"{ID_UNO}.json")
-    assert not any(
-        fila["date"] == "2025-04-30" and fila["kind"] == "month"
-        for fila in datos["history"]
-    )
-    # El día capturado se conserva como dato real, sin inventar el cierre.
-    assert any(
-        fila["date"] == "2025-04-15" and fila["kind"] == "day"
-        for fila in datos["history"]
-    )
+    assert all(not fila["date"].startswith("2025-04") for fila in datos["history"])
 
 
 # ----------------------------------------------------------------------
@@ -1424,6 +1524,75 @@ def _entorno_aviso(
         )
     )
     return entorno, payload, chart
+
+
+def test_un_mes_sin_el_ultimo_dia_del_chart_avisa_igual(
+    tmp_path: Path,
+) -> None:
+    """El hueco puede no rellenarse nunca: el aviso sale igual."""
+    entorno, payload, _ = _entorno_aviso(tmp_path)
+    chart = payload_chart(
+        puntos_diarios(
+            date(2025, 3, 31),
+            date(2025, 4, 29),
+            {date(2025, 4, 10): 1.02, date(2025, 4, 20): 1.02},
+        )
+    )
+    notifier = NotificadorFalso()
+
+    ejecutar(
+        entorno,
+        ClienteFalso({"uno": payload}, charts={"uno": chart}),
+        usuarios=["uno"],
+        reloj=lambda: instante(2025, 5, 2),
+        notifier=notifier,
+    )
+
+    assert len(notifier.mensajes) == 1
+    mensaje = notifier.mensajes[0]
+    assert "2025-04" in mensaje
+    assert "5.00" in mensaje
+    assert "4.04" in mensaje
+    datos = leer_json(entorno.datos / "series" / f"{ID_UNO}.json")
+    assert datos["months"]["2025-04"]["status"] == "calibrated"
+    assert datos["months"]["2025-04"]["complete"] is False
+    estado = leer_json(entorno.datos / "state.json")
+    assert estado["alerts"][ID_UNO]["month"] == "2025-04"
+
+
+def test_un_mes_intermedio_avisa_y_explica_que_no_se_adapta(
+    tmp_path: Path,
+) -> None:
+    """Stats completa el hueco y el aviso lo dice."""
+    entorno = entorno_base(tmp_path)
+    payload = payload_meses({"2025-09": 2.5})
+    chart = payload_chart(
+        [
+            (date(2025, 8, 31), 100.0),
+            *[(date(2025, 9, dia), 100.0) for dia in range(1, 27)],
+            (date(2025, 9, 27), 102.0),
+            (date(2025, 10, 2), 106.0),
+        ]
+    )
+    notifier = NotificadorFalso()
+
+    ejecutar(
+        entorno,
+        ClienteFalso({"uno": payload}, charts={"uno": chart}),
+        usuarios=["uno"],
+        reloj=lambda: instante(2025, 10, 15),
+        notifier=notifier,
+    )
+
+    assert len(notifier.mensajes) == 1
+    mensaje = notifier.mensajes[0]
+    assert "2025-09" in mensaje
+    assert "2.50" in mensaje
+    assert "2.00" in mensaje
+    assert "stats completa el hueco" in mensaje
+    datos = leer_json(entorno.datos / "series" / f"{ID_UNO}.json")
+    assert datos["months"]["2025-09"]["intermediate"] is True
+    assert datos["months"]["2025-09"]["complete"] is False
 
 
 def test_el_aviso_sale_una_vez_y_se_guarda_por_id(
@@ -1561,6 +1730,46 @@ def test_tres_meses_poco_fiables_añaden_la_recomendacion(
         info["status"] == "calibrated"
         for info in datos["months"].values()
     )
+
+
+def test_los_meses_incompletos_no_cuentan_para_la_recomendacion(
+    tmp_path: Path,
+) -> None:
+    """Los meses con chart incompleto avisan, pero no recomiendan no usarlo."""
+    entorno = entorno_base(tmp_path)
+    payload = payload_meses(
+        {"2025-01": 5.0, "2025-02": 5.0, "2025-03": 5.0, "2025-04": 5.0}
+    )
+    movimientos = {}
+    for mes in (1, 2, 3, 4):
+        movimientos[date(2025, mes, 10)] = 1.02
+        movimientos[date(2025, mes, 20)] = 1.02
+    ultimo_dia = {1: 31, 2: 28, 3: 31}
+    puntos = [
+        (dia, nivel)
+        for dia, nivel in puntos_diarios(
+            date(2024, 12, 31), date(2025, 4, 30), movimientos
+        )
+        if not (dia.month in ultimo_dia and dia.day == ultimo_dia[dia.month])
+    ]
+    chart = payload_chart(puntos)
+    notifier = NotificadorFalso()
+
+    ejecutar(
+        entorno,
+        ClienteFalso({"uno": payload}, charts={"uno": chart}),
+        usuarios=["uno"],
+        reloj=lambda: instante(2025, 5, 2),
+        notifier=notifier,
+    )
+
+    assert len(notifier.mensajes) == 1
+    assert "no usar el chart" not in notifier.mensajes[0].lower()
+    datos = leer_json(entorno.datos / "series" / f"{ID_UNO}.json")
+    assert datos["months"]["2025-01"]["complete"] is False
+    assert datos["months"]["2025-02"]["complete"] is False
+    assert datos["months"]["2025-03"]["complete"] is False
+    assert datos["months"]["2025-04"]["complete"] is True
 
 
 def test_dry_run_no_envia_avisos_ni_escribe(

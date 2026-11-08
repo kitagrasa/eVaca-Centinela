@@ -31,7 +31,8 @@ from .serie import (
 #   M = cierre mensual de la rentabilidad de stats (también en meses calibrados)
 #   D = día del chart sin calibrar (mes en curso o mes que ya coincidía con stats)
 #   C = día de un mes cerrado realmente calibrado con el cierre de stats
-#   A = base, ancla o relleno (generado por el programa)
+#   A = base o relleno (generado por el programa; las anclas del día 1 solo
+#       aparecen en ficheros antiguos)
 KIND_MARKERS = {
     KIND_MONTH: "M",
     KIND_DAY: "D",

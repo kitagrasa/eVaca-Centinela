@@ -137,14 +137,11 @@ def test_encadenado_mensual(hoy: date) -> None:
 
     filas = build_series(puntos, today=hoy)
 
-    # Cada mes: ancla el día 1 con el cierre anterior y cierre real al final.
+    # Cada mes guarda su cierre real; el resto de días se rellena al vuelo.
     assert como_tuplas(filas) == [
         (date(2025, 3, 31), 100.0, KIND_BASE),
-        (date(2025, 4, 1), 100.0, KIND_ANCHOR),
         (date(2025, 4, 30), 114.9, KIND_MONTH),
-        (date(2025, 5, 1), 114.9, KIND_ANCHOR),
         (date(2025, 5, 31), 111.453, KIND_MONTH),
-        (date(2025, 6, 1), 111.453, KIND_ANCHOR),
         (date(2025, 6, 30), 113.6821, KIND_MONTH),
     ]
 
@@ -156,7 +153,7 @@ def test_cierre_de_mes_en_el_ultimo_dia(hoy: date) -> None:
     assert filas[-1] == PriceRow(date(2025, 2, 28), 101.0, KIND_MONTH)
 
 
-def test_guarda_la_rentabilidad_original_de_meses_y_dia_actual(hoy: date) -> None:
+def test_guarda_la_rentabilidad_original_de_los_meses(hoy: date) -> None:
     puntos = [
         mes(2025, 4, 14.9),
         mes(2025, 5, -3.0),
@@ -169,9 +166,9 @@ def test_guarda_la_rentabilidad_original_de_meses_y_dia_actual(hoy: date) -> Non
     assert filas[date(2025, 4, 30)].gain == 14.9
     assert filas[date(2025, 5, 31)].gain == -3.0
     assert filas[date(2025, 6, 30)].gain == 2.0
-    assert filas[date(2026, 11, 2)].gain == 2.51
-    assert filas[date(2025, 4, 1)].gain is None  # ancla
     assert filas[date(2025, 3, 31)].gain is None  # base
+    # Los stats del mes en curso (MTD) no se publican.
+    assert date(2026, 11, 2) not in filas
 
 
 def test_reconstruye_la_rentabilidad_de_un_dia_guardado(hoy: date) -> None:
@@ -204,25 +201,25 @@ def test_mes_sin_cerrar_no_genera_fila_diaria(hoy: date) -> None:
 
 
 # ----------------------------------------------------------------------
-# Mes en curso
+# Mes en curso: sus stats no se usan
 # ----------------------------------------------------------------------
-def test_dia_actual_con_mtd(hoy: date) -> None:
+def test_el_mtd_del_mes_en_curso_no_se_publica(hoy: date) -> None:
     puntos = [mes(2025, 4, 10.0), mes(2026, 11, 2.51)]
 
     filas = build_series(puntos, today=hoy)
 
-    assert filas[-1] == PriceRow(date(2026, 11, 2), 112.761, KIND_DAY)
+    # El mes en curso solo puede venir del chart: sus stats (MTD) no valen.
+    assert filas[-1] == PriceRow(date(2025, 4, 30), 110.0, KIND_MONTH)
+    assert not any(f.date.year == 2026 for f in filas)
 
 
-def test_mismo_dia_actualiza_y_no_duplica(hoy: date) -> None:
+def test_un_mtd_guardado_de_hoy_no_se_publica(hoy: date) -> None:
     puntos = [mes(2025, 4, 10.0), mes(2026, 11, 2.51)]
     historial = [fila(2026, 11, 2, 999.0, KIND_DAY)]
 
     filas = build_series(puntos, today=hoy, history=historial)
 
-    del_dia = [f for f in filas if f.date == hoy]
-    assert len(del_dia) == 1
-    assert del_dia[0].close == 112.761
+    assert all(f.date != hoy for f in filas)
 
 
 def test_conserva_los_dias_anteriores_del_mes(hoy: date) -> None:
@@ -246,60 +243,56 @@ def test_conserva_los_dias_reales_de_meses_cerrados(hoy: date) -> None:
     # El día real se conserva; en el último día manda el cierre del mes.
     assert como_tuplas(filas) == [
         (date(2025, 3, 31), 100.0, KIND_BASE),
-        (date(2025, 4, 1), 100.0, KIND_ANCHOR),
         (date(2025, 4, 30), 110.0, KIND_MONTH),
-        (date(2026, 10, 1), 110.0, KIND_ANCHOR),
         (date(2026, 10, 15), 555.0, KIND_DAY),
         (date(2026, 10, 31), 111.1, KIND_MONTH),
     ]
 
 
 # ----------------------------------------------------------------------
-# Ancla del día 1: PP empieza a dibujar en el primer punto del periodo
+# Relleno entre meses: no se copia el cierre de fin de mes en el día 1
 # ----------------------------------------------------------------------
-def test_ancla_el_dia_1_de_cada_mes_cerrado(hoy: date) -> None:
+def test_un_mes_cerrado_sin_chart_no_crea_ancla(hoy: date) -> None:
     puntos = [mes(2025, 4, 14.90), mes(2025, 5, -3.0)]
 
     filas = build_series(puntos, today=hoy)
-    anclas = [(f.date, f.close) for f in filas if f.kind == KIND_ANCHOR]
 
-    assert anclas == [
-        (date(2025, 4, 1), 100.0),
-        (date(2025, 5, 1), 114.9),
-    ]
+    assert all(fila.kind != KIND_ANCHOR for fila in filas)
 
 
-def test_el_ancla_lleva_el_cierre_del_mes_anterior(hoy: date) -> None:
+def test_el_relleno_no_copia_el_cierre_del_mes_anterior(hoy: date) -> None:
     puntos = [mes(2025, 4, 14.90), mes(2025, 5, -3.0)]
 
-    filas = {f.date: f for f in build_series(puntos, today=hoy)}
+    filas = build_series(puntos, today=hoy)
+    por_fecha = {f.date: f for f in filas}
+    diarias = {f.date: f for f in daily_rows(filas, today=hoy)}
 
-    assert filas[date(2025, 5, 1)].close == filas[date(2025, 4, 30)].close
+    # El 1 de mayo ya se mueve respecto al cierre del 30 de abril (mayo baja).
+    assert date(2025, 5, 1) not in por_fecha
+    assert diarias[date(2025, 5, 1)].kind == KIND_FILL
+    assert diarias[date(2025, 5, 1)].close < diarias[date(2025, 4, 30)].close
 
 
-def test_ancla_del_mes_en_curso(hoy: date) -> None:
+def test_el_mes_en_curso_sin_chart_no_publica_nada(hoy: date) -> None:
     puntos = [mes(2025, 4, 10.0), mes(2026, 11, 2.51)]
 
     filas = {f.date: f for f in build_series(puntos, today=hoy)}
 
-    # Día 1 con el cierre del mes anterior; después el punto real de hoy.
-    assert filas[date(2026, 11, 1)] == PriceRow(
-        date(2026, 11, 1), 110.0, KIND_ANCHOR
-    )
-    assert filas[date(2026, 11, 2)].kind == KIND_DAY
+    # Sin chart, el mes en curso no tiene ningún dato que publicar.
+    assert date(2026, 11, 1) not in filas
+    assert date(2026, 11, 2) not in filas
 
 
-def test_la_primera_ancla_valen_cien_como_la_base(hoy: date) -> None:
+def test_la_base_arranca_la_serie_en_cien(hoy: date) -> None:
     filas = build_series([mes(2025, 4, 10.0)], today=hoy)
 
     assert como_tuplas(filas) == [
         (date(2025, 3, 31), 100.0, KIND_BASE),
-        (date(2025, 4, 1), 100.0, KIND_ANCHOR),
         (date(2025, 4, 30), 110.0, KIND_MONTH),
     ]
 
 
-def test_un_dia_capturado_manda_sobre_el_ancla(hoy: date) -> None:
+def test_un_dia_capturado_manda_sobre_lo_calculado(hoy: date) -> None:
     puntos = [mes(2025, 4, 10.0), mes(2026, 11, 2.51)]
     historial = [fila(2026, 11, 1, 111.5, KIND_DAY)]
 
@@ -309,17 +302,7 @@ def test_un_dia_capturado_manda_sobre_el_ancla(hoy: date) -> None:
     assert por_fecha[date(2026, 11, 1)] == fila(2026, 11, 1, 111.5, KIND_DAY)
 
 
-def test_si_hoy_es_dia_1_manda_el_dato_real(hoy: date) -> None:
-    puntos = [mes(2025, 4, 10.0), mes(2026, 11, 2.51)]
-
-    filas = build_series(puntos, today=date(2026, 11, 1))
-    dia_uno = {f.date: f for f in filas}[date(2026, 11, 1)]
-
-    assert dia_uno.kind == KIND_DAY
-    assert dia_uno.close == 112.761
-
-
-def test_el_ancla_no_duplica_fechas(hoy: date) -> None:
+def test_el_dia_1_no_duplica_fechas(hoy: date) -> None:
     puntos = [mes(2025, 4, 10.0), mes(2025, 5, 1.0), mes(2026, 11, 1.0)]
 
     filas = build_series(puntos, today=hoy)
@@ -353,15 +336,15 @@ def test_rejilla_diaria_empieza_y_acaba_en_los_extremos_reales(hoy: date) -> Non
     assert diarias[-1] == PriceRow(date(2025, 4, 30), 110.0, KIND_MONTH)
 
 
-def test_rejilla_diaria_respeta_el_ancla(hoy: date) -> None:
+def test_rejilla_diaria_no_copia_el_cierre_en_el_dia_1(hoy: date) -> None:
     filas = build_series([mes(2025, 4, 10.0)], today=hoy)
 
     por_fecha = {f.date: f for f in daily_rows(filas, today=hoy)}
 
-    # El día 1 sigue siendo el ancla real (100), no un punto interpolado.
-    assert por_fecha[date(2025, 4, 1)] == PriceRow(
-        date(2025, 4, 1), 100.0, KIND_ANCHOR
-    )
+    # Del cierre del 31 de marzo (100) al del 30 de abril (110) todos los días
+    # avanzan: el día 1 no repite el cierre del mes anterior.
+    assert por_fecha[date(2025, 4, 1)].kind == KIND_FILL
+    assert por_fecha[date(2025, 4, 1)].close > 100.0
     assert por_fecha[date(2025, 4, 2)].kind == KIND_FILL
 
 
@@ -372,9 +355,10 @@ def test_rejilla_diaria_reparte_la_rentabilidad_con_tasa_constante(
 
     por_fecha = {f.date: f for f in daily_rows(filas, today=hoy)}
 
-    # Del 1 de abril (100) al 30 (110) hay 29 días.
-    assert por_fecha[date(2025, 4, 2)].close == round(100.0 * 1.1 ** (1 / 29), 4)
-    assert por_fecha[date(2025, 4, 16)].close == round(100.0 * 1.1 ** (15 / 29), 4)
+    # Del 31 de marzo (100) al 30 de abril (110) hay 30 días.
+    assert por_fecha[date(2025, 4, 1)].close == round(100.0 * 1.1 ** (1 / 30), 4)
+    assert por_fecha[date(2025, 4, 2)].close == round(100.0 * 1.1 ** (2 / 30), 4)
+    assert por_fecha[date(2025, 4, 16)].close == round(100.0 * 1.1 ** (16 / 30), 4)
 
 
 def test_rejilla_diaria_no_rellena_un_mes_con_dias_capturados(hoy: date) -> None:
@@ -387,12 +371,12 @@ def test_rejilla_diaria_no_rellena_un_mes_con_dias_capturados(hoy: date) -> None
     # El día capturado se queda con su valor y su tipo...
     assert por_fecha[date(2025, 4, 15)] == fila(2025, 4, 15, 150.0, KIND_DAY)
     # ...y el resto del mes no se rellena: sus huecos se quedan como huecos.
+    assert date(2025, 4, 1) not in por_fecha
     assert date(2025, 4, 14) not in por_fecha
     assert date(2025, 4, 16) not in por_fecha
     assert all(f.kind != KIND_FILL for f in por_fecha.values())
 
-    # El ancla del día 1 y el cierre del mes siguen ahí (son filas reales).
-    assert por_fecha[date(2025, 4, 1)].kind == KIND_ANCHOR
+    # El cierre del mes sigue ahí (es una fila real).
     assert por_fecha[date(2025, 4, 30)].kind == KIND_MONTH
 
 
@@ -429,9 +413,8 @@ def test_rejilla_diaria_no_inventa_el_mes_en_curso(hoy: date) -> None:
         if (f.date.year, f.date.month) == (2026, 11)
     ]
 
-    # Solo el ancla del día 1 y el dato real de hoy, sin relleno.
-    assert [f.date for f in noviembre] == [date(2026, 11, 1), date(2026, 11, 2)]
-    assert all(f.kind != KIND_FILL for f in noviembre)
+    # Sin chart no hay nada del mes en curso que publicar.
+    assert noviembre == []
 
 
 def test_rejilla_diaria_ordenada_sin_duplicados_y_4_decimales(hoy: date) -> None:
@@ -460,15 +443,15 @@ def test_rejilla_diaria_de_una_sola_fila_no_inventa_nada() -> None:
 
 
 def test_rejilla_diaria_cubre_los_huecos_entre_meses(hoy: date) -> None:
-    # Sin datos de septiembre: el tramo va del cierre de agosto al ancla de
-    # octubre, que vale lo mismo, así que septiembre queda plano.
+    # Sin datos de septiembre: el tramo va del cierre de agosto al de octubre
+    # en una sola progresión, sin copiar el cierre en el día 1.
     filas = build_series([mes(2025, 8, 1.0), mes(2025, 10, 1.0)], today=hoy)
 
     diarias = daily_rows(filas, today=hoy)
     por_fecha = {f.date: f.close for f in diarias}
 
-    assert por_fecha[date(2025, 9, 15)] == 101.0
-    assert por_fecha[date(2025, 10, 3)] > por_fecha[date(2025, 10, 1)]
+    assert 101.0 < por_fecha[date(2025, 9, 15)] < por_fecha[date(2025, 10, 31)]
+    assert por_fecha[date(2025, 10, 1)] > 101.0
     # Del 31 de julio (base) al 31 de octubre, sin huecos.
     assert len(diarias) == 93
 
@@ -667,6 +650,7 @@ def test_calibracion_producto_exacto_y_cierre_m_exacto(hoy: date) -> None:
     ]
 
     assert resultado.months["2025-04"]["status"] == "calibrated"
+    assert resultado.months["2025-04"]["complete"] is True
     assert resultado.months["2025-04"]["stats_pct"] == 4.5
     assert resultado.months["2025-04"]["chart_pct"] == pytest.approx(4.04)
     assert all(fila.kind == KIND_CALIBRATED for fila in abril[:-1])
@@ -677,6 +661,84 @@ def test_calibracion_producto_exacto_y_cierre_m_exacto(hoy: date) -> None:
     for anterior, actual in zip(abril, abril[1:], strict=False):
         producto *= actual.close / anterior.close
     assert producto == pytest.approx(1.045, abs=1e-4)
+
+
+def test_un_mes_sin_el_ultimo_dia_del_chart_queda_incompleto(
+    hoy: date,
+) -> None:
+    """Sin el último día del chart, el mes se calibra y se marca incompleto."""
+    estadistica = [mes(2025, 4, 4.5)]
+    chart = serie_diaria(
+        date(2025, 3, 31),
+        date(2025, 4, 29),
+        {date(2025, 4, 10): 1.02, date(2025, 4, 20): 1.02},
+    )
+
+    resultado = build_series_full(estadistica, today=hoy, chart=chart)
+
+    assert resultado.months["2025-04"]["status"] == "calibrated"
+    assert resultado.months["2025-04"]["complete"] is False
+    abril = [
+        fila
+        for fila in resultado.rows
+        if (fila.date.year, fila.date.month) == (2025, 4)
+    ]
+    assert abril[-1].kind == KIND_MONTH
+    assert abril[-1].close == 104.5
+
+
+def test_un_mes_incompleto_con_stats_intermedio_no_calibra_el_chart() -> None:
+    """Stats entre el último punto y el siguiente completa el hueco."""
+    chart = [
+        ChartPoint(date(2025, 8, 31), 100.0),
+        *[ChartPoint(date(2025, 9, dia), 100.0) for dia in range(1, 27)],
+        ChartPoint(date(2025, 9, 27), 102.0),
+        ChartPoint(date(2025, 10, 2), 106.0),
+    ]
+
+    resultado = build_series_full(
+        [mes(2025, 9, 2.5)], today=date(2025, 10, 15), chart=chart
+    )
+    filas = {fila.date: fila for fila in resultado.rows}
+
+    assert resultado.months["2025-09"]["complete"] is False
+    assert resultado.months["2025-09"]["intermediate"] is True
+    assert resultado.months["2025-09"]["factor"] == 1.0
+    # El chart no se adapta: el 27 de septiembre sigue en 102.
+    assert filas[date(2025, 9, 27)].close == 102.0
+    assert filas[date(2025, 9, 27)].kind == KIND_DAY
+    # Stats pone el cierre que falta.
+    assert filas[date(2025, 9, 30)].close == 102.5
+    # Octubre se mide desde el M de stats y conserva el 6 % del 2 de octubre;
+    # el día 1 de octubre se rellena al vuelo desde ese M.
+    assert date(2025, 10, 1) not in filas
+    assert filas[date(2025, 10, 2)].close == 106.0
+
+
+def test_un_mes_incompleto_con_stats_fuera_del_hueco_calibra_el_chart() -> None:
+    """Si stats queda fuera, manda stats y el chart del mes se adapta."""
+    chart = [
+        ChartPoint(date(2025, 8, 31), 100.0),
+        *[ChartPoint(date(2025, 9, dia), 100.0) for dia in range(1, 27)],
+        ChartPoint(date(2025, 9, 27), 102.0),
+        ChartPoint(date(2025, 10, 2), 106.0),
+    ]
+
+    resultado = build_series_full(
+        [mes(2025, 9, 8.0)], today=date(2025, 10, 15), chart=chart
+    )
+    filas = {fila.date: fila for fila in resultado.rows}
+
+    assert resultado.months["2025-09"]["complete"] is False
+    assert resultado.months["2025-09"]["intermediate"] is False
+    assert resultado.months["2025-09"]["factor"] != 1.0
+    # El 27 de septiembre se ha adaptado para acabar en el 8 %.
+    assert filas[date(2025, 9, 27)].close == 108.0
+    assert filas[date(2025, 9, 27)].kind == KIND_CALIBRATED
+    assert filas[date(2025, 9, 30)].close == 108.0
+    # El mes siguiente se mide desde el M y conserva el 6 % del 2 de octubre,
+    # aunque eso implique una bajada desde el 108.
+    assert filas[date(2025, 10, 2)].close == 106.0
 
 
 def test_calibracion_no_mueve_los_dias_de_retorno_cero(hoy: date) -> None:
@@ -769,6 +831,188 @@ def test_calibra_signos_opuestos(hoy: date) -> None:
     )
 
 
+# ----------------------------------------------------------------------
+# Stats corregidos en meses que el chart ya no cubre
+# ----------------------------------------------------------------------
+def test_recalibra_un_mes_sin_chart_con_los_dias_guardados(hoy: date) -> None:
+    """Si stats cambia un mes fuera de la ventana, sus días se recalibran."""
+    chart = serie_diaria(
+        date(2025, 3, 31),
+        date(2025, 4, 30),
+        {date(2025, 4, 10): 1.02, date(2025, 4, 20): 1.02},
+    )
+    primera = build_series_full(
+        [mes(2025, 4, 4.5), mes(2025, 5, 2.0)], today=hoy, chart=chart
+    )
+    antes = {fila.date: fila for fila in primera.rows}
+
+    segunda = build_series_full(
+        [mes(2025, 4, 6.0), mes(2025, 5, 2.0)],
+        today=hoy,
+        history=primera.rows,
+        chart=None,
+    )
+    filas = {fila.date: fila for fila in segunda.rows}
+
+    # Abril conserva su forma pero acaba en el cierre nuevo.
+    assert segunda.months["2025-04"]["status"] == "calibrated"
+    assert segunda.months["2025-04"]["stats_pct"] == 6.0
+    assert filas[date(2025, 4, 30)].kind == KIND_MONTH
+    assert filas[date(2025, 4, 30)].close == 106.0
+    assert filas[date(2025, 4, 10)].close != antes[date(2025, 4, 10)].close
+    assert [fila.date for fila in primera.rows] == [
+        fila.date for fila in segunda.rows
+    ]
+    # El mes siguiente se mide desde el cierre corregido.
+    assert filas[date(2025, 5, 31)].close == round(106.0 * 1.02, 4)
+
+
+def test_la_recalibracion_conserva_el_movimiento_del_ultimo_dia(
+    hoy: date,
+) -> None:
+    chart = serie_diaria(
+        date(2025, 3, 31),
+        date(2025, 4, 30),
+        {date(2025, 4, 10): 1.02, date(2025, 4, 30): 1.01},
+    )
+    primera = build_series_full([mes(2025, 4, 4.5)], today=hoy, chart=chart)
+    antes = {fila.date: fila for fila in primera.rows}
+    salto_antes = (
+        antes[date(2025, 4, 30)].close / antes[date(2025, 4, 29)].close
+    )
+
+    segunda = build_series_full(
+        [mes(2025, 4, 7.0)], today=hoy, history=primera.rows, chart=None
+    )
+    filas = {fila.date: fila for fila in segunda.rows}
+    salto_despues = filas[date(2025, 4, 30)].close / filas[date(2025, 4, 29)].close
+
+    assert filas[date(2025, 4, 30)].close == 107.0
+    # La forma no cambia: el último día conserva su movimiento.
+    assert salto_despues == pytest.approx(salto_antes, rel=1e-3)
+
+
+def test_recalibra_los_dias_d_de_un_mes_sin_chart(hoy: date) -> None:
+    """Un mes `D` pasa a `C` si su cierre de stats cambia."""
+    chart = serie_diaria(
+        date(2025, 3, 31), date(2025, 4, 30), {date(2025, 4, 10): 1.02}
+    )
+    primera = build_series_full([mes(2025, 4, 2.0)], today=hoy, chart=chart)
+    assert primera.months["2025-04"]["factor"] == 1.0
+    assert any(fila.kind == KIND_DAY for fila in primera.rows)
+
+    segunda = build_series_full(
+        [mes(2025, 4, 4.0)], today=hoy, history=primera.rows, chart=None
+    )
+    abril = [
+        fila
+        for fila in segunda.rows
+        if (fila.date.year, fila.date.month) == (2025, 4)
+    ]
+
+    assert segunda.months["2025-04"]["factor"] != 1.0
+    assert any(fila.kind == KIND_CALIBRATED for fila in abril)
+    assert abril[-1].close == 104.0
+
+
+def test_rehace_un_mes_con_chart_desde_el_chart_nuevo(hoy: date) -> None:
+    """Con chart disponible, los días salen del chart de la web."""
+    primero = serie_diaria(
+        date(2025, 3, 31), date(2025, 4, 30), {date(2025, 4, 10): 1.02}
+    )
+    primera = build_series_full([mes(2025, 4, 2.0)], today=hoy, chart=primero)
+
+    segundo = serie_diaria(
+        date(2025, 3, 31), date(2025, 4, 30), {date(2025, 4, 20): 1.03}
+    )
+    segunda = build_series_full(
+        [mes(2025, 4, 5.0)],
+        today=hoy,
+        history=primera.rows,
+        chart=segundo,
+    )
+    filas = {fila.date: fila for fila in segunda.rows}
+
+    assert segunda.months["2025-04"]["chart_pct"] == pytest.approx(3.0)
+    assert filas[date(2025, 4, 30)].close == 105.0
+    # El movimiento ya no está en el día 10, sino en el 20 del chart nuevo.
+    assert filas[date(2025, 4, 10)].close == filas[date(2025, 4, 9)].close
+    assert filas[date(2025, 4, 20)].close > filas[date(2025, 4, 19)].close
+
+
+def test_un_c_que_ya_coincide_con_el_chart_se_queda_en_d(hoy: date) -> None:
+    """Con el chart nuevo no hay que adaptar nada: sus días son `D`."""
+    chart = serie_diaria(
+        date(2025, 3, 31), date(2025, 4, 30), {date(2025, 4, 10): 1.02}
+    )
+    primera = build_series_full([mes(2025, 4, 4.0)], today=hoy, chart=chart)
+    assert any(fila.kind == KIND_CALIBRATED for fila in primera.rows)
+
+    segunda = build_series_full(
+        [mes(2025, 4, 2.0)],
+        today=hoy,
+        history=primera.rows,
+        chart=chart,
+    )
+    abril = [
+        fila
+        for fila in segunda.rows
+        if (fila.date.year, fila.date.month) == (2025, 4)
+    ]
+
+    assert segunda.months["2025-04"]["factor"] == 1.0
+    assert all(fila.kind == KIND_DAY for fila in abril[:-1])
+    assert abril[-1].kind == KIND_MONTH
+    assert abril[-1].close == 102.0
+
+
+def test_no_toca_nada_si_los_stats_no_cambian(hoy: date) -> None:
+    chart = serie_diaria(
+        date(2025, 3, 31), date(2025, 4, 30), {date(2025, 4, 10): 1.02}
+    )
+    primera = build_series_full(
+        [mes(2025, 4, 4.5), mes(2025, 5, 1.0)], today=hoy, chart=chart
+    )
+
+    segunda = build_series_full(
+        [mes(2025, 4, 4.5), mes(2025, 5, 1.0)],
+        today=hoy,
+        history=primera.rows,
+        chart=None,
+    )
+
+    assert como_tuplas(segunda.rows) == como_tuplas(primera.rows)
+    assert segunda.months == {}
+
+
+def test_la_recalibracion_conserva_lo_que_no_depende_de_los_dias(
+    hoy: date,
+) -> None:
+    chart = serie_diaria(
+        date(2025, 3, 31), date(2025, 4, 30), {date(2025, 4, 10): 1.02}
+    )
+    primera = build_series_full([mes(2025, 4, 2.0)], today=hoy, chart=chart)
+
+    segunda = build_series_full(
+        [mes(2025, 4, 4.0)],
+        today=hoy,
+        history=primera.rows,
+        chart=None,
+        prev_months={
+            "2025-04": {
+                "chart_pct": 2.0,
+                "complete": False,
+                "intermediate": True,
+            }
+        },
+    )
+    info = segunda.months["2025-04"]
+
+    assert info["complete"] is False
+    assert info["intermediate"] is True
+    assert info["chart_pct"] == 2.0
+
+
 def test_rechaza_solo_si_no_hay_dias_con_movimiento(hoy: date) -> None:
     """Sin ningún día con retorno no hay forma de repartir el cierre."""
     estadistica = [mes(2025, 4, 2.0)]
@@ -813,7 +1057,7 @@ def test_daily_rows_rellena_el_hueco_inicial_del_mes_frontera(
     filas = build_series_full(estadistica, today=hoy, chart=chart).rows
     diarias = {fila.date: fila for fila in daily_rows(filas, today=hoy)}
 
-    assert diarias[date(2025, 4, 1)].kind == KIND_ANCHOR
+    assert diarias[date(2025, 4, 1)].kind == KIND_FILL
     assert diarias[date(2025, 4, 14)].kind == KIND_FILL
     assert diarias[date(2025, 4, 15)].kind == KIND_CALIBRATED
     assert diarias[date(2025, 4, 16)].kind == KIND_CALIBRATED

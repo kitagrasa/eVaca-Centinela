@@ -11,10 +11,12 @@ Diseño de la pasada:
   el HTML y recalibra los meses cerrados con el `gain` que ya está guardado;
 * **mensual**: la rentabilidad se lee el día 5 (con **un** reintento el día 6
   si aún no ha salido) y otra vez el día 12, para corregir el cierre del mes
-  anterior. `--force` fuerza la lectura cualquier día. Cada lectura compara
-  los stats guardados con los de la web para los tres meses anteriores; la
-  del día 12 también para el mes que se cierra, y reconstruye con los valores
-  nuevos;
+  anterior. `--force` fuerza la lectura cualquier día. Solo se usan **meses
+  cerrados**: el mes en curso es MTD, no se guarda ni se publica. Cada lectura
+  contrasta **todos** los meses guardados con los de la web y corrige los que
+  no coinciden con las valoraciones diarias de ese mes: un mes `A` se rehace,
+  uno `D` o `C` se recalibra (desde el chart de la web si aún trae ese mes; si
+  no, con la forma de los días guardados);
 * un fallo del chart no borra lo publicado: se conservan los días `C` y `D`
   guardados; un fallo de la rentabilidad mensual no toca los ficheros de ese
   trader y se reintenta en la siguiente pasada;
@@ -45,6 +47,7 @@ from .serie import (
     ChartPoint,
     SeriesError,
     build_series_full,
+    clean_monthly,
     daily_rows,
     parse_chart,
     parse_chart_points,
@@ -57,9 +60,6 @@ from .serie_html import render as render_html
 # (salvo dentro de .state-repo, que es el clon del repositorio de estado).
 RAIZ_CODIGO = Path(__file__).resolve().parents[1]
 DIR_ESTADO = ".state-repo"
-
-# Cada lectura de stats revisa el mes que se cierra y los tres anteriores.
-MESES_REVISION = 3
 
 
 @dataclass(slots=True)
@@ -271,16 +271,12 @@ class SerieRun:
             if self._debe_pedir_stats(datos, hoy):
                 payload = self._pedir_stats(usuario, identificador)
                 stats_pedidas = True
-                incluir_objetivo = (
-                    hoy.day == self._config.series.stats_days[-1]
-                    or self._cfg.force
-                )
                 self._revisar_stats(
                     identificador,
                     payload_anterior,
                     payload,
                     hoy,
-                    incluir_objetivo=incluir_objetivo,
+                    parcial=_mes_parcial(datos.fetched_at, hoy),
                 )
             if not _payload_valido(payload):
                 raise SeriesError(
@@ -304,14 +300,32 @@ class SerieRun:
         if not isinstance(payload, dict):  # pragma: no cover - ya validado
             raise SeriesError("la rentabilidad mensual no es un objeto JSON")
 
-        meses = parse_monthly(payload)
-        meses = _quitar_mes_parcial(meses, nuevo_fetched, hoy)
+        # Solo valen los meses cerrados: el mes en curso es MTD y no es un
+        # cierre. Sin ningún cierre todavía no se publica nada (no es un fallo:
+        # se espera al día 5).
+        try:
+            meses = clean_monthly(
+                _meses_cerrados(
+                    _quitar_mes_parcial(
+                        parse_monthly(payload), nuevo_fetched, hoy
+                    ),
+                    hoy,
+                )
+            )
+        except SeriesError:
+            self._log.info(
+                "%s: los stats todavía no traen ningún mes cerrado completo; "
+                "no se publica nada hasta el cierre",
+                identificador,
+            )
+            return {"status": "sin_datos", "last_date": None, "error": None}
         construccion = build_series_full(
             meses,
             today=hoy,
             history=datos.history,
             chart=chart_points,
             checked_at=marca,
+            prev_months=datos.months,
         )
         filas = construccion.rows
         auditoria = dict(datos.months)
@@ -334,7 +348,7 @@ class SerieRun:
             }
 
         datos.version = serie_store.DATA_FILE_VERSION
-        datos.last_payload = _payload_mensual(payload)
+        datos.last_payload = _payload_mensual(payload, hoy)
         datos.updated_at = marca
         if stats_pedidas:
             datos.fetched_at = marca
@@ -444,15 +458,17 @@ class SerieRun:
         nuevo: Any,
         hoy: date,
         *,
-        incluir_objetivo: bool,
+        parcial: tuple[int, int] | None = None,
     ) -> None:
-        """Contrasta los stats guardados con los de la web.
+        """Contrasta **todos** los meses guardados con los de la web.
 
-        La primera lectura del mes (día 5) revisa los tres meses anteriores;
-        el día 12 revisa también el mes que se cierra. No cambia el cálculo:
-        el payload nuevo ya manda en la reconstrucción. Solo deja en el log
-        los meses que cambian y la diferencia máxima, sin nombres ni datos
-        personales.
+        La reconstrucción ya aplica los stats nuevos a cada mes (y recalibra
+        los días guardados de los meses que el chart ya no trae), así que aquí
+        solo se deja constancia en el log de lo que cambia: los meses que no
+        coinciden, la diferencia máxima y los que faltan en un lado. El mes en
+        curso no se compara: es MTD, no un cierre. `parcial` solo hace falta
+        con un fichero guardado por una versión anterior, que sí guardaba el
+        MTD: ese mes no era un cierre y cuenta como nuevo, no como cambio.
         """
         if not isinstance(anterior, dict):
             self._log.info(
@@ -477,31 +493,35 @@ class SerieRun:
             )
             return
 
-        claves = _ventana_revision(hoy, incluir_objetivo)
-        comunes = [clave for clave in claves if clave in viejos and clave in nuevos]
-        solo_viejos = [clave for clave in claves if clave in viejos and clave not in nuevos]
-        solo_nuevos = [clave for clave in claves if clave in nuevos and clave not in viejos]
-        ausentes = [clave for clave in claves if clave not in viejos and clave not in nuevos]
+        actual = (hoy.year, hoy.month)
+        viejos.pop(actual, None)
+        nuevos.pop(actual, None)
+        if parcial is not None:
+            viejos.pop(parcial, None)
+
+        comunes = sorted(set(viejos) & set(nuevos))
+        solo_viejos = sorted(set(viejos) - set(nuevos))
+        solo_nuevos = sorted(set(nuevos) - set(viejos))
         cambios = [
             (clave, viejos[clave], nuevos[clave])
             for clave in comunes
             if abs(viejos[clave] - nuevos[clave]) > 1e-4
         ]
-        ventana = ", ".join(_clave_mes(clave) for clave in claves)
+        nuevos_txt = _meses_o_guion(solo_nuevos)
+        viejos_txt = _meses_o_guion(solo_viejos)
 
         if not comunes and not solo_viejos and not solo_nuevos:
             self._log.info(
-                "%s: revisión de stats (%s): no hay meses comparables",
+                "%s: revisión de stats: no hay meses comparables",
                 identificador,
-                ventana,
             )
             return
-        if not cambios and not solo_viejos and not solo_nuevos:
+        if not cambios and not solo_viejos:
             self._log.info(
-                "%s: revisión de stats (%s): coinciden (%d meses)",
+                "%s: revisión de stats (%d meses): coinciden; nuevos: %s",
                 identificador,
-                ventana,
                 len(comunes),
+                nuevos_txt,
             )
             return
         maxima = max(
@@ -509,16 +529,15 @@ class SerieRun:
             default=0.0,
         )
         self._log.warning(
-            "%s: revisión de stats (%s): %d cambio(s) %s; diferencia máxima "
-            "%.2f pp; solo en la web: %s; solo guardados: %s; sin datos: %s",
+            "%s: revisión de stats (%d meses): %d cambio(s) %s (se corrigen); "
+            "diferencia máxima %.2f pp; nuevos: %s; solo guardados: %s",
             identificador,
-            ventana,
+            len(comunes),
             len(cambios),
-            ", ".join(_clave_mes(clave) for clave, _, _ in cambios) or "-",
+            _meses_o_guion([clave for clave, _, _ in cambios]),
             maxima,
-            ", ".join(_clave_mes(clave) for clave in solo_nuevos) or "-",
-            ", ".join(_clave_mes(clave) for clave in solo_viejos) or "-",
-            ", ".join(_clave_mes(clave) for clave in ausentes) or "-",
+            nuevos_txt,
+            viejos_txt,
         )
 
     # ------------------------------------------------------------------
@@ -538,7 +557,9 @@ class SerieRun:
 
         Como máximo hay un aviso por mes y trader en la primera detección y
         otro el día 12 si la rentabilidad mensual ha cambiado más de
-        `alert_pp`. El estado solo guarda el último mes avisado por id.
+        `alert_pp`. El estado solo guarda el último mes avisado por id. Si el
+        chart no llega al cierre del mes, se compara y avisa igual: puede que
+        ese hueco no se rellene nunca.
         """
         if self._cfg.dry_run:
             return
@@ -580,6 +601,7 @@ class SerieRun:
             stats_pct=stats_pct,
             chart_pct=chart_pct,
             estado=str(info.get("status") or ""),
+            intermedio=bool(info.get("intermediate")),
             poco_fiable=diferencia > cap_pp,
             cap_pp=cap_pp,
             rechazados=_rechazados_ultimos_12(auditoria, hoy, cap_pp),
@@ -704,39 +726,45 @@ def _stats_leidos_hoy(fetched_at: Any, hoy: date) -> bool:
     return momento is not None and en_madrid(momento).date() == hoy
 
 
+def _fecha_inicio(valor: Any) -> date | None:
+    """Fecha del campo `start` de un mes; None si no vale."""
+    if not isinstance(valor, str) or len(valor) < 10:
+        return None
+    try:
+        return date.fromisoformat(valor[:10])
+    except ValueError:
+        return None
+
+
+def _meses_cerrados(meses: list[Any], hoy: date) -> list[Any]:
+    """Quita el mes en curso y los futuros: los stats solo valen cerrados."""
+    actual = (hoy.year, hoy.month)
+    return [
+        mes for mes in meses if (mes.start.year, mes.start.month) < actual
+    ]
+
+
 def _tiene_mes(payload: dict[str, Any], clave: tuple[int, int]) -> bool:
     """¿La respuesta guardada ya trae el mes indicado?"""
     for entrada in payload.get("monthly") or []:
         if not isinstance(entrada, dict):
             continue
-        inicio = entrada.get("start")
-        if not isinstance(inicio, str) or len(inicio) < 10:
-            continue
-        try:
-            fecha = date.fromisoformat(inicio[:10])
-        except ValueError:
-            continue
-        if (fecha.year, fecha.month) == clave:
+        inicio = _fecha_inicio(entrada.get("start"))
+        if inicio is not None and (inicio.year, inicio.month) == clave:
             return True
     return False
 
 
-def _ventana_revision(
-    hoy: date, incluir_objetivo: bool = True
-) -> list[tuple[int, int]]:
-    """Meses que se contrastan en una lectura de stats.
-
-    Si hoy es 5 de noviembre (primera lectura), devuelve septiembre, agosto y
-    julio: el mes que se cierra (octubre) es nuevo y no hay un cierre anterior
-    con el que compararlo. El día 12 se incluye también octubre, porque ya
-    hubo una primera lectura y puede haber cambiado.
-    """
-    clave = _mes_anterior((hoy.year, hoy.month))
-    claves = [clave] if incluir_objetivo else []
-    for _ in range(MESES_REVISION):
-        clave = _mes_anterior(clave)
-        claves.append(clave)
-    return claves
+def _meses_o_guion(
+    claves: list[tuple[int, int]], maximo: int = 12
+) -> str:
+    """Lista de meses para el log, recortada si hay muchos."""
+    if not claves:
+        return "-"
+    texto = ", ".join(_clave_mes(clave) for clave in claves[:maximo])
+    if len(claves) > maximo:
+        texto += f" (+{len(claves) - maximo})"
+    return texto
 
 
 def _mes_parcial(
@@ -744,8 +772,9 @@ def _mes_parcial(
 ) -> tuple[int, int] | None:
     """Mes que era el actual cuando se leyó stats y que ya ha cerrado.
 
-    Si la última lectura fue antes de que empezara el mes en curso, su último
-    mes era parcial (MTD) y no puede usarse como cierre. Se espera a la
+    Sirve para no tomar por cierre un MTD guardado por una versión anterior
+    (ahora el mes en curso ya no se guarda). Si la última lectura fue antes de
+    que empezara el mes en curso, ese mes no tiene cierre y se espera a la
     lectura del día 5.
     """
     momento = serie_store.parse_iso(fetched_at)
@@ -803,17 +832,21 @@ def _chart_data(
     }
 
 
-def _payload_mensual(payload: dict[str, Any]) -> dict[str, Any]:
-    """Lo único que se guarda en data/: los campos usados de la lista mensual.
+def _payload_mensual(payload: dict[str, Any], hoy: date) -> dict[str, Any]:
+    """Lo único que se guarda en data/: los campos usados, de meses cerrados.
 
     El repositorio es público y en `data/` no debe haber nada de más. De cada
     mes se guardan solo `start`, `gain` y `isSimulation`: cualquier otro campo
     de la respuesta (identificadores internos, URLs...) se tira, para que no
-    pueda acabar publicado sin darse cuenta.
+    pueda acabar publicado sin darse cuenta. El mes en curso (y cualquier mes
+    futuro) tampoco se guarda: sus stats son MTD y no valen como cierre.
     """
     mensual: list[dict[str, Any]] = []
     for entrada in payload.get("monthly") or []:
         if not isinstance(entrada, dict):
+            continue
+        inicio = _fecha_inicio(entrada.get("start"))
+        if inicio is None or (inicio.year, inicio.month) >= (hoy.year, hoy.month):
             continue
         limpia: dict[str, Any] = {
             "start": entrada.get("start"),
@@ -833,6 +866,7 @@ def _mensaje_aviso(
     stats_pct: float,
     chart_pct: float,
     estado: str,
+    intermedio: bool,
     poco_fiable: bool,
     cap_pp: float,
     rechazados: int,
@@ -853,6 +887,11 @@ def _mensaje_aviso(
         lineas.append(
             "El mes no se ha calibrado: se publica como cierre mensual "
             "+ relleno."
+        )
+    elif intermedio:
+        lineas.append(
+            "El chart no llega al cierre del mes: stats completa el hueco "
+            "y el chart no se ha adaptado."
         )
     else:
         lineas.append(
@@ -889,11 +928,14 @@ def _rechazados_ultimos_12(
     """Cuenta los meses con chart poco fiable en los últimos 12 meses.
 
     Incluye los que no se pudieron calibrar (`rejected`) y los que sí se
-    calibraron pero se alejan más de `cap_pp` de stats.
+    calibraron pero se alejan más de `cap_pp` de stats. Los meses con el chart
+    incompleto quedan fuera de la recomendación, aunque sí puedan avisar.
     """
     total = 0
     for clave, info in auditoria.items():
         if not isinstance(info, dict):
+            continue
+        if info.get("complete") is False:
             continue
         try:
             anio, mes = (int(parte) for parte in clave.split("-", 1))

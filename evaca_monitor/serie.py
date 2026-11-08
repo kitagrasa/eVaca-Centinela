@@ -9,19 +9,26 @@ Hay dos fuentes:
   manda sobre el chart;
 * el **chart diario** público de los dos últimos años: da los días. Los meses
   cerrados que caben en el chart se calibran para que su producto acabe
-  exactamente en la rentabilidad mensual; el mes en curso se publica tal cual.
-  Un mes cuyo chart ya coincide con la rentabilidad mensual no se calibra: sus
-  días quedan como datos de chart (`D`), igual que los del mes en curso.
+  exactamente en la rentabilidad mensual; el mes en curso se publica tal cual,
+  solo con sus días de chart (sus stats son MTD y no se usan). Un mes cuyo
+  chart ya coincide con la rentabilidad mensual no se calibra: sus días quedan
+  como datos de chart (`D`), igual que los del mes en curso.
 
-El JSON guarda los datos reales: la base, el ancla del día 1 de cada mes, el
-cierre exacto de cada mes, los días de chart calibrados o sin adaptar y los
-meses antiguos que solo tienen rentabilidad mensual. Encima, para el HTML,
-`daily_rows` rellena los huecos de los meses que no tienen días de chart.
+El JSON guarda los datos reales: la base, el cierre exacto de cada mes, los
+días de chart calibrados o sin adaptar y los meses antiguos que solo tienen
+rentabilidad mensual. Encima, para el HTML, `daily_rows` rellena los huecos de
+los meses que no tienen días de chart.
 
-El ancla del día 1 existe para los meses que no tienen chart: Portfolio
-Performance empieza a dibujar cada serie en su primera cotización del periodo,
-así que sin un punto el día 1, el primer mes de cualquier comparativa (YTD, 1
-año, 3 años) salía vacío hasta el cierre.
+El relleno de los meses que no tienen chart (`A`) se calcula al vuelo,
+interpolando entre el cierre del mes anterior y el de este: la serie no copia
+el cierre de fin de mes en el día 1 del mes siguiente. Portfolio Performance
+empieza a dibujar cada serie en su primera cotización del periodo, y la rejilla
+diaria ya le da un punto en cada día de los meses cerrados.
+
+Si una lectura de stats cambia el cierre de un mes que el chart ya no cubre
+(ventana de dos años), los días guardados de ese mes se recalibran con su misma
+forma hasta el cierre nuevo: el mes no se queda con los días de un cierre
+viejo.
 
 Ningún dato de este módulo lleva el nombre del trader: todo lo que se publica
 se nombra con `serie_id(usuario)`, un identificador opaco y estable.
@@ -32,7 +39,7 @@ from __future__ import annotations
 import calendar
 import hashlib
 import math
-from collections.abc import Iterable, Sequence
+from collections.abc import Iterable, Mapping, Sequence
 from dataclasses import dataclass, field
 from datetime import date, timedelta
 from typing import Any
@@ -43,6 +50,9 @@ KIND_MONTH = "month"
 # Día de chart sin calibrar: el mes en curso o un mes cerrado que aún no se ha
 # adaptado (chart y stats ya coinciden, factor 1).
 KIND_DAY = "day"
+# Ancla del día 1 de un mes: ya no se genera (el relleno `A` interpola entre
+# los cierres de mes) y solo se conserva para leer ficheros antiguos. Una pasada
+# nueva no guarda ninguna.
 KIND_ANCHOR = "anchor"
 # Día de un mes cerrado realmente calibrado con el cierre mensual: el factor
 # aplicado no es 1. Se marca aparte de `day` para que un fallo del chart no lo
@@ -58,6 +68,16 @@ KIND_FILL = "fill"
 
 # Cien: valor inicial del índice.
 BASE_VALUE = 100.0
+
+# Diferencia mínima entre el cierre guardado de un mes y el que sale de los
+# stats nuevos para recalibrar sus días. Por debajo de la última cifra que se
+# guarda (4 decimales) el cambio no se nota en la serie.
+TOLERANCIA_CIERRE = 1e-4
+
+# Diferencia (en puntos porcentuales) por debajo de la cual el chart se
+# considera que ya termina en el cierre de stats: solo es ruido de coma
+# flotante, no hay nada que calibrar y sus días se publican como `D`.
+TOLERANCIA_SIN_CALIBRAR = 1e-6
 
 # Prefijo del hash. No es decorativo: separa estos ids de cualquier otro hash
 # que se pudiera calcular con el mismo nombre de usuario.
@@ -339,6 +359,7 @@ def build_series_full(
     chart: Iterable[ChartPoint] | None = None,
     *,
     checked_at: str = "",
+    prev_months: Mapping[str, Any] | None = None,
 ) -> SeriesBuild:
     """Construye las filas y la auditoría de los meses calibrados.
 
@@ -347,6 +368,12 @@ def build_series_full(
     history: filas ya guardadas; se conservan los días de chart reales (`C` y
     `D`) de los meses que no se reconstruyen en esta pasada.
     chart: puntos diarios del chart público, o None si no hay chart disponible.
+    prev_months: auditoría guardada por mes; al recalibrar un mes sin chart se
+    conservan de ella los datos que no se pueden deducir de los días (`complete`,
+    `intermediate` y la desviación real del chart).
+
+    El mes en curso no se usa como cierre: solo se publican sus días de chart
+    (`D`), sin calibrar. El `gain` de ese mes en la respuesta es MTD y no vale.
 
     Reglas de los meses cerrados con chart:
 
@@ -356,10 +383,23 @@ def build_series_full(
       vaya en sentido contrario;
     * si el factor es 1 (el chart ya acaba en el cierre de stats), no hay
       adaptación: los días se guardan como `D` (dato de chart sin calibrar);
+    * si el chart no llega a su último día, stats puede completar el hueco: si
+      su cierre cae entre el último punto del chart y el primero del mes
+      siguiente, no se calibra el mes; si queda fuera, stats manda y se
+      calibra. En los dos casos el mes siguiente se mide desde ese `M` y
+      conserva el primer punto del chart;
     * los días con retorno 0 se quedan en 0;
     * solo se marca `rejected` si no hay forma matemática de repartir el
       cierre (ningún día con movimiento y un mes que no es plano, o un factor
       inválido). En ese caso se publica `M` + relleno `A`.
+
+    Regla de los meses cerrados sin chart (fuera de la ventana del chart, o con
+    el chart caído):
+
+    * si el mes ya tenía días reales guardados y su cierre guardado no coincide
+      con el de stats, se recalibran esos días con un factor constante (misma
+      regla que con el chart) hasta el cierre nuevo; si coinciden, se conservan
+      tal cual. Un mes sin días guardados se publica `M` + relleno `A`.
 
     El umbral de aviso (`alert_pp`) no cambia el cálculo: el aviso por
     Telegram lo decide `serie_run` a partir de la auditoría que devuelve esta
@@ -370,6 +410,18 @@ def build_series_full(
     clave_actual = (today.year, today.month)
     stats = {(mes.start.year, mes.start.month): mes.gain for mes in meses}
     historial = list(history)
+
+    # Días y cierre guardados de cada mes: permiten recalibrar un mes que el
+    # chart ya no trae en vez de dejar sus días anclados a un cierre viejo.
+    guardadas: dict[tuple[int, int], list[PriceRow]] = {}
+    cierres: dict[tuple[int, int], float] = {}
+    for fila in sorted(historial, key=lambda fila: fila.date):
+        clave_fila = (fila.date.year, fila.date.month)
+        if fila.kind in (KIND_CALIBRATED, KIND_DAY):
+            guardadas.setdefault(clave_fila, []).append(fila)
+        elif fila.kind == KIND_MONTH:
+            cierres[clave_fila] = fila.close
+    guardadas_por_fecha = {fila.date: fila for fila in historial}
 
     puntos_chart = [
         punto for punto in _normalizar_chart(chart) if punto.date <= today
@@ -382,6 +434,13 @@ def build_series_full(
     fecha_base = meses[0].start - timedelta(days=1)
     filas[fecha_base] = PriceRow(date=fecha_base, close=BASE_VALUE, kind=KIND_BASE)
     cierre_previo = BASE_VALUE
+
+    # Nivel del chart que corresponde al cierre de la serie al empezar el mes.
+    # Normalmente es el último punto del chart del mes anterior; si un mes
+    # queda intermedio, se sustituye por un nivel sintético en el cierre de
+    # stats para que el mes siguiente se mida desde el `M`.
+    primera = (meses[0].start.year, meses[0].start.month)
+    base_chart = ultimo_mes.get(_prev_month(primera))
 
     # Meses cuyos días de chart se han decidido en esta pasada. Los que no
     # estén aquí conservan sus `C`/`D` guardados: si el chart falla o una
@@ -401,18 +460,88 @@ def build_series_full(
         dias_chart = por_mes.get(clave)
 
         if not dias_chart:
-            cierre_previo = _add_plain_month(
-                filas, mes, cierre_previo, ganancia
+            # Sin chart en esta pasada. Si el mes ya tenía días reales
+            # guardados y el cierre de stats ha cambiado, se recalibran con su
+            # misma forma; si no, el mes va solo con su cierre `M` y el
+            # relleno `A` se calcula al vuelo en `daily_rows`.
+            cierre_mes = round(cierre_previo * (1 + ganancia / 100), 4)
+            dias_guardados = guardadas.get(clave)
+            cierre_guardado = cierres.get(clave)
+            necesita = bool(
+                dias_guardados
+                and cierre_guardado is not None
+                and abs(cierre_guardado - cierre_mes) > TOLERANCIA_CIERRE
             )
+            recalculado: tuple[list[PriceRow], dict[str, Any]] | None = None
+            if necesita:
+                base_guardada = _previous_close(
+                    guardadas_por_fecha, dias_guardados[0].date
+                )
+                if base_guardada is not None:
+                    recalculado = _recalibrar_mes(
+                        mes,
+                        dias_guardados,
+                        base_guardada,
+                        cierre_previo,
+                        ganancia,
+                        cierre_guardado,
+                        ultimo_dia=ultimo_dia,
+                        checked_at=checked_at,
+                        previo=(prev_months or {}).get(_month_key(clave)),
+                    )
+            if recalculado is None:
+                cierre_previo = _add_plain_month(
+                    filas, mes, cierre_previo, ganancia
+                )
+                if necesita:
+                    # No hay forma de repartir el cierre con los días viejos:
+                    # el mes queda como `M` + relleno `A`, sin resucitar los
+                    # días que ya no cuadran.
+                    decididos.add(clave)
+            else:
+                nuevas, info = recalculado
+                for fila in nuevas:
+                    filas[fila.date] = fila
+                cierre_previo = nuevas[-1].close
+                auditoria[_month_key(clave)] = info
+                decididos.add(clave)
+            base_chart = None
             continue
 
-        gc, retornos, _frontera = _chart_month(
-            dias_chart, ultimo_mes.get(_prev_month(clave))
-        )
+        completo = dias_chart[-1].date >= ultimo_dia
+        gc, retornos, _frontera = _chart_month(dias_chart, base_chart)
+
+        # Caso intermedio: el chart no llega al cierre, pero stats cae entre su
+        # último punto y el primero del mes siguiente. Stats completa el hueco
+        # y no se calibra el chart.
+        siguiente = por_mes.get(_next_month(clave))
+        intermedio = False
+        if (
+            not completo
+            and base_chart is not None
+            and siguiente
+            and ganancia > -100
+        ):
+            r_ultimo = gc / 100
+            r_siguiente = siguiente[0].equity / base_chart - 1
+            r_stats = ganancia / 100
+            intermedio = (
+                min(r_ultimo, r_siguiente)
+                <= r_stats
+                <= max(r_ultimo, r_siguiente)
+            )
+
         n = sum(1 for retorno in retornos if retorno != 0.0)
-        if n == 0 and abs(ganancia) <= 1e-12:
-            # Un mes plano puede quedar plano: no hay nada que repartir.
+        if intermedio:
+            # No se adapta: los días del chart se publican tal cual y stats
+            # solo pone el cierre `M` que falta.
             factor: float | None = 1.0
+            rechazado = False
+        elif abs(gc - ganancia) <= TOLERANCIA_SIN_CALIBRAR:
+            # El chart ya termina en el cierre de stats: no hay nada que
+            # adaptar (el factor es 1 salvo ruido de coma flotante) y sus
+            # días se publican como `D`, no como `C`.
+            factor = 1.0
             rechazado = False
         else:
             # La rentabilidad mensual manda siempre. Si el chart se desvía
@@ -434,6 +563,8 @@ def build_series_full(
             "chart_pct": round(gc, 4),
             "factor": round(factor, 6) if factor is not None else 1.0,
             "status": "rejected" if rechazado else "calibrated",
+            "complete": completo,
+            "intermediate": intermedio,
             "checked_at": checked_at,
         }
         decididos.add(clave)
@@ -442,6 +573,12 @@ def build_series_full(
             cierre_previo = _add_plain_month(
                 filas, mes, cierre_previo, ganancia
             )
+            if completo:
+                base_chart = dias_chart[-1].equity
+            elif base_chart is not None and siguiente:
+                base_chart = base_chart * (1 + ganancia / 100)
+            else:
+                base_chart = None
             continue
 
         # Un factor de 1 significa que el chart ya cuadraba con stats: no se
@@ -451,14 +588,8 @@ def build_series_full(
 
         # Mes con chart: un punto por día del chart. El primer punto de una
         # ventana es el cierre del primer día (no se usa el nivel inicial del
-        # chart); cuando no hay cierre del mes anterior, ese primer día se
-        # deja plano y los días anteriores se rellenan con `A`.
-        if dias_chart[0].date > mes.start:
-            filas.setdefault(
-                mes.start,
-                PriceRow(date=mes.start, close=cierre_previo, kind=KIND_ANCHOR),
-            )
-
+        # chart); si el chart empieza a mitad de mes, los días anteriores se
+        # rellenan con `A` desde el cierre del mes anterior.
         acumulado = cierre_previo
         cierre_anterior = cierre_previo
         for punto, retorno in zip(dias_chart, retornos, strict=False):
@@ -483,21 +614,20 @@ def build_series_full(
             kind=KIND_MONTH,
             gain=ganancia,
         )
+        if completo:
+            base_chart = dias_chart[-1].equity
+        elif base_chart is not None and siguiente:
+            # Mes incompleto: stats pone el cierre `M` y el mes siguiente se
+            # mide desde ese cierre, conservando el primer punto del chart.
+            base_chart = base_chart * (1 + ganancia / 100)
+        else:
+            base_chart = None
         cierre_previo = cierre_mes
 
-    # Mes en curso: días del chart sin calibrar. Si no hay chart, se conserva
-    # lo guardado; sin nada guardado, se usa el MTD de la rentabilidad mensual
-    # (el comportamiento antiguo, solo como respaldo).
-    mes_actual = next(
-        (
-            mes
-            for mes in meses
-            if (mes.start.year, mes.start.month) == clave_actual
-        ),
-        None,
-    )
+    # Mes en curso: solo los días del chart, sin calibrar. Sus stats no se
+    # usan: el MTD no es un cierre, así que no hay cierre que aplicar hasta
+    # que el mes termine.
     dias_actual = por_mes.get(clave_actual)
-    inicio_actual = mes_actual.start if mes_actual else today.replace(day=1)
     # Sin el cierre del mes anterior no hay base correcta para los días del
     # mes en curso: se espera a que stats traiga el mes (día 5) antes que
     # publicar un nivel que luego habría que corregir. La excepción es el
@@ -508,20 +638,9 @@ def build_series_full(
     )
     if dias_actual and hay_previo:
         # El chart del mes en curso no necesita la rentabilidad mensual: sus
-        # días son `D` sin calibrar. Se publican también si stats todavía no
-        # trae el mes actual.
-        _, retornos, _frontera = _chart_month(
-            dias_actual, ultimo_mes.get(_prev_month(clave_actual))
-        )
-        if dias_actual[0].date > inicio_actual:
-            filas.setdefault(
-                inicio_actual,
-                PriceRow(
-                    date=inicio_actual,
-                    close=cierre_previo,
-                    kind=KIND_ANCHOR,
-                ),
-            )
+        # días son `D` sin calibrar, aunque stats todavía no traiga el mes
+        # actual. Se mide desde la base que dejó el último mes cerrado.
+        _, retornos, _frontera = _chart_month(dias_actual, base_chart)
         acumulado = cierre_previo
         cierre_anterior = cierre_previo
         for punto, retorno in zip(dias_actual, retornos, strict=False):
@@ -535,27 +654,10 @@ def build_series_full(
             )
             cierre_anterior = cierre
         decididos.add(clave_actual)
-    elif mes_actual is not None:
-        # Respaldo sin chart: ancla y MTD de la rentabilidad mensual, como
-        # antes. Solo se usa si el chart no trae el mes en curso (o si falta
-        # el cierre del mes anterior para encadenarlo con seguridad).
-        filas.setdefault(
-            inicio_actual,
-            PriceRow(
-                date=inicio_actual, close=cierre_previo, kind=KIND_ANCHOR
-            ),
-        )
-        cierre_hoy = round(cierre_previo * (1 + mes_actual.gain / 100), 4)
-        filas[today] = PriceRow(
-            date=today,
-            close=cierre_hoy,
-            kind=KIND_DAY,
-            gain=mes_actual.gain,
-        )
 
     # Se conservan los días reales de chart (`C`/`D`) de los meses que esta
     # pasada no ha podido reconstruir. El cierre `M` y la base no se tocan
-    # nunca; un día guardado sí manda sobre un ancla.
+    # nunca: un día guardado nunca sustituye a esos dos.
     for fila in historial:
         if fila.kind not in (KIND_CALIBRATED, KIND_DAY):
             continue
@@ -592,10 +694,10 @@ def daily_rows(rows: Sequence[PriceRow], today: date) -> list[PriceRow]:
     Los meses con días de chart (`C`/`D`) ya traen su propia rejilla diaria:
     no se rellenan por dentro. La única excepción es el hueco inicial de un
     mes frontera (el primero con chart): los días anteriores al primer `C` se
-    rellenan con `A` hasta el ancla del día 1.
+    rellenan con `A` desde el cierre del mes anterior.
 
-    El mes en curso no se rellena salvo ese hueco inicial: su MTD todavía
-    puede cambiar y PP no reescribe fechas antiguas.
+    El mes en curso no se calibra ni se rellena salvo ese hueco inicial: sus
+    días todavía pueden cambiar y PP no reescribe fechas antiguas.
 
     Las filas inventadas llevan kind = "fill" y solo existen para el HTML:
     nunca se guardan en `data/series/<id>.json`.
@@ -729,11 +831,11 @@ def _add_plain_month(
     cierre_previo: float,
     ganancia: float,
 ) -> float:
-    """Añade un mes sin chart: ancla del día 1 y cierre `M` exacto."""
-    filas.setdefault(
-        mes.start,
-        PriceRow(date=mes.start, close=cierre_previo, kind=KIND_ANCHOR),
-    )
+    """Añade un mes sin chart: solo el cierre `M`; el relleno va al vuelo.
+
+    No se copia el cierre del mes anterior en el día 1: el relleno `A` de
+    `daily_rows` interpola entre ese cierre y el de este mes.
+    """
     cierre = round(cierre_previo * (1 + ganancia / 100), 4)
     filas[_last_day(mes.start)] = PriceRow(
         date=_last_day(mes.start),
@@ -742,6 +844,101 @@ def _add_plain_month(
         gain=ganancia,
     )
     return cierre
+
+
+def _recalibrar_mes(
+    mes: MonthGain,
+    dias: Sequence[PriceRow],
+    base: float,
+    cierre_previo: float,
+    ganancia: float,
+    cierre_guardado: float,
+    *,
+    ultimo_dia: date,
+    checked_at: str,
+    previo: Any,
+) -> tuple[list[PriceRow], dict[str, Any]] | None:
+    """Recalibra los días guardados de un mes que el chart ya no cubre.
+
+    Mantiene la forma de los días guardados (sus retornos diarios) y aplica un
+    factor constante para que el mes acabe en el cierre nuevo de stats: la
+    misma regla que con el chart, pero con los días que ya estaban publicados.
+    `base` es el cierre guardado anterior al primer día del mes y
+    `cierre_guardado` el `M` viejo, que deja ver el movimiento del último día:
+    ese movimiento se conserva en el `M` nuevo, como en un mes con chart.
+
+    Devuelve las filas nuevas (días y cierre `M`) y la auditoría del mes, o
+    None si no hay forma de repartir el cierre (no se recalibra).
+    """
+    retornos: list[float] = []
+    anterior = base
+    for fila in dias:
+        retornos.append(fila.close / anterior - 1)
+        anterior = fila.close
+    n = sum(1 for retorno in retornos if retorno != 0.0)
+    chart_pct = (dias[-1].close / base - 1) * 100
+
+    # Movimiento del último día en la serie guardada (entre el último día
+    # escrito y el `M`). Se mantiene: la forma del mes no cambia, solo escala.
+    ultimo_retorno = cierre_guardado / dias[-1].close - 1
+    if ultimo_retorno <= -1:
+        return None
+    objetivo = ((1 + ganancia / 100) / (1 + ultimo_retorno) - 1) * 100
+    factor = _factor(objetivo, chart_pct, n)
+    if factor is None or not math.isfinite(factor) or factor <= 0:
+        return None
+
+    tipo_dia = KIND_DAY if factor == 1.0 else KIND_CALIBRATED
+    filas: list[PriceRow] = []
+    acumulado = cierre_previo
+    cierre_anterior = cierre_previo
+    for fila, retorno in zip(dias, retornos, strict=False):
+        ajustado = 0.0 if retorno == 0.0 else (1 + retorno) * factor - 1
+        acumulado *= 1 + ajustado
+        if fila.date == ultimo_dia:
+            # El último día es el cierre mensual exacto; se añade abajo.
+            continue
+        cierre = round(acumulado, 4)
+        filas.append(
+            PriceRow(
+                date=fila.date,
+                close=cierre,
+                kind=tipo_dia,
+                gain=_gain_from_close(cierre, cierre_anterior),
+            )
+        )
+        cierre_anterior = cierre
+
+    cierre_mes = round(cierre_previo * (1 + ganancia / 100), 4)
+    filas.append(
+        PriceRow(
+            date=ultimo_dia,
+            close=cierre_mes,
+            kind=KIND_MONTH,
+            gain=ganancia,
+        )
+    )
+
+    # Lo que no se puede deducir de los días se conserva de la auditoría
+    # anterior si existe: la desviación real del chart y si el mes estaba
+    # incompleto.
+    anterior_info = previo if isinstance(previo, Mapping) else {}
+    try:
+        chart_pct_final = float(anterior_info.get("chart_pct"))
+    except (TypeError, ValueError):
+        # Sin auditoría previa (fichero antiguo) no hay desviación del chart:
+        # se deja la rentabilidad que tenía publicado el mes.
+        chart_pct_final = (cierre_guardado / base - 1) * 100
+    info = {
+        "stats_pct": round(ganancia, 4),
+        "chart_pct": round(chart_pct_final, 4),
+        "factor": round(factor, 6),
+        "status": "calibrated",
+        "complete": bool(anterior_info.get("complete", True)),
+        "intermediate": bool(anterior_info.get("intermediate", False)),
+        "checked_at": checked_at,
+    }
+    return filas, info
 
 
 def _parse_start(valor: Any) -> date | None:

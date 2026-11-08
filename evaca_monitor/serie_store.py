@@ -166,7 +166,8 @@ class SerieData:
         # Chart crudo de la última lectura: permite recalibrar cuando cambia
         # la rentabilidad mensual sin volver a pedir el chart.
         self.chart = chart
-        # Auditoría por mes: stats_pct, chart_pct, factor, status y checked_at.
+        # Auditoría por mes: stats_pct, chart_pct, factor, status, complete,
+        # intermediate y checked_at.
         self.months = dict(months or {})
         # Momento de la última lectura del chart, separado de `fetched_at`
         # (que sigue siendo el de la rentabilidad mensual).
