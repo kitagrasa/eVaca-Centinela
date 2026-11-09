@@ -379,17 +379,14 @@ def build_series_full(
     Reglas de los meses cerrados con chart:
 
     * el cierre `M` es siempre el `gain` exacto de la rentabilidad mensual;
-    * solo se calibra si el chart tiene cotización en los dos cierres del mes:
-      el del mes anterior (el `M` que ya está en la serie) y el de este. Así la
-      rentabilidad que se compara es la del mismo periodo que stats. Si falta
-      un borde, no hay periodo comparable: los días se publican tal cual (`D`)
-      y stats solo pone el cierre `M` (estado `not_comparable`);
-    * los días con movimiento se multiplican por un factor constante para que
-      el producto del mes acabe en ese cierre, aunque el chart se desvíe o
-      vaya en sentido contrario;
-    * si el factor es 1 (el chart ya acaba en el cierre de stats, hasta 0,1 pp),
-      no hay adaptación: los días se guardan como `D` (dato de chart sin
-      calibrar);
+    * si el chart tiene cotización en los dos cierres del mes (el del mes
+      anterior, que es el `M` ya en la serie, y el de este) y su rentabilidad
+      ya coincide con stats (hasta 0,1 pp), no se calibra: los días se publican
+      como `D` (dato de chart sin adaptar);
+    * en cualquier otro caso manda stats: los días con movimiento se
+      multiplican por un factor constante para que el producto del mes acabe
+      en su cierre, también si al chart le falta uno de los dos cierres o va
+      en sentido contrario. Esos días se publican como `C`;
     * los días con retorno 0 se quedan en 0;
     * solo se marca `rejected` si no hay forma matemática de repartir el
       cierre (ningún día con movimiento y un mes que no es plano, o un factor
@@ -472,25 +469,13 @@ def build_series_full(
             cierre_mes = round(cierre_previo * (1 + ganancia / 100), 4)
             dias_guardados = guardadas.get(clave)
             cierre_guardado = cierres.get(clave)
-            previo_mes = (prev_months or {}).get(_month_key(clave))
-            # Un mes que ya se publicó sin periodo comparable (le faltaba un
-            # cierre del chart) no se recalibra: sus días se quedan y solo se
-            # mueve el cierre `M`. `intermediate` es el nombre que usaban los
-            # ficheros antiguos para ese caso.
-            sin_comparar = (
-                isinstance(previo_mes, Mapping)
-                and (
-                    previo_mes.get("status") == "not_comparable"
-                    or previo_mes.get("intermediate") is True
-                )
-            )
             necesita = bool(
                 dias_guardados
                 and cierre_guardado is not None
                 and abs(cierre_guardado - cierre_mes) > TOLERANCIA_CIERRE
             )
             recalculado: tuple[list[PriceRow], dict[str, Any]] | None = None
-            if necesita and not sin_comparar:
+            if necesita:
                 base_guardada = _previous_close(
                     guardadas_por_fecha, dias_guardados[0].date
                 )
@@ -504,13 +489,13 @@ def build_series_full(
                         cierre_guardado,
                         ultimo_dia=ultimo_dia,
                         checked_at=checked_at,
-                        previo=previo_mes,
+                        previo=(prev_months or {}).get(_month_key(clave)),
                     )
             if recalculado is None:
                 cierre_previo = _add_plain_month(
                     filas, mes, cierre_previo, ganancia
                 )
-                if necesita and not sin_comparar:
+                if necesita:
                     # No hay forma de repartir el cierre con los días viejos:
                     # el mes queda como `M` + relleno `A`, sin resucitar los
                     # días que ya no cuadran.
@@ -540,22 +525,17 @@ def build_series_full(
         )
 
         n = sum(1 for retorno in retornos if retorno != 0.0)
-        if not comparable:
-            # Sin periodo comparable: los días del chart se publican tal cual
-            # (`D`) y stats solo pone el cierre `M`.
+        if comparable and abs(gc - ganancia) <= TOLERANCIA_SIN_CALIBRAR:
+            # Con los dos cierres y el chart ya en el cierre de stats (hasta
+            # 0,1 pp) no hay nada que adaptar: sus días se publican como `D`.
             factor: float | None = 1.0
             rechazado = False
-        elif abs(gc - ganancia) <= TOLERANCIA_SIN_CALIBRAR:
-            # El chart ya termina en el cierre de stats (hasta 0,1 pp): no hay
-            # nada que adaptar y sus días se publican como `D`, no como `C`.
-            factor = 1.0
-            rechazado = False
         else:
-            # La rentabilidad mensual manda siempre. Si el chart se desvía
-            # (o incluso va en sentido contrario), se calibran sus días para
-            # que el mes acabe exactamente en stats. Solo se rechaza si no
-            # hay forma matemática de repartir el cierre (ningún día con
-            # movimiento o un factor inválido).
+            # Stats manda: si el chart no acaba en su cierre, o le falta
+            # alguno de los dos cierres para comparar, se calibran sus días
+            # para que el mes acabe exactamente en el cierre mensual. Solo se
+            # rechaza si no hay forma matemática de repartir el cierre
+            # (ningún día con movimiento o un factor inválido).
             factor = _factor(ganancia, gc, n)
             rechazado = (
                 factor is None
@@ -565,17 +545,11 @@ def build_series_full(
             if rechazado:
                 factor = 1.0
 
-        if not comparable:
-            estado = "not_comparable"
-        elif rechazado:
-            estado = "rejected"
-        else:
-            estado = "calibrated"
         auditoria[_month_key(clave)] = {
             "stats_pct": round(ganancia, 4),
             "chart_pct": round(gc, 4),
             "factor": round(factor, 6) if factor is not None else 1.0,
-            "status": estado,
+            "status": "rejected" if rechazado else "calibrated",
             "complete": completo,
             "checked_at": checked_at,
         }

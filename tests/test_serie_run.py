@@ -1020,7 +1020,12 @@ def test_un_mes_calibrado_fuera_del_chart_se_recalibra_al_cambiar_stats(
 
     assert tipos["2025-01-31"] == "month"
     assert cierres["2025-01-31"] == 105.0
-    assert len([f for f in despues["history"] if f["kind"] == "c"]) == len(dias_c)
+    enero_c = [
+        f
+        for f in despues["history"]
+        if f["date"].startswith("2025-01") and f["kind"] == "c"
+    ]
+    assert len(enero_c) == len(dias_c)
     assert cierres["2025-01-10"] != enero_10_antes
     assert despues["months"]["2025-01"]["stats_pct"] == 5.0
     assert despues["months"]["2025-01"]["factor"] != 1.0
@@ -1554,16 +1559,16 @@ def test_un_mes_sin_el_ultimo_dia_del_chart_avisa_igual(
     assert "5.00" in mensaje
     assert "4.04" in mensaje
     datos = leer_json(entorno.datos / "series" / f"{ID_UNO}.json")
-    assert datos["months"]["2025-04"]["status"] == "not_comparable"
+    assert datos["months"]["2025-04"]["status"] == "calibrated"
     assert datos["months"]["2025-04"]["complete"] is False
     estado = leer_json(entorno.datos / "state.json")
     assert estado["alerts"][ID_UNO]["month"] == "2025-04"
 
 
-def test_un_mes_sin_el_cierre_avisa_y_explica_que_no_se_compara(
+def test_un_mes_sin_el_cierre_avisa_y_se_calibra(
     tmp_path: Path,
 ) -> None:
-    """El aviso dice que el chart no tiene el cierre y no se calibra."""
+    """Sin el cierre del mes, stats manda: se calibra y el aviso sale igual."""
     entorno = entorno_base(tmp_path)
     payload = payload_meses({"2025-09": 2.5})
     chart = payload_chart(
@@ -1589,9 +1594,9 @@ def test_un_mes_sin_el_cierre_avisa_y_explica_que_no_se_compara(
     assert "2025-09" in mensaje
     assert "2.50" in mensaje
     assert "2.00" in mensaje
-    assert "no se puede comparar el mismo periodo" in mensaje
+    assert "se ha calibrado" in mensaje
     datos = leer_json(entorno.datos / "series" / f"{ID_UNO}.json")
-    assert datos["months"]["2025-09"]["status"] == "not_comparable"
+    assert datos["months"]["2025-09"]["status"] == "calibrated"
     assert datos["months"]["2025-09"]["complete"] is False
 
 

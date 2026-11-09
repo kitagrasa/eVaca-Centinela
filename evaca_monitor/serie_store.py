@@ -167,7 +167,7 @@ class SerieData:
         # la rentabilidad mensual sin volver a pedir el chart.
         self.chart = chart
         # Auditoría por mes: stats_pct, chart_pct, factor, status
-        # (calibrated/rejected/not_comparable), complete y checked_at.
+        # (calibrated/rejected), complete y checked_at.
         self.months = dict(months or {})
         # Momento de la última lectura del chart, separado de `fetched_at`
         # (que sigue siendo el de la rentabilidad mensual).

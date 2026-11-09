@@ -15,10 +15,10 @@ Diseño de la pasada:
   cerrados**: el mes en curso es MTD, no se guarda ni se publica. Cada lectura
   contrasta **todos** los meses guardados con los de la web y corrige los que
   no coinciden con las valoraciones diarias de ese mes: un mes `A` se rehace;
-  uno `D` o `C` se recalibra desde el chart si trae el mes entero (los dos
-  cierres) y, si el chart ya no trae ese mes, con la forma de los días
-  guardados; si el chart lo trae pero le falta un cierre, no hay periodo
-  comparable y sus días se dejan tal cual (`D`);
+  uno `D` o `C` se recalibra desde el chart si aún trae ese mes y, si no, con
+  la forma de los días guardados. El cierre de stats manda: si el chart no
+  acaba en su cierre o le falta alguno de los dos cierres, se calibran los días
+  visibles;
 * un fallo del chart no borra lo publicado: se conservan los días `C` y `D`
   guardados; un fallo de la rentabilidad mensual no toca los ficheros de ese
   trader y se reintenta en la siguiente pasada;
@@ -888,12 +888,6 @@ def _mensaje_aviso(
             "El mes no se ha calibrado: se publica como cierre mensual "
             "+ relleno."
         )
-    elif estado == "not_comparable":
-        lineas.append(
-            "El chart no tiene cotización en el cierre del mes o en el del "
-            "anterior: no se puede comparar el mismo periodo y sus días se "
-            "publican sin calibrar."
-        )
     else:
         lineas.append(
             "El mes se ha calibrado para acabar en el cierre mensual de stats."
@@ -930,7 +924,7 @@ def _rechazados_ultimos_12(
 
     Incluye los que no se pudieron calibrar (`rejected`) y los que sí se
     calibraron pero se alejan más de `cap_pp` de stats. Los meses con el chart
-    incompleto o sin periodo comparable (`not_comparable`) quedan fuera de la
+    incompleto de ficheros antiguos (`intermediate`) quedan fuera de la
     recomendación, aunque sí puedan avisar: su rentabilidad no es comparable.
     """
     total = 0
@@ -938,8 +932,6 @@ def _rechazados_ultimos_12(
         if not isinstance(info, dict):
             continue
         if info.get("complete") is False:
-            continue
-        if info.get("status") == "not_comparable":
             continue
         if info.get("intermediate") is True:
             continue
