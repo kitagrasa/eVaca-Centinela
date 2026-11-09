@@ -1244,7 +1244,7 @@ def test_un_mes_cerrado_con_chart_sale_calibrado(
     html = (entorno.datos / "prices" / ID_UNO).read_text(encoding="utf-8")
     assert (
         "M = Mes stats · D = Diario chart sin calibrar · "
-        "A = Automático · C = Calibrado" in html
+        "C = diario chart Calibrado · A = relleno Automático" in html
     )
     assert 'data-kind=   "C"' in html
     assert 'data-kind=   "M"' in html

@@ -46,7 +46,7 @@ KIND_MARKERS = {
 # ir como párrafo antes de ella.
 LEYENDA = (
     "M = Mes stats · D = Diario chart sin calibrar · "
-    "A = Automático · C = Calibrado"
+    "C = diario chart Calibrado · A = relleno Automático"
 )
 
 # Ancho mínimo del valor de rentab entre comillas. Los valores habituales

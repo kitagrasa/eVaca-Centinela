@@ -261,7 +261,7 @@ def test_leyenda_de_la_cabecera_antes_de_la_tabla() -> None:
 
     leyenda = (
         "M = Mes stats · D = Diario chart sin calibrar · "
-        "A = Automático · C = Calibrado"
+        "C = diario chart Calibrado · A = relleno Automático"
     )
     assert f"<p>{leyenda}</p>" in html
     assert html.index(leyenda) < html.index("<table>")
