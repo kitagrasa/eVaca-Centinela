@@ -12,6 +12,7 @@
       <tr><th>Date</th><th>Close</th></tr>
     </thead>
     <tbody>
+      <tr data-kind=   "D"   rentab=    "0.00"   ><td>   2026-11-08   </td><td>   305.8104   </td></tr>
       <tr data-kind=   "D"   rentab=    "0.00"   ><td>   2026-11-07   </td><td>   305.8104   </td></tr>
       <tr data-kind=   "D"   rentab=    "6.60"   ><td>   2026-11-06   </td><td>   305.8104   </td></tr>
       <tr data-kind=   "D"   rentab=  "-12.93"   ><td>   2026-11-05   </td><td>   286.8766   </td></tr>

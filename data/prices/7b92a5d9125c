@@ -12,6 +12,7 @@
       <tr><th>Date</th><th>Close</th></tr>
     </thead>
     <tbody>
+      <tr data-kind=   "D"   rentab=    "0.03"   ><td>   2026-11-08   </td><td>   433.4712   </td></tr>
       <tr data-kind=   "D"   rentab=    "0.01"   ><td>   2026-11-07   </td><td>   433.3412   </td></tr>
       <tr data-kind=   "D"   rentab=   "-0.66"   ><td>   2026-11-06   </td><td>   433.2979   </td></tr>
       <tr data-kind=   "D"   rentab=   "-3.59"   ><td>   2026-11-05   </td><td>   436.1767   </td></tr>
@@ -1024,36 +1025,36 @@
       <tr data-kind=   "C"   rentab=    "0.06"   ><td>   2024-02-02   </td><td>   215.0426   </td></tr>
       <tr data-kind=   "C"   rentab=    "1.00"   ><td>   2024-02-01   </td><td>   214.9128   </td></tr>
       <tr data-kind=   "M"   rentab=    "4.89"   ><td>   2024-01-31   </td><td>   212.7853   </td></tr>
-      <tr data-kind=   "D"   rentab=    "0.64"   ><td>   2024-01-30   </td><td>   215.8183   </td></tr>
-      <tr data-kind=   "D"   rentab=    "1.08"   ><td>   2024-01-29   </td><td>   214.4460   </td></tr>
-      <tr data-kind=   "D"   rentab=    "0.00"   ><td>   2024-01-28   </td><td>   212.1546   </td></tr>
-      <tr data-kind=   "D"   rentab=    "0.00"   ><td>   2024-01-27   </td><td>   212.1546   </td></tr>
-      <tr data-kind=   "D"   rentab=   "-0.28"   ><td>   2024-01-26   </td><td>   212.1546   </td></tr>
-      <tr data-kind=   "D"   rentab=    "0.60"   ><td>   2024-01-25   </td><td>   212.7502   </td></tr>
-      <tr data-kind=   "D"   rentab=    "0.06"   ><td>   2024-01-24   </td><td>   211.4813   </td></tr>
-      <tr data-kind=   "D"   rentab=    "0.46"   ><td>   2024-01-23   </td><td>   211.3545   </td></tr>
-      <tr data-kind=   "D"   rentab=    "0.64"   ><td>   2024-01-22   </td><td>   210.3866   </td></tr>
-      <tr data-kind=   "D"   rentab=    "0.00"   ><td>   2024-01-21   </td><td>   209.0487   </td></tr>
-      <tr data-kind=   "D"   rentab=    "0.00"   ><td>   2024-01-20   </td><td>   209.0487   </td></tr>
-      <tr data-kind=   "D"   rentab=    "0.80"   ><td>   2024-01-19   </td><td>   209.0487   </td></tr>
-      <tr data-kind=   "D"   rentab=    "0.91"   ><td>   2024-01-18   </td><td>   207.3897   </td></tr>
-      <tr data-kind=   "D"   rentab=   "-0.90"   ><td>   2024-01-17   </td><td>   205.5195   </td></tr>
-      <tr data-kind=   "D"   rentab=   "-0.52"   ><td>   2024-01-16   </td><td>   207.3861   </td></tr>
-      <tr data-kind=   "D"   rentab=    "0.00"   ><td>   2024-01-15   </td><td>   208.4702   </td></tr>
-      <tr data-kind=   "D"   rentab=    "0.00"   ><td>   2024-01-14   </td><td>   208.4702   </td></tr>
-      <tr data-kind=   "D"   rentab=    "0.00"   ><td>   2024-01-13   </td><td>   208.4702   </td></tr>
-      <tr data-kind=   "D"   rentab=   "-0.56"   ><td>   2024-01-12   </td><td>   208.4702   </td></tr>
-      <tr data-kind=   "D"   rentab=    "0.18"   ><td>   2024-01-11   </td><td>   209.6441   </td></tr>
-      <tr data-kind=   "D"   rentab=    "0.84"   ><td>   2024-01-10   </td><td>   209.2674   </td></tr>
-      <tr data-kind=   "D"   rentab=    "0.67"   ><td>   2024-01-09   </td><td>   207.5242   </td></tr>
-      <tr data-kind=   "D"   rentab=    "1.05"   ><td>   2024-01-08   </td><td>   206.1431   </td></tr>
-      <tr data-kind=   "D"   rentab=    "0.00"   ><td>   2024-01-07   </td><td>   204.0010   </td></tr>
-      <tr data-kind=   "D"   rentab=    "0.00"   ><td>   2024-01-06   </td><td>   204.0010   </td></tr>
-      <tr data-kind=   "D"   rentab=    "0.38"   ><td>   2024-01-05   </td><td>   204.0010   </td></tr>
-      <tr data-kind=   "D"   rentab=    "0.08"   ><td>   2024-01-04   </td><td>   203.2287   </td></tr>
-      <tr data-kind=   "D"   rentab=    "0.35"   ><td>   2024-01-03   </td><td>   203.0662   </td></tr>
-      <tr data-kind=   "D"   rentab=   "-0.25"   ><td>   2024-01-02   </td><td>   202.3580   </td></tr>
-      <tr data-kind=   "D"   rentab=    "0.00"   ><td>   2024-01-01   </td><td>   202.8652   </td></tr>
+      <tr data-kind=   "C"   rentab=    "0.64"   ><td>   2024-01-30   </td><td>   215.8279   </td></tr>
+      <tr data-kind=   "C"   rentab=    "1.08"   ><td>   2024-01-29   </td><td>   214.4550   </td></tr>
+      <tr data-kind=   "C"   rentab=    "0.00"   ><td>   2024-01-28   </td><td>   212.1631   </td></tr>
+      <tr data-kind=   "C"   rentab=    "0.00"   ><td>   2024-01-27   </td><td>   212.1631   </td></tr>
+      <tr data-kind=   "C"   rentab=   "-0.28"   ><td>   2024-01-26   </td><td>   212.1631   </td></tr>
+      <tr data-kind=   "C"   rentab=    "0.60"   ><td>   2024-01-25   </td><td>   212.7583   </td></tr>
+      <tr data-kind=   "C"   rentab=    "0.06"   ><td>   2024-01-24   </td><td>   211.4888   </td></tr>
+      <tr data-kind=   "C"   rentab=    "0.46"   ><td>   2024-01-23   </td><td>   211.3616   </td></tr>
+      <tr data-kind=   "C"   rentab=    "0.64"   ><td>   2024-01-22   </td><td>   210.3932   </td></tr>
+      <tr data-kind=   "C"   rentab=    "0.00"   ><td>   2024-01-21   </td><td>   209.0548   </td></tr>
+      <tr data-kind=   "C"   rentab=    "0.00"   ><td>   2024-01-20   </td><td>   209.0548   </td></tr>
+      <tr data-kind=   "C"   rentab=    "0.80"   ><td>   2024-01-19   </td><td>   209.0548   </td></tr>
+      <tr data-kind=   "C"   rentab=    "0.91"   ><td>   2024-01-18   </td><td>   207.3952   </td></tr>
+      <tr data-kind=   "C"   rentab=   "-0.90"   ><td>   2024-01-17   </td><td>   205.5245   </td></tr>
+      <tr data-kind=   "C"   rentab=   "-0.52"   ><td>   2024-01-16   </td><td>   207.3907   </td></tr>
+      <tr data-kind=   "C"   rentab=    "0.00"   ><td>   2024-01-15   </td><td>   208.4743   </td></tr>
+      <tr data-kind=   "C"   rentab=    "0.00"   ><td>   2024-01-14   </td><td>   208.4743   </td></tr>
+      <tr data-kind=   "C"   rentab=    "0.00"   ><td>   2024-01-13   </td><td>   208.4743   </td></tr>
+      <tr data-kind=   "C"   rentab=   "-0.56"   ><td>   2024-01-12   </td><td>   208.4743   </td></tr>
+      <tr data-kind=   "C"   rentab=    "0.18"   ><td>   2024-01-11   </td><td>   209.6479   </td></tr>
+      <tr data-kind=   "C"   rentab=    "0.84"   ><td>   2024-01-10   </td><td>   209.2707   </td></tr>
+      <tr data-kind=   "C"   rentab=    "0.67"   ><td>   2024-01-09   </td><td>   207.5270   </td></tr>
+      <tr data-kind=   "C"   rentab=    "1.05"   ><td>   2024-01-08   </td><td>   206.1454   </td></tr>
+      <tr data-kind=   "C"   rentab=    "0.00"   ><td>   2024-01-07   </td><td>   204.0029   </td></tr>
+      <tr data-kind=   "C"   rentab=    "0.00"   ><td>   2024-01-06   </td><td>   204.0029   </td></tr>
+      <tr data-kind=   "C"   rentab=    "0.38"   ><td>   2024-01-05   </td><td>   204.0029   </td></tr>
+      <tr data-kind=   "C"   rentab=    "0.08"   ><td>   2024-01-04   </td><td>   203.2301   </td></tr>
+      <tr data-kind=   "C"   rentab=    "0.35"   ><td>   2024-01-03   </td><td>   203.0671   </td></tr>
+      <tr data-kind=   "C"   rentab=   "-0.25"   ><td>   2024-01-02   </td><td>   202.3585   </td></tr>
+      <tr data-kind=   "C"   rentab=    "0.00"   ><td>   2024-01-01   </td><td>   202.8652   </td></tr>
       <tr data-kind=   "M"   rentab=    "3.14"   ><td>   2023-12-31   </td><td>   202.8652   </td></tr>
       <tr data-kind=   "A"   ><td>                       2023-12-30   </td><td>   202.6630   </td></tr>
       <tr data-kind=   "A"   ><td>                       2023-12-29   </td><td>   202.4610   </td></tr>
