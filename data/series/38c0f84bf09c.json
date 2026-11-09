@@ -1,9 +1,9 @@
 {
   "version": 2,
   "id": "38c0f84bf09c",
-  "updated_at": "2026-11-08T12:54:19+00:00",
+  "updated_at": "2026-11-09T08:47:28+00:00",
   "fetched_at": "2026-11-06T18:47:22+00:00",
-  "chart_fetched_at": "2026-11-08T12:54:19+00:00",
+  "chart_fetched_at": "2026-11-09T08:47:28+00:00",
   "last_payload": {
     "monthly": [
       {
@@ -275,7 +275,7 @@
   },
   "chart": {
     "window": "lastTwoYears",
-    "fetched_at": "2026-11-08T12:54:19+00:00",
+    "fetched_at": "2026-11-09T08:47:28+00:00",
     "points": [
       [
         "2024-01-01",
@@ -4451,20 +4451,18 @@
     "2024-01": {
       "stats_pct": -0.55,
       "chart_pct": -0.5445,
-      "factor": 0.999997,
-      "status": "calibrated",
+      "factor": 1.0,
+      "status": "not_comparable",
       "complete": true,
-      "intermediate": false,
-      "checked_at": "2026-11-08T12:54:19+00:00"
+      "checked_at": "2026-11-09T08:47:28+00:00"
     },
     "2024-02": {
       "stats_pct": -3.46,
       "chart_pct": -3.4663,
-      "factor": 1.000003,
+      "factor": 1.0,
       "status": "calibrated",
       "complete": true,
-      "intermediate": false,
-      "checked_at": "2026-11-08T12:54:19+00:00"
+      "checked_at": "2026-11-09T08:47:28+00:00"
     },
     "2024-03": {
       "stats_pct": 3.53,
@@ -4472,8 +4470,7 @@
       "factor": 0.999849,
       "status": "calibrated",
       "complete": true,
-      "intermediate": false,
-      "checked_at": "2026-11-08T12:54:19+00:00"
+      "checked_at": "2026-11-09T08:47:28+00:00"
     },
     "2024-04": {
       "stats_pct": 1.26,
@@ -4481,44 +4478,39 @@
       "factor": 0.999715,
       "status": "calibrated",
       "complete": true,
-      "intermediate": false,
-      "checked_at": "2026-11-08T12:54:19+00:00"
+      "checked_at": "2026-11-09T08:47:28+00:00"
     },
     "2024-05": {
       "stats_pct": 12.92,
       "chart_pct": 12.9126,
-      "factor": 1.000003,
+      "factor": 1.0,
       "status": "calibrated",
       "complete": true,
-      "intermediate": false,
-      "checked_at": "2026-11-08T12:54:19+00:00"
+      "checked_at": "2026-11-09T08:47:28+00:00"
     },
     "2024-06": {
       "stats_pct": -6.21,
       "chart_pct": -6.2005,
-      "factor": 0.999995,
+      "factor": 1.0,
       "status": "calibrated",
       "complete": true,
-      "intermediate": false,
-      "checked_at": "2026-11-08T12:54:19+00:00"
+      "checked_at": "2026-11-09T08:47:28+00:00"
     },
     "2024-07": {
       "stats_pct": 2.16,
       "chart_pct": 2.1685,
-      "factor": 0.999997,
+      "factor": 1.0,
       "status": "calibrated",
       "complete": true,
-      "intermediate": false,
-      "checked_at": "2026-11-08T12:54:19+00:00"
+      "checked_at": "2026-11-09T08:47:28+00:00"
     },
     "2024-08": {
       "stats_pct": -8.45,
       "chart_pct": -8.4843,
-      "factor": 1.000017,
+      "factor": 1.0,
       "status": "calibrated",
       "complete": true,
-      "intermediate": false,
-      "checked_at": "2026-11-08T12:54:19+00:00"
+      "checked_at": "2026-11-09T08:47:28+00:00"
     },
     "2024-09": {
       "stats_pct": 2.1,
@@ -4526,233 +4518,207 @@
       "factor": 1.0,
       "status": "calibrated",
       "complete": true,
-      "intermediate": false,
-      "checked_at": "2026-11-08T12:54:19+00:00"
+      "checked_at": "2026-11-09T08:47:28+00:00"
     },
     "2024-10": {
       "stats_pct": -5.05,
       "chart_pct": -5.0382,
-      "factor": 0.999995,
+      "factor": 1.0,
       "status": "calibrated",
       "complete": true,
-      "intermediate": false,
-      "checked_at": "2026-11-08T12:54:19+00:00"
+      "checked_at": "2026-11-09T08:47:28+00:00"
     },
     "2024-11": {
       "stats_pct": -4.6,
       "chart_pct": -4.5789,
-      "factor": 0.999991,
+      "factor": 1.0,
       "status": "calibrated",
       "complete": true,
-      "intermediate": false,
-      "checked_at": "2026-11-08T12:54:19+00:00"
+      "checked_at": "2026-11-09T08:47:28+00:00"
     },
     "2024-12": {
       "stats_pct": -0.54,
       "chart_pct": -0.5482,
-      "factor": 1.000003,
+      "factor": 1.0,
       "status": "calibrated",
       "complete": true,
-      "intermediate": false,
-      "checked_at": "2026-11-08T12:54:19+00:00"
+      "checked_at": "2026-11-09T08:47:28+00:00"
     },
     "2025-01": {
       "stats_pct": -2.02,
       "chart_pct": -2.031,
-      "factor": 1.000004,
+      "factor": 1.0,
       "status": "calibrated",
       "complete": true,
-      "intermediate": false,
-      "checked_at": "2026-11-08T12:54:19+00:00"
+      "checked_at": "2026-11-09T08:47:28+00:00"
     },
     "2025-02": {
       "stats_pct": 1.42,
       "chart_pct": 1.4288,
-      "factor": 0.999997,
+      "factor": 1.0,
       "status": "calibrated",
       "complete": true,
-      "intermediate": false,
-      "checked_at": "2026-11-08T12:54:19+00:00"
+      "checked_at": "2026-11-09T08:47:28+00:00"
     },
     "2025-03": {
       "stats_pct": -1.83,
       "chart_pct": -1.7833,
-      "factor": 0.999982,
+      "factor": 1.0,
       "status": "calibrated",
       "complete": true,
-      "intermediate": false,
-      "checked_at": "2026-11-08T12:54:19+00:00"
+      "checked_at": "2026-11-09T08:47:28+00:00"
     },
     "2025-04": {
       "stats_pct": -1.05,
       "chart_pct": -0.977,
-      "factor": 0.99997,
+      "factor": 1.0,
       "status": "calibrated",
       "complete": true,
-      "intermediate": false,
-      "checked_at": "2026-11-08T12:54:19+00:00"
+      "checked_at": "2026-11-09T08:47:28+00:00"
     },
     "2025-05": {
       "stats_pct": 5.32,
       "chart_pct": 5.3932,
-      "factor": 0.999973,
+      "factor": 1.0,
       "status": "calibrated",
       "complete": true,
-      "intermediate": false,
-      "checked_at": "2026-11-08T12:54:19+00:00"
+      "checked_at": "2026-11-09T08:47:28+00:00"
     },
     "2025-06": {
       "stats_pct": 1.1,
       "chart_pct": 1.1168,
-      "factor": 0.999994,
+      "factor": 1.0,
       "status": "calibrated",
       "complete": true,
-      "intermediate": false,
-      "checked_at": "2026-11-08T12:54:19+00:00"
+      "checked_at": "2026-11-09T08:47:28+00:00"
     },
     "2025-07": {
       "stats_pct": 6.24,
       "chart_pct": 6.2207,
-      "factor": 1.000007,
+      "factor": 1.0,
       "status": "calibrated",
       "complete": true,
-      "intermediate": false,
-      "checked_at": "2026-11-08T12:54:19+00:00"
+      "checked_at": "2026-11-09T08:47:28+00:00"
     },
     "2025-08": {
       "stats_pct": 0.65,
       "chart_pct": 0.6402,
-      "factor": 1.000004,
+      "factor": 1.0,
       "status": "calibrated",
       "complete": true,
-      "intermediate": false,
-      "checked_at": "2026-11-08T12:54:19+00:00"
+      "checked_at": "2026-11-09T08:47:28+00:00"
     },
     "2025-09": {
       "stats_pct": -3.58,
       "chart_pct": -3.5909,
-      "factor": 1.000005,
+      "factor": 1.0,
       "status": "calibrated",
       "complete": true,
-      "intermediate": false,
-      "checked_at": "2026-11-08T12:54:19+00:00"
+      "checked_at": "2026-11-09T08:47:28+00:00"
     },
     "2025-10": {
       "stats_pct": 5.3,
       "chart_pct": 5.289,
-      "factor": 1.000004,
+      "factor": 1.0,
       "status": "calibrated",
       "complete": true,
-      "intermediate": false,
-      "checked_at": "2026-11-08T12:54:19+00:00"
+      "checked_at": "2026-11-09T08:47:28+00:00"
     },
     "2025-11": {
       "stats_pct": -2.77,
       "chart_pct": -2.7784,
-      "factor": 1.000004,
+      "factor": 1.0,
       "status": "calibrated",
       "complete": true,
-      "intermediate": false,
-      "checked_at": "2026-11-08T12:54:19+00:00"
+      "checked_at": "2026-11-09T08:47:28+00:00"
     },
     "2025-12": {
       "stats_pct": 3.36,
       "chart_pct": 3.3528,
-      "factor": 1.000003,
+      "factor": 1.0,
       "status": "calibrated",
       "complete": true,
-      "intermediate": false,
-      "checked_at": "2026-11-08T12:54:19+00:00"
+      "checked_at": "2026-11-09T08:47:28+00:00"
     },
     "2026-01": {
       "stats_pct": 9.71,
       "chart_pct": 9.6934,
-      "factor": 1.000006,
+      "factor": 1.0,
       "status": "calibrated",
       "complete": true,
-      "intermediate": false,
-      "checked_at": "2026-11-08T12:54:19+00:00"
+      "checked_at": "2026-11-09T08:47:28+00:00"
     },
     "2026-02": {
       "stats_pct": 5.49,
       "chart_pct": 5.4714,
-      "factor": 1.000007,
+      "factor": 1.0,
       "status": "calibrated",
       "complete": true,
-      "intermediate": false,
-      "checked_at": "2026-11-08T12:54:19+00:00"
+      "checked_at": "2026-11-09T08:47:28+00:00"
     },
     "2026-03": {
       "stats_pct": -1.65,
       "chart_pct": -1.6546,
-      "factor": 1.000002,
+      "factor": 1.0,
       "status": "calibrated",
       "complete": true,
-      "intermediate": false,
-      "checked_at": "2026-11-08T12:54:19+00:00"
+      "checked_at": "2026-11-09T08:47:28+00:00"
     },
     "2026-04": {
       "stats_pct": -2.23,
       "chart_pct": -2.2281,
-      "factor": 0.999999,
+      "factor": 1.0,
       "status": "calibrated",
       "complete": true,
-      "intermediate": false,
-      "checked_at": "2026-11-08T12:54:19+00:00"
+      "checked_at": "2026-11-09T08:47:28+00:00"
     },
     "2026-05": {
       "stats_pct": 1.78,
       "chart_pct": 1.7846,
-      "factor": 0.999998,
+      "factor": 1.0,
       "status": "calibrated",
       "complete": true,
-      "intermediate": false,
-      "checked_at": "2026-11-08T12:54:19+00:00"
+      "checked_at": "2026-11-09T08:47:28+00:00"
     },
     "2026-06": {
       "stats_pct": 0.97,
       "chart_pct": 0.9812,
-      "factor": 0.999995,
+      "factor": 1.0,
       "status": "calibrated",
       "complete": true,
-      "intermediate": false,
-      "checked_at": "2026-11-08T12:54:19+00:00"
+      "checked_at": "2026-11-09T08:47:28+00:00"
     },
     "2026-07": {
       "stats_pct": -1.27,
       "chart_pct": -1.261,
-      "factor": 0.999996,
+      "factor": 1.0,
       "status": "calibrated",
       "complete": true,
-      "intermediate": false,
-      "checked_at": "2026-11-08T12:54:19+00:00"
+      "checked_at": "2026-11-09T08:47:28+00:00"
     },
     "2026-08": {
       "stats_pct": 24.41,
       "chart_pct": 24.3981,
-      "factor": 1.000005,
+      "factor": 1.0,
       "status": "calibrated",
       "complete": true,
-      "intermediate": false,
-      "checked_at": "2026-11-08T12:54:19+00:00"
+      "checked_at": "2026-11-09T08:47:28+00:00"
     },
     "2026-09": {
       "stats_pct": 7.63,
       "chart_pct": 7.6438,
-      "factor": 0.999994,
+      "factor": 1.0,
       "status": "calibrated",
       "complete": true,
-      "intermediate": false,
-      "checked_at": "2026-11-08T12:54:19+00:00"
+      "checked_at": "2026-11-09T08:47:28+00:00"
     },
     "2026-10": {
       "stats_pct": 5.85,
       "chart_pct": 5.8674,
-      "factor": 0.999993,
+      "factor": 1.0,
       "status": "calibrated",
       "complete": true,
-      "intermediate": false,
-      "checked_at": "2026-11-08T12:54:19+00:00"
+      "checked_at": "2026-11-09T08:47:28+00:00"
     }
   },
   "history": [
@@ -4859,152 +4825,152 @@
     {
       "date": "2024-01-01",
       "close": 96.479,
-      "kind": "c"
+      "kind": "day"
     },
     {
       "date": "2024-01-02",
-      "close": 100.6081,
-      "kind": "c"
+      "close": 100.6083,
+      "kind": "day"
     },
     {
       "date": "2024-01-03",
-      "close": 100.316,
-      "kind": "c"
+      "close": 100.3166,
+      "kind": "day"
     },
     {
       "date": "2024-01-04",
-      "close": 102.0814,
-      "kind": "c"
+      "close": 102.0822,
+      "kind": "day"
     },
     {
       "date": "2024-01-05",
-      "close": 101.438,
-      "kind": "c"
+      "close": 101.4391,
+      "kind": "day"
     },
     {
       "date": "2024-01-06",
-      "close": 101.438,
-      "kind": "c"
+      "close": 101.4391,
+      "kind": "day"
     },
     {
       "date": "2024-01-07",
-      "close": 101.438,
-      "kind": "c"
+      "close": 101.4391,
+      "kind": "day"
     },
     {
       "date": "2024-01-08",
-      "close": 100.2814,
-      "kind": "c"
+      "close": 100.2827,
+      "kind": "day"
     },
     {
       "date": "2024-01-09",
-      "close": 99.4087,
-      "kind": "c"
+      "close": 99.4102,
+      "kind": "day"
     },
     {
       "date": "2024-01-10",
-      "close": 98.7027,
-      "kind": "c"
+      "close": 98.7044,
+      "kind": "day"
     },
     {
       "date": "2024-01-11",
-      "close": 98.2386,
-      "kind": "c"
+      "close": 98.2405,
+      "kind": "day"
     },
     {
       "date": "2024-01-12",
-      "close": 97.9141,
-      "kind": "c"
+      "close": 97.9163,
+      "kind": "day"
     },
     {
       "date": "2024-01-13",
-      "close": 97.9141,
-      "kind": "c"
+      "close": 97.9163,
+      "kind": "day"
     },
     {
       "date": "2024-01-14",
-      "close": 97.9141,
-      "kind": "c"
+      "close": 97.9163,
+      "kind": "day"
     },
     {
       "date": "2024-01-15",
-      "close": 98.2174,
-      "kind": "c"
+      "close": 98.2199,
+      "kind": "day"
     },
     {
       "date": "2024-01-16",
-      "close": 97.3528,
-      "kind": "c"
+      "close": 97.3555,
+      "kind": "day"
     },
     {
       "date": "2024-01-17",
-      "close": 96.3596,
-      "kind": "c"
+      "close": 96.3625,
+      "kind": "day"
     },
     {
       "date": "2024-01-18",
-      "close": 95.7426,
-      "kind": "c"
+      "close": 95.7457,
+      "kind": "day"
     },
     {
       "date": "2024-01-19",
-      "close": 95.1678,
-      "kind": "c"
+      "close": 95.1712,
+      "kind": "day"
     },
     {
       "date": "2024-01-20",
-      "close": 95.1678,
-      "kind": "c"
+      "close": 95.1712,
+      "kind": "day"
     },
     {
       "date": "2024-01-21",
-      "close": 95.1678,
-      "kind": "c"
+      "close": 95.1712,
+      "kind": "day"
     },
     {
       "date": "2024-01-22",
-      "close": 96.1859,
-      "kind": "c"
+      "close": 96.1895,
+      "kind": "day"
     },
     {
       "date": "2024-01-23",
-      "close": 98.0709,
-      "kind": "c"
+      "close": 98.0748,
+      "kind": "day"
     },
     {
       "date": "2024-01-24",
-      "close": 97.443,
-      "kind": "c"
+      "close": 97.4472,
+      "kind": "day"
     },
     {
       "date": "2024-01-25",
-      "close": 97.3453,
-      "kind": "c"
+      "close": 97.3497,
+      "kind": "day"
     },
     {
       "date": "2024-01-26",
-      "close": 96.615,
-      "kind": "c"
+      "close": 96.6196,
+      "kind": "day"
     },
     {
       "date": "2024-01-27",
-      "close": 96.615,
-      "kind": "c"
+      "close": 96.6196,
+      "kind": "day"
     },
     {
       "date": "2024-01-28",
-      "close": 96.615,
-      "kind": "c"
+      "close": 96.6196,
+      "kind": "day"
     },
     {
       "date": "2024-01-29",
-      "close": 97.1654,
-      "kind": "c"
+      "close": 97.1703,
+      "kind": "day"
     },
     {
       "date": "2024-01-30",
-      "close": 95.8049,
-      "kind": "c"
+      "close": 95.81,
+      "kind": "day"
     },
     {
       "date": "2024-01-31",
@@ -5013,143 +4979,143 @@
     },
     {
       "date": "2024-02-01",
-      "close": 95.5457,
-      "kind": "c"
+      "close": 95.5454,
+      "kind": "day"
     },
     {
       "date": "2024-02-02",
-      "close": 94.7911,
-      "kind": "c"
+      "close": 94.7906,
+      "kind": "day"
     },
     {
       "date": "2024-02-03",
-      "close": 94.7911,
-      "kind": "c"
+      "close": 94.7906,
+      "kind": "day"
     },
     {
       "date": "2024-02-04",
-      "close": 94.782,
-      "kind": "c"
+      "close": 94.7811,
+      "kind": "day"
     },
     {
       "date": "2024-02-05",
-      "close": 94.5169,
-      "kind": "c"
+      "close": 94.5158,
+      "kind": "day"
     },
     {
       "date": "2024-02-06",
-      "close": 96.0767,
-      "kind": "c"
+      "close": 96.0752,
+      "kind": "day"
     },
     {
       "date": "2024-02-07",
-      "close": 95.6638,
-      "kind": "c"
+      "close": 95.6621,
+      "kind": "day"
     },
     {
       "date": "2024-02-08",
-      "close": 92.421,
-      "kind": "c"
+      "close": 92.4191,
+      "kind": "day"
     },
     {
       "date": "2024-02-09",
-      "close": 91.5711,
-      "kind": "c"
+      "close": 91.5689,
+      "kind": "day"
     },
     {
       "date": "2024-02-10",
-      "close": 91.5711,
-      "kind": "c"
+      "close": 91.5689,
+      "kind": "day"
     },
     {
       "date": "2024-02-11",
-      "close": 91.5711,
-      "kind": "c"
+      "close": 91.5689,
+      "kind": "day"
     },
     {
       "date": "2024-02-12",
-      "close": 92.7343,
-      "kind": "c"
+      "close": 92.7318,
+      "kind": "day"
     },
     {
       "date": "2024-02-13",
-      "close": 90.9633,
-      "kind": "c"
+      "close": 90.9606,
+      "kind": "day"
     },
     {
       "date": "2024-02-14",
-      "close": 91.3093,
-      "kind": "c"
+      "close": 91.3063,
+      "kind": "day"
     },
     {
       "date": "2024-02-15",
-      "close": 92.9441,
-      "kind": "c"
+      "close": 92.9408,
+      "kind": "day"
     },
     {
       "date": "2024-02-16",
-      "close": 91.9405,
-      "kind": "c"
+      "close": 91.937,
+      "kind": "day"
     },
     {
       "date": "2024-02-17",
-      "close": 91.9405,
-      "kind": "c"
+      "close": 91.937,
+      "kind": "day"
     },
     {
       "date": "2024-02-18",
-      "close": 91.9405,
-      "kind": "c"
+      "close": 91.937,
+      "kind": "day"
     },
     {
       "date": "2024-02-19",
-      "close": 92.4097,
-      "kind": "c"
+      "close": 92.4058,
+      "kind": "day"
     },
     {
       "date": "2024-02-20",
-      "close": 91.5413,
-      "kind": "c"
+      "close": 91.5373,
+      "kind": "day"
     },
     {
       "date": "2024-02-21",
-      "close": 92.1732,
-      "kind": "c"
+      "close": 92.1688,
+      "kind": "day"
     },
     {
       "date": "2024-02-22",
-      "close": 94.358,
-      "kind": "c"
+      "close": 94.3532,
+      "kind": "day"
     },
     {
       "date": "2024-02-23",
-      "close": 93.9242,
-      "kind": "c"
+      "close": 93.9192,
+      "kind": "day"
     },
     {
       "date": "2024-02-24",
-      "close": 93.9242,
-      "kind": "c"
+      "close": 93.9192,
+      "kind": "day"
     },
     {
       "date": "2024-02-25",
-      "close": 93.9242,
-      "kind": "c"
+      "close": 93.9192,
+      "kind": "day"
     },
     {
       "date": "2024-02-26",
-      "close": 92.7128,
-      "kind": "c"
+      "close": 92.7076,
+      "kind": "day"
     },
     {
       "date": "2024-02-27",
-      "close": 93.4455,
-      "kind": "c"
+      "close": 93.44,
+      "kind": "day"
     },
     {
       "date": "2024-02-28",
-      "close": 94.2494,
-      "kind": "c"
+      "close": 94.2436,
+      "kind": "day"
     },
     {
       "date": "2024-02-29",
@@ -5463,153 +5429,153 @@
     },
     {
       "date": "2024-05-01",
-      "close": 98.6898,
-      "kind": "c"
+      "close": 98.6895,
+      "kind": "day"
     },
     {
       "date": "2024-05-02",
-      "close": 99.6573,
-      "kind": "c"
+      "close": 99.6567,
+      "kind": "day"
     },
     {
       "date": "2024-05-03",
-      "close": 99.7373,
-      "kind": "c"
+      "close": 99.7364,
+      "kind": "day"
     },
     {
       "date": "2024-05-04",
-      "close": 99.7373,
-      "kind": "c"
+      "close": 99.7364,
+      "kind": "day"
     },
     {
       "date": "2024-05-05",
-      "close": 99.7373,
-      "kind": "c"
+      "close": 99.7364,
+      "kind": "day"
     },
     {
       "date": "2024-05-06",
-      "close": 99.6777,
-      "kind": "c"
+      "close": 99.6766,
+      "kind": "day"
     },
     {
       "date": "2024-05-07",
-      "close": 99.6182,
-      "kind": "c"
+      "close": 99.6168,
+      "kind": "day"
     },
     {
       "date": "2024-05-08",
-      "close": 100.4354,
-      "kind": "c"
+      "close": 100.4337,
+      "kind": "day"
     },
     {
       "date": "2024-05-09",
-      "close": 101.8618,
-      "kind": "c"
+      "close": 101.8598,
+      "kind": "day"
     },
     {
       "date": "2024-05-10",
-      "close": 101.3834,
-      "kind": "c"
+      "close": 101.3811,
+      "kind": "day"
     },
     {
       "date": "2024-05-11",
-      "close": 101.3834,
-      "kind": "c"
+      "close": 101.3811,
+      "kind": "day"
     },
     {
       "date": "2024-05-12",
-      "close": 101.3834,
-      "kind": "c"
+      "close": 101.3811,
+      "kind": "day"
     },
     {
       "date": "2024-05-13",
-      "close": 105.1247,
-      "kind": "c"
+      "close": 105.122,
+      "kind": "day"
     },
     {
       "date": "2024-05-14",
-      "close": 106.4181,
-      "kind": "c"
+      "close": 106.415,
+      "kind": "day"
     },
     {
       "date": "2024-05-15",
-      "close": 106.163,
-      "kind": "c"
+      "close": 106.1596,
+      "kind": "day"
     },
     {
       "date": "2024-05-16",
-      "close": 107.002,
-      "kind": "c"
+      "close": 106.9983,
+      "kind": "day"
     },
     {
       "date": "2024-05-17",
-      "close": 105.9215,
-      "kind": "c"
+      "close": 105.9176,
+      "kind": "day"
     },
     {
       "date": "2024-05-18",
-      "close": 105.9215,
-      "kind": "c"
+      "close": 105.9176,
+      "kind": "day"
     },
     {
       "date": "2024-05-19",
-      "close": 105.9215,
-      "kind": "c"
+      "close": 105.9176,
+      "kind": "day"
     },
     {
       "date": "2024-05-20",
-      "close": 107.2988,
-      "kind": "c"
+      "close": 107.2945,
+      "kind": "day"
     },
     {
       "date": "2024-05-21",
-      "close": 107.578,
-      "kind": "c"
+      "close": 107.5734,
+      "kind": "day"
     },
     {
       "date": "2024-05-22",
-      "close": 111.1392,
-      "kind": "c"
+      "close": 111.1341,
+      "kind": "day"
     },
     {
       "date": "2024-05-23",
-      "close": 110.4838,
-      "kind": "c"
+      "close": 110.4785,
+      "kind": "day"
     },
     {
       "date": "2024-05-24",
-      "close": 111.9867,
-      "kind": "c"
+      "close": 111.9809,
+      "kind": "day"
     },
     {
       "date": "2024-05-25",
-      "close": 111.9867,
-      "kind": "c"
+      "close": 111.9809,
+      "kind": "day"
     },
     {
       "date": "2024-05-26",
-      "close": 111.9867,
-      "kind": "c"
+      "close": 111.9809,
+      "kind": "day"
     },
     {
       "date": "2024-05-27",
-      "close": 112.9389,
-      "kind": "c"
+      "close": 112.9327,
+      "kind": "day"
     },
     {
       "date": "2024-05-28",
-      "close": 110.7708,
-      "kind": "c"
+      "close": 110.7644,
+      "kind": "day"
     },
     {
       "date": "2024-05-29",
-      "close": 109.0209,
-      "kind": "c"
+      "close": 109.0144,
+      "kind": "day"
     },
     {
       "date": "2024-05-30",
-      "close": 109.7843,
-      "kind": "c"
+      "close": 109.7775,
+      "kind": "day"
     },
     {
       "date": "2024-05-31",
@@ -5619,147 +5585,147 @@
     {
       "date": "2024-06-01",
       "close": 109.6529,
-      "kind": "c"
+      "kind": "day"
     },
     {
       "date": "2024-06-02",
       "close": 109.6529,
-      "kind": "c"
+      "kind": "day"
     },
     {
       "date": "2024-06-03",
-      "close": 110.7818,
-      "kind": "c"
+      "close": 110.7823,
+      "kind": "day"
     },
     {
       "date": "2024-06-04",
-      "close": 110.7036,
-      "kind": "c"
+      "close": 110.7047,
+      "kind": "day"
     },
     {
       "date": "2024-06-05",
-      "close": 112.3082,
-      "kind": "c"
+      "close": 112.3099,
+      "kind": "day"
     },
     {
       "date": "2024-06-06",
-      "close": 112.2964,
-      "kind": "c"
+      "close": 112.2987,
+      "kind": "day"
     },
     {
       "date": "2024-06-07",
-      "close": 111.4199,
-      "kind": "c"
+      "close": 111.4228,
+      "kind": "day"
     },
     {
       "date": "2024-06-08",
-      "close": 111.4199,
-      "kind": "c"
+      "close": 111.4228,
+      "kind": "day"
     },
     {
       "date": "2024-06-09",
-      "close": 111.4199,
-      "kind": "c"
+      "close": 111.4228,
+      "kind": "day"
     },
     {
       "date": "2024-06-10",
-      "close": 110.0154,
-      "kind": "c"
+      "close": 110.0188,
+      "kind": "day"
     },
     {
       "date": "2024-06-11",
-      "close": 107.7815,
-      "kind": "c"
+      "close": 107.7854,
+      "kind": "day"
     },
     {
       "date": "2024-06-12",
-      "close": 107.1128,
-      "kind": "c"
+      "close": 107.1171,
+      "kind": "day"
     },
     {
       "date": "2024-06-13",
-      "close": 106.0518,
-      "kind": "c"
+      "close": 106.0567,
+      "kind": "day"
     },
     {
       "date": "2024-06-14",
-      "close": 105.012,
-      "kind": "c"
+      "close": 105.0173,
+      "kind": "day"
     },
     {
       "date": "2024-06-15",
-      "close": 105.012,
-      "kind": "c"
+      "close": 105.0173,
+      "kind": "day"
     },
     {
       "date": "2024-06-16",
-      "close": 105.012,
-      "kind": "c"
+      "close": 105.0173,
+      "kind": "day"
     },
     {
       "date": "2024-06-17",
-      "close": 104.8749,
-      "kind": "c"
+      "close": 104.8807,
+      "kind": "day"
     },
     {
       "date": "2024-06-18",
-      "close": 104.6646,
-      "kind": "c"
+      "close": 104.671,
+      "kind": "day"
     },
     {
       "date": "2024-06-19",
-      "close": 104.3815,
-      "kind": "c"
+      "close": 104.3884,
+      "kind": "day"
     },
     {
       "date": "2024-06-20",
-      "close": 105.2891,
-      "kind": "c"
+      "close": 105.2966,
+      "kind": "day"
     },
     {
       "date": "2024-06-21",
-      "close": 104.5305,
-      "kind": "c"
+      "close": 104.5384,
+      "kind": "day"
     },
     {
       "date": "2024-06-22",
-      "close": 104.5305,
-      "kind": "c"
+      "close": 104.5384,
+      "kind": "day"
     },
     {
       "date": "2024-06-23",
-      "close": 104.5305,
-      "kind": "c"
+      "close": 104.5384,
+      "kind": "day"
     },
     {
       "date": "2024-06-24",
-      "close": 106.5578,
-      "kind": "c"
+      "close": 106.5665,
+      "kind": "day"
     },
     {
       "date": "2024-06-25",
-      "close": 105.886,
-      "kind": "c"
+      "close": 105.8951,
+      "kind": "day"
     },
     {
       "date": "2024-06-26",
-      "close": 103.1853,
-      "kind": "c"
+      "close": 103.1948,
+      "kind": "day"
     },
     {
       "date": "2024-06-27",
-      "close": 103.2674,
-      "kind": "c"
+      "close": 103.2773,
+      "kind": "day"
     },
     {
       "date": "2024-06-28",
-      "close": 102.8435,
-      "kind": "c"
+      "close": 102.8539,
+      "kind": "day"
     },
     {
       "date": "2024-06-29",
-      "close": 102.8435,
-      "kind": "c"
+      "close": 102.8539,
+      "kind": "day"
     },
     {
       "date": "2024-06-30",
@@ -5768,153 +5734,153 @@
     },
     {
       "date": "2024-07-01",
-      "close": 103.3265,
-      "kind": "c"
+      "close": 103.3269,
+      "kind": "day"
     },
     {
       "date": "2024-07-02",
-      "close": 103.0266,
-      "kind": "c"
+      "close": 103.0272,
+      "kind": "day"
     },
     {
       "date": "2024-07-03",
-      "close": 103.7783,
-      "kind": "c"
+      "close": 103.7793,
+      "kind": "day"
     },
     {
       "date": "2024-07-04",
-      "close": 103.56,
-      "kind": "c"
+      "close": 103.5614,
+      "kind": "day"
     },
     {
       "date": "2024-07-05",
-      "close": 102.4412,
-      "kind": "c"
+      "close": 102.4429,
+      "kind": "day"
     },
     {
       "date": "2024-07-06",
-      "close": 102.4412,
-      "kind": "c"
+      "close": 102.4429,
+      "kind": "day"
     },
     {
       "date": "2024-07-07",
-      "close": 102.4412,
-      "kind": "c"
+      "close": 102.4429,
+      "kind": "day"
     },
     {
       "date": "2024-07-08",
-      "close": 100.812,
-      "kind": "c"
+      "close": 100.814,
+      "kind": "day"
     },
     {
       "date": "2024-07-09",
-      "close": 100.8218,
-      "kind": "c"
+      "close": 100.8241,
+      "kind": "day"
     },
     {
       "date": "2024-07-10",
-      "close": 102.5254,
-      "kind": "c"
+      "close": 102.5281,
+      "kind": "day"
     },
     {
       "date": "2024-07-11",
-      "close": 103.2734,
-      "kind": "c"
+      "close": 103.2765,
+      "kind": "day"
     },
     {
       "date": "2024-07-12",
-      "close": 102.5089,
-      "kind": "c"
+      "close": 102.5123,
+      "kind": "day"
     },
     {
       "date": "2024-07-13",
-      "close": 102.5089,
-      "kind": "c"
+      "close": 102.5123,
+      "kind": "day"
     },
     {
       "date": "2024-07-14",
-      "close": 102.5089,
-      "kind": "c"
+      "close": 102.5123,
+      "kind": "day"
     },
     {
       "date": "2024-07-15",
-      "close": 102.8058,
-      "kind": "c"
+      "close": 102.8096,
+      "kind": "day"
     },
     {
       "date": "2024-07-16",
-      "close": 104.3578,
-      "kind": "c"
+      "close": 104.362,
+      "kind": "day"
     },
     {
       "date": "2024-07-17",
-      "close": 104.1696,
-      "kind": "c"
+      "close": 104.1741,
+      "kind": "day"
     },
     {
       "date": "2024-07-18",
-      "close": 104.1276,
-      "kind": "c"
+      "close": 104.1325,
+      "kind": "day"
     },
     {
       "date": "2024-07-19",
-      "close": 103.3567,
-      "kind": "c"
+      "close": 103.3619,
+      "kind": "day"
     },
     {
       "date": "2024-07-20",
-      "close": 103.3567,
-      "kind": "c"
+      "close": 103.3619,
+      "kind": "day"
     },
     {
       "date": "2024-07-21",
-      "close": 103.3667,
-      "kind": "c"
+      "close": 103.3722,
+      "kind": "day"
     },
     {
       "date": "2024-07-22",
-      "close": 104.1622,
-      "kind": "c"
+      "close": 104.1681,
+      "kind": "day"
     },
     {
       "date": "2024-07-23",
-      "close": 103.7556,
-      "kind": "c"
+      "close": 103.7618,
+      "kind": "day"
     },
     {
       "date": "2024-07-24",
-      "close": 103.3507,
-      "kind": "c"
+      "close": 103.3572,
+      "kind": "day"
     },
     {
       "date": "2024-07-25",
-      "close": 103.743,
-      "kind": "c"
+      "close": 103.7499,
+      "kind": "day"
     },
     {
       "date": "2024-07-26",
-      "close": 103.7841,
-      "kind": "c"
+      "close": 103.7914,
+      "kind": "day"
     },
     {
       "date": "2024-07-27",
-      "close": 103.7841,
-      "kind": "c"
+      "close": 103.7914,
+      "kind": "day"
     },
     {
       "date": "2024-07-28",
-      "close": 103.7734,
-      "kind": "c"
+      "close": 103.7809,
+      "kind": "day"
     },
     {
       "date": "2024-07-29",
-      "close": 105.0391,
-      "kind": "c"
+      "close": 105.0471,
+      "kind": "day"
     },
     {
       "date": "2024-07-30",
-      "close": 104.3349,
-      "kind": "c"
+      "close": 104.3433,
+      "kind": "day"
     },
     {
       "date": "2024-07-31",
@@ -5923,153 +5889,153 @@
     },
     {
       "date": "2024-08-01",
-      "close": 101.0006,
-      "kind": "c"
+      "close": 100.9989,
+      "kind": "day"
     },
     {
       "date": "2024-08-02",
-      "close": 97.9622,
-      "kind": "c"
+      "close": 97.9589,
+      "kind": "day"
     },
     {
       "date": "2024-08-03",
-      "close": 97.9622,
-      "kind": "c"
+      "close": 97.9589,
+      "kind": "day"
     },
     {
       "date": "2024-08-04",
-      "close": 97.9622,
-      "kind": "c"
+      "close": 97.9589,
+      "kind": "day"
     },
     {
       "date": "2024-08-05",
-      "close": 96.4356,
-      "kind": "c"
+      "close": 96.4307,
+      "kind": "day"
     },
     {
       "date": "2024-08-06",
-      "close": 96.4356,
-      "kind": "c"
+      "close": 96.4307,
+      "kind": "day"
     },
     {
       "date": "2024-08-07",
-      "close": 95.9646,
-      "kind": "c"
+      "close": 95.9581,
+      "kind": "day"
     },
     {
       "date": "2024-08-08",
-      "close": 97.0986,
-      "kind": "c"
+      "close": 97.0904,
+      "kind": "day"
     },
     {
       "date": "2024-08-09",
-      "close": 97.1877,
-      "kind": "c"
+      "close": 97.1778,
+      "kind": "day"
     },
     {
       "date": "2024-08-10",
-      "close": 97.1877,
-      "kind": "c"
+      "close": 97.1778,
+      "kind": "day"
     },
     {
       "date": "2024-08-11",
-      "close": 97.1796,
-      "kind": "c"
+      "close": 97.1681,
+      "kind": "day"
     },
     {
       "date": "2024-08-12",
-      "close": 96.8217,
-      "kind": "c"
+      "close": 96.8085,
+      "kind": "day"
     },
     {
       "date": "2024-08-13",
-      "close": 97.2591,
-      "kind": "c"
+      "close": 97.2442,
+      "kind": "day"
     },
     {
       "date": "2024-08-14",
-      "close": 96.7161,
-      "kind": "c"
+      "close": 96.6996,
+      "kind": "day"
     },
     {
       "date": "2024-08-15",
-      "close": 98.1589,
-      "kind": "c"
+      "close": 98.1405,
+      "kind": "day"
     },
     {
       "date": "2024-08-16",
-      "close": 97.9937,
-      "kind": "c"
+      "close": 97.9737,
+      "kind": "day"
     },
     {
       "date": "2024-08-17",
-      "close": 97.9937,
-      "kind": "c"
+      "close": 97.9737,
+      "kind": "day"
     },
     {
       "date": "2024-08-18",
-      "close": 97.9937,
-      "kind": "c"
+      "close": 97.9737,
+      "kind": "day"
     },
     {
       "date": "2024-08-19",
-      "close": 99.6417,
-      "kind": "c"
+      "close": 99.6197,
+      "kind": "day"
     },
     {
       "date": "2024-08-20",
-      "close": 98.916,
-      "kind": "c"
+      "close": 98.8924,
+      "kind": "day"
     },
     {
       "date": "2024-08-21",
-      "close": 99.1946,
-      "kind": "c"
+      "close": 99.1693,
+      "kind": "day"
     },
     {
       "date": "2024-08-22",
-      "close": 97.619,
-      "kind": "c"
+      "close": 97.5925,
+      "kind": "day"
     },
     {
       "date": "2024-08-23",
-      "close": 98.6164,
-      "kind": "c"
+      "close": 98.5879,
+      "kind": "day"
     },
     {
       "date": "2024-08-24",
-      "close": 98.6164,
-      "kind": "c"
+      "close": 98.5879,
+      "kind": "day"
     },
     {
       "date": "2024-08-25",
-      "close": 98.6164,
-      "kind": "c"
+      "close": 98.5879,
+      "kind": "day"
     },
     {
       "date": "2024-08-26",
-      "close": 98.4603,
-      "kind": "c"
+      "close": 98.4302,
+      "kind": "day"
     },
     {
       "date": "2024-08-27",
-      "close": 97.2804,
-      "kind": "c"
+      "close": 97.249,
+      "kind": "day"
     },
     {
       "date": "2024-08-28",
-      "close": 96.2898,
-      "kind": "c"
+      "close": 96.2571,
+      "kind": "day"
     },
     {
       "date": "2024-08-29",
-      "close": 96.0892,
-      "kind": "c"
+      "close": 96.0549,
+      "kind": "day"
     },
     {
       "date": "2024-08-30",
-      "close": 96.1869,
-      "kind": "c"
+      "close": 96.1509,
+      "kind": "day"
     },
     {
       "date": "2024-08-31",
@@ -6079,147 +6045,147 @@
     {
       "date": "2024-09-01",
       "close": 96.1869,
-      "kind": "c"
+      "kind": "day"
     },
     {
       "date": "2024-09-02",
       "close": 96.1196,
-      "kind": "c"
+      "kind": "day"
     },
     {
       "date": "2024-09-03",
       "close": 94.351,
-      "kind": "c"
+      "kind": "day"
     },
     {
       "date": "2024-09-04",
       "close": 93.8604,
-      "kind": "c"
+      "kind": "day"
     },
     {
       "date": "2024-09-05",
       "close": 93.5601,
-      "kind": "c"
+      "kind": "day"
     },
     {
       "date": "2024-09-06",
       "close": 92.2877,
-      "kind": "c"
+      "kind": "day"
     },
     {
       "date": "2024-09-07",
       "close": 92.2877,
-      "kind": "c"
+      "kind": "day"
     },
     {
       "date": "2024-09-08",
       "close": 92.2877,
-      "kind": "c"
+      "kind": "day"
     },
     {
       "date": "2024-09-09",
       "close": 93.995,
-      "kind": "c"
+      "kind": "day"
     },
     {
       "date": "2024-09-10",
       "close": 94.2488,
-      "kind": "c"
+      "kind": "day"
     },
     {
       "date": "2024-09-11",
       "close": 96.3882,
-      "kind": "c"
+      "kind": "day"
     },
     {
       "date": "2024-09-12",
       "close": 94.5183,
-      "kind": "c"
+      "kind": "day"
     },
     {
       "date": "2024-09-13",
       "close": 95.5675,
-      "kind": "c"
+      "kind": "day"
     },
     {
       "date": "2024-09-14",
       "close": 95.5675,
-      "kind": "c"
+      "kind": "day"
     },
     {
       "date": "2024-09-15",
       "close": 95.5866,
-      "kind": "c"
+      "kind": "day"
     },
     {
       "date": "2024-09-16",
       "close": 96.1697,
-      "kind": "c"
+      "kind": "day"
     },
     {
       "date": "2024-09-17",
       "close": 96.8717,
-      "kind": "c"
+      "kind": "day"
     },
     {
       "date": "2024-09-18",
       "close": 97.143,
-      "kind": "c"
+      "kind": "day"
     },
     {
       "date": "2024-09-19",
       "close": 97.1332,
-      "kind": "c"
+      "kind": "day"
     },
     {
       "date": "2024-09-20",
       "close": 96.4533,
-      "kind": "c"
+      "kind": "day"
     },
     {
       "date": "2024-09-21",
       "close": 96.4533,
-      "kind": "c"
+      "kind": "day"
     },
     {
       "date": "2024-09-22",
       "close": 96.4436,
-      "kind": "c"
+      "kind": "day"
     },
     {
       "date": "2024-09-23",
       "close": 96.7619,
-      "kind": "c"
+      "kind": "day"
     },
     {
       "date": "2024-09-24",
       "close": 98.165,
-      "kind": "c"
+      "kind": "day"
     },
     {
       "date": "2024-09-25",
-      "close": 97.0262,
-      "kind": "c"
+      "close": 97.0263,
+      "kind": "day"
     },
     {
       "date": "2024-09-26",
       "close": 96.3859,
-      "kind": "c"
+      "kind": "day"
     },
     {
       "date": "2024-09-27",
       "close": 98.2461,
-      "kind": "c"
+      "kind": "day"
     },
     {
       "date": "2024-09-28",
       "close": 98.2461,
-      "kind": "c"
+      "kind": "day"
     },
     {
       "date": "2024-09-29",
       "close": 98.2461,
-      "kind": "c"
+      "kind": "day"
     },
     {
       "date": "2024-09-30",
@@ -6228,153 +6194,153 @@
     },
     {
       "date": "2024-10-01",
-      "close": 96.1244,
-      "kind": "c"
+      "close": 96.1248,
+      "kind": "day"
     },
     {
       "date": "2024-10-02",
-      "close": 95.576,
-      "kind": "c"
+      "close": 95.5769,
+      "kind": "day"
     },
     {
       "date": "2024-10-03",
-      "close": 94.7631,
-      "kind": "c"
+      "close": 94.7645,
+      "kind": "day"
     },
     {
       "date": "2024-10-04",
-      "close": 92.6969,
-      "kind": "c"
+      "close": 92.6986,
+      "kind": "day"
     },
     {
       "date": "2024-10-05",
-      "close": 92.6969,
-      "kind": "c"
+      "close": 92.6986,
+      "kind": "day"
     },
     {
       "date": "2024-10-06",
-      "close": 92.6408,
-      "kind": "c"
+      "close": 92.643,
+      "kind": "day"
     },
     {
       "date": "2024-10-07",
-      "close": 92.8257,
-      "kind": "c"
+      "close": 92.8283,
+      "kind": "day"
     },
     {
       "date": "2024-10-08",
-      "close": 92.6675,
-      "kind": "c"
+      "close": 92.6705,
+      "kind": "day"
     },
     {
       "date": "2024-10-09",
-      "close": 93.0655,
-      "kind": "c"
+      "close": 93.069,
+      "kind": "day"
     },
     {
       "date": "2024-10-10",
-      "close": 91.7528,
-      "kind": "c"
+      "close": 91.7567,
+      "kind": "day"
     },
     {
       "date": "2024-10-11",
-      "close": 92.5781,
-      "kind": "c"
+      "close": 92.5825,
+      "kind": "day"
     },
     {
       "date": "2024-10-12",
-      "close": 92.5781,
-      "kind": "c"
+      "close": 92.5825,
+      "kind": "day"
     },
     {
       "date": "2024-10-13",
-      "close": 92.5499,
-      "kind": "c"
+      "close": 92.5547,
+      "kind": "day"
     },
     {
       "date": "2024-10-14",
-      "close": 93.4564,
-      "kind": "c"
+      "close": 93.4617,
+      "kind": "day"
     },
     {
       "date": "2024-10-15",
-      "close": 93.7176,
-      "kind": "c"
+      "close": 93.7234,
+      "kind": "day"
     },
     {
       "date": "2024-10-16",
-      "close": 94.6543,
-      "kind": "c"
+      "close": 94.6607,
+      "kind": "day"
     },
     {
       "date": "2024-10-17",
-      "close": 93.1299,
-      "kind": "c"
+      "close": 93.1366,
+      "kind": "day"
     },
     {
       "date": "2024-10-18",
-      "close": 93.7907,
-      "kind": "c"
+      "close": 93.7979,
+      "kind": "day"
     },
     {
       "date": "2024-10-19",
-      "close": 93.7907,
-      "kind": "c"
+      "close": 93.7979,
+      "kind": "day"
     },
     {
       "date": "2024-10-20",
-      "close": 93.7907,
-      "kind": "c"
+      "close": 93.7979,
+      "kind": "day"
     },
     {
       "date": "2024-10-21",
-      "close": 94.0153,
-      "kind": "c"
+      "close": 94.023,
+      "kind": "day"
     },
     {
       "date": "2024-10-22",
-      "close": 93.8456,
-      "kind": "c"
+      "close": 93.8537,
+      "kind": "day"
     },
     {
       "date": "2024-10-23",
-      "close": 93.4511,
-      "kind": "c"
+      "close": 93.4595,
+      "kind": "day"
     },
     {
       "date": "2024-10-24",
-      "close": 94.002,
-      "kind": "c"
+      "close": 94.0109,
+      "kind": "day"
     },
     {
       "date": "2024-10-25",
-      "close": 94.3399,
-      "kind": "c"
+      "close": 94.3494,
+      "kind": "day"
     },
     {
       "date": "2024-10-26",
-      "close": 94.3399,
-      "kind": "c"
+      "close": 94.3494,
+      "kind": "day"
     },
     {
       "date": "2024-10-27",
-      "close": 94.3583,
-      "kind": "c"
+      "close": 94.3682,
+      "kind": "day"
     },
     {
       "date": "2024-10-28",
-      "close": 94.5937,
-      "kind": "c"
+      "close": 94.6041,
+      "kind": "day"
     },
     {
       "date": "2024-10-29",
-      "close": 94.0068,
-      "kind": "c"
+      "close": 94.0175,
+      "kind": "day"
     },
     {
       "date": "2024-10-30",
-      "close": 92.7654,
-      "kind": "c"
+      "close": 92.7764,
+      "kind": "day"
     },
     {
       "date": "2024-10-31",
@@ -6383,148 +6349,148 @@
     },
     {
       "date": "2024-11-01",
-      "close": 95.0089,
-      "kind": "c"
+      "close": 95.0097,
+      "kind": "day"
     },
     {
       "date": "2024-11-02",
-      "close": 95.0089,
-      "kind": "c"
+      "close": 95.0097,
+      "kind": "day"
     },
     {
       "date": "2024-11-03",
-      "close": 95.1031,
-      "kind": "c"
+      "close": 95.1047,
+      "kind": "day"
     },
     {
       "date": "2024-11-04",
-      "close": 95.1031,
-      "kind": "c"
+      "close": 95.1047,
+      "kind": "day"
     },
     {
       "date": "2024-11-05",
-      "close": 95.5112,
-      "kind": "c"
+      "close": 95.5137,
+      "kind": "day"
     },
     {
       "date": "2024-11-06",
-      "close": 90.84,
-      "kind": "c"
+      "close": 90.8431,
+      "kind": "day"
     },
     {
       "date": "2024-11-07",
-      "close": 91.1571,
-      "kind": "c"
+      "close": 91.161,
+      "kind": "day"
     },
     {
       "date": "2024-11-08",
-      "close": 88.3214,
-      "kind": "c"
+      "close": 88.3259,
+      "kind": "day"
     },
     {
       "date": "2024-11-09",
-      "close": 88.3214,
-      "kind": "c"
+      "close": 88.3259,
+      "kind": "day"
     },
     {
       "date": "2024-11-10",
-      "close": 88.303,
-      "kind": "c"
+      "close": 88.3083,
+      "kind": "day"
     },
     {
       "date": "2024-11-11",
-      "close": 86.9512,
-      "kind": "c"
+      "close": 86.9571,
+      "kind": "day"
     },
     {
       "date": "2024-11-12",
-      "close": 86.5418,
-      "kind": "c"
+      "close": 86.5484,
+      "kind": "day"
     },
     {
       "date": "2024-11-13",
-      "close": 87.017,
-      "kind": "c"
+      "close": 87.0244,
+      "kind": "day"
     },
     {
       "date": "2024-11-14",
-      "close": 87.608,
-      "kind": "c"
+      "close": 87.6162,
+      "kind": "day"
     },
     {
       "date": "2024-11-15",
-      "close": 86.0916,
-      "kind": "c"
+      "close": 86.1004,
+      "kind": "day"
     },
     {
       "date": "2024-11-16",
-      "close": 86.1081,
-      "kind": "c"
+      "close": 86.1176,
+      "kind": "day"
     },
     {
       "date": "2024-11-17",
-      "close": 86.0987,
-      "kind": "c"
+      "close": 86.109,
+      "kind": "day"
     },
     {
       "date": "2024-11-18",
-      "close": 87.0795,
-      "kind": "c"
+      "close": 87.0907,
+      "kind": "day"
     },
     {
       "date": "2024-11-19",
-      "close": 86.33,
-      "kind": "c"
+      "close": 86.3417,
+      "kind": "day"
     },
     {
       "date": "2024-11-20",
-      "close": 86.3033,
-      "kind": "c"
+      "close": 86.3158,
+      "kind": "day"
     },
     {
       "date": "2024-11-21",
-      "close": 86.2508,
-      "kind": "c"
+      "close": 86.264,
+      "kind": "day"
     },
     {
       "date": "2024-11-22",
-      "close": 87.4834,
-      "kind": "c"
+      "close": 87.4976,
+      "kind": "day"
     },
     {
       "date": "2024-11-23",
-      "close": 87.4915,
-      "kind": "c"
+      "close": 87.5064,
+      "kind": "day"
     },
     {
       "date": "2024-11-24",
-      "close": 87.5608,
-      "kind": "c"
+      "close": 87.5764,
+      "kind": "day"
     },
     {
       "date": "2024-11-25",
-      "close": 88.8034,
-      "kind": "c"
+      "close": 88.82,
+      "kind": "day"
     },
     {
       "date": "2024-11-26",
-      "close": 87.6305,
-      "kind": "c"
+      "close": 87.6476,
+      "kind": "day"
     },
     {
       "date": "2024-11-27",
-      "close": 88.0066,
-      "kind": "c"
+      "close": 88.0245,
+      "kind": "day"
     },
     {
       "date": "2024-11-28",
-      "close": 88.4986,
-      "kind": "c"
+      "close": 88.5175,
+      "kind": "day"
     },
     {
       "date": "2024-11-29",
-      "close": 88.958,
-      "kind": "c"
+      "close": 88.9777,
+      "kind": "day"
     },
     {
       "date": "2024-11-30",
@@ -6533,153 +6499,153 @@
     },
     {
       "date": "2024-12-01",
-      "close": 88.8782,
-      "kind": "c"
+      "close": 88.8779,
+      "kind": "day"
     },
     {
       "date": "2024-12-02",
-      "close": 90.2917,
-      "kind": "c"
+      "close": 90.2911,
+      "kind": "day"
     },
     {
       "date": "2024-12-03",
-      "close": 90.599,
-      "kind": "c"
+      "close": 90.5981,
+      "kind": "day"
     },
     {
       "date": "2024-12-04",
-      "close": 89.6481,
-      "kind": "c"
+      "close": 89.6469,
+      "kind": "day"
     },
     {
       "date": "2024-12-05",
-      "close": 91.6386,
-      "kind": "c"
+      "close": 91.6371,
+      "kind": "day"
     },
     {
       "date": "2024-12-06",
-      "close": 94.2414,
-      "kind": "c"
+      "close": 94.2395,
+      "kind": "day"
     },
     {
       "date": "2024-12-07",
-      "close": 94.2414,
-      "kind": "c"
+      "close": 94.2395,
+      "kind": "day"
     },
     {
       "date": "2024-12-08",
-      "close": 94.2414,
-      "kind": "c"
+      "close": 94.2395,
+      "kind": "day"
     },
     {
       "date": "2024-12-09",
-      "close": 95.0899,
-      "kind": "c"
+      "close": 95.0877,
+      "kind": "day"
     },
     {
       "date": "2024-12-10",
-      "close": 93.4356,
-      "kind": "c"
+      "close": 93.4331,
+      "kind": "day"
     },
     {
       "date": "2024-12-11",
-      "close": 92.7071,
-      "kind": "c"
+      "close": 92.7043,
+      "kind": "day"
     },
     {
       "date": "2024-12-12",
-      "close": 92.3458,
-      "kind": "c"
+      "close": 92.3428,
+      "kind": "day"
     },
     {
       "date": "2024-12-13",
-      "close": 92.8355,
-      "kind": "c"
+      "close": 92.8322,
+      "kind": "day"
     },
     {
       "date": "2024-12-14",
-      "close": 92.8355,
-      "kind": "c"
+      "close": 92.8322,
+      "kind": "day"
     },
     {
       "date": "2024-12-15",
-      "close": 92.8451,
-      "kind": "c"
+      "close": 92.8414,
+      "kind": "day"
     },
     {
       "date": "2024-12-16",
-      "close": 91.5641,
-      "kind": "c"
+      "close": 91.5602,
+      "kind": "day"
     },
     {
       "date": "2024-12-17",
-      "close": 90.9143,
-      "kind": "c"
+      "close": 90.9101,
+      "kind": "day"
     },
     {
       "date": "2024-12-18",
-      "close": 88.7872,
-      "kind": "c"
+      "close": 88.7828,
+      "kind": "day"
     },
     {
       "date": "2024-12-19",
-      "close": 88.7341,
-      "kind": "c"
+      "close": 88.7295,
+      "kind": "day"
     },
     {
       "date": "2024-12-20",
-      "close": 87.8559,
-      "kind": "c"
+      "close": 87.851,
+      "kind": "day"
     },
     {
       "date": "2024-12-21",
-      "close": 87.8559,
-      "kind": "c"
+      "close": 87.851,
+      "kind": "day"
     },
     {
       "date": "2024-12-22",
-      "close": 87.8211,
-      "kind": "c"
+      "close": 87.8159,
+      "kind": "day"
     },
     {
       "date": "2024-12-23",
-      "close": 88.4361,
-      "kind": "c"
+      "close": 88.4306,
+      "kind": "day"
     },
     {
       "date": "2024-12-24",
-      "close": 88.6575,
-      "kind": "c"
+      "close": 88.6517,
+      "kind": "day"
     },
     {
       "date": "2024-12-25",
-      "close": 88.6667,
-      "kind": "c"
+      "close": 88.6606,
+      "kind": "day"
     },
     {
       "date": "2024-12-26",
-      "close": 88.7557,
-      "kind": "c"
+      "close": 88.7492,
+      "kind": "day"
     },
     {
       "date": "2024-12-27",
-      "close": 88.7557,
-      "kind": "c"
+      "close": 88.7492,
+      "kind": "day"
     },
     {
       "date": "2024-12-28",
-      "close": 88.7557,
-      "kind": "c"
+      "close": 88.7492,
+      "kind": "day"
     },
     {
       "date": "2024-12-29",
-      "close": 88.8003,
-      "kind": "c"
+      "close": 88.7936,
+      "kind": "day"
     },
     {
       "date": "2024-12-30",
-      "close": 88.0547,
-      "kind": "c"
+      "close": 88.0477,
+      "kind": "day"
     },
     {
       "date": "2024-12-31",
@@ -6688,153 +6654,153 @@
     },
     {
       "date": "2025-01-01",
-      "close": 88.4691,
-      "kind": "c"
+      "close": 88.4687,
+      "kind": "day"
     },
     {
       "date": "2025-01-02",
-      "close": 89.186,
-      "kind": "c"
+      "close": 89.1853,
+      "kind": "day"
     },
     {
       "date": "2025-01-03",
-      "close": 89.0438,
-      "kind": "c"
+      "close": 89.0426,
+      "kind": "day"
     },
     {
       "date": "2025-01-04",
-      "close": 89.0438,
-      "kind": "c"
+      "close": 89.0426,
+      "kind": "day"
     },
     {
       "date": "2025-01-05",
-      "close": 89.0353,
-      "kind": "c"
+      "close": 89.0337,
+      "kind": "day"
     },
     {
       "date": "2025-01-06",
-      "close": 90.3178,
-      "kind": "c"
+      "close": 90.3158,
+      "kind": "day"
     },
     {
       "date": "2025-01-07",
-      "close": 90.9233,
-      "kind": "c"
+      "close": 90.921,
+      "kind": "day"
     },
     {
       "date": "2025-01-08",
-      "close": 89.0598,
-      "kind": "c"
+      "close": 89.0571,
+      "kind": "day"
     },
     {
       "date": "2025-01-09",
-      "close": 87.1721,
-      "kind": "c"
+      "close": 87.1691,
+      "kind": "day"
     },
     {
       "date": "2025-01-10",
-      "close": 86.8325,
-      "kind": "c"
+      "close": 86.8291,
+      "kind": "day"
     },
     {
       "date": "2025-01-11",
-      "close": 86.8325,
-      "kind": "c"
+      "close": 86.8291,
+      "kind": "day"
     },
     {
       "date": "2025-01-12",
-      "close": 86.8325,
-      "kind": "c"
+      "close": 86.8291,
+      "kind": "day"
     },
     {
       "date": "2025-01-13",
-      "close": 84.4189,
-      "kind": "c"
+      "close": 84.4153,
+      "kind": "day"
     },
     {
       "date": "2025-01-14",
-      "close": 83.8874,
-      "kind": "c"
+      "close": 83.8834,
+      "kind": "day"
     },
     {
       "date": "2025-01-15",
-      "close": 83.569,
-      "kind": "c"
+      "close": 83.5647,
+      "kind": "day"
     },
     {
       "date": "2025-01-16",
-      "close": 82.3743,
-      "kind": "c"
+      "close": 82.3697,
+      "kind": "day"
     },
     {
       "date": "2025-01-17",
-      "close": 82.0698,
-      "kind": "c"
+      "close": 82.0649,
+      "kind": "day"
     },
     {
       "date": "2025-01-18",
-      "close": 82.0698,
-      "kind": "c"
+      "close": 82.0649,
+      "kind": "day"
     },
     {
       "date": "2025-01-19",
-      "close": 82.0866,
-      "kind": "c"
+      "close": 82.0813,
+      "kind": "day"
     },
     {
       "date": "2025-01-20",
-      "close": 82.875,
-      "kind": "c"
+      "close": 82.8693,
+      "kind": "day"
     },
     {
       "date": "2025-01-21",
-      "close": 83.2815,
-      "kind": "c"
+      "close": 83.2754,
+      "kind": "day"
     },
     {
       "date": "2025-01-22",
-      "close": 84.2313,
-      "kind": "c"
+      "close": 84.2247,
+      "kind": "day"
     },
     {
       "date": "2025-01-23",
-      "close": 85.773,
-      "kind": "c"
+      "close": 85.766,
+      "kind": "day"
     },
     {
       "date": "2025-01-24",
-      "close": 86.0393,
-      "kind": "c"
+      "close": 86.0318,
+      "kind": "day"
     },
     {
       "date": "2025-01-25",
-      "close": 86.0393,
-      "kind": "c"
+      "close": 86.0318,
+      "kind": "day"
     },
     {
       "date": "2025-01-26",
-      "close": 85.988,
-      "kind": "c"
+      "close": 85.9802,
+      "kind": "day"
     },
     {
       "date": "2025-01-27",
-      "close": 87.1665,
-      "kind": "c"
+      "close": 87.1582,
+      "kind": "day"
     },
     {
       "date": "2025-01-28",
-      "close": 87.6463,
-      "kind": "c"
+      "close": 87.6376,
+      "kind": "day"
     },
     {
       "date": "2025-01-29",
-      "close": 86.8666,
-      "kind": "c"
+      "close": 86.8576,
+      "kind": "day"
     },
     {
       "date": "2025-01-30",
-      "close": 87.8051,
-      "kind": "c"
+      "close": 87.7956,
+      "kind": "day"
     },
     {
       "date": "2025-01-31",
@@ -6843,138 +6809,138 @@
     },
     {
       "date": "2025-02-01",
-      "close": 86.6988,
-      "kind": "c"
+      "close": 86.6991,
+      "kind": "day"
     },
     {
       "date": "2025-02-02",
-      "close": 86.5685,
-      "kind": "c"
+      "close": 86.569,
+      "kind": "day"
     },
     {
       "date": "2025-02-03",
-      "close": 84.7935,
-      "kind": "c"
+      "close": 84.7943,
+      "kind": "day"
     },
     {
       "date": "2025-02-04",
-      "close": 84.8186,
-      "kind": "c"
+      "close": 84.8197,
+      "kind": "day"
     },
     {
       "date": "2025-02-05",
-      "close": 85.2764,
-      "kind": "c"
+      "close": 85.2778,
+      "kind": "day"
     },
     {
       "date": "2025-02-06",
-      "close": 85.7025,
-      "kind": "c"
+      "close": 85.7042,
+      "kind": "day"
     },
     {
       "date": "2025-02-07",
-      "close": 84.828,
-      "kind": "c"
+      "close": 84.83,
+      "kind": "day"
     },
     {
       "date": "2025-02-08",
-      "close": 84.828,
-      "kind": "c"
+      "close": 84.83,
+      "kind": "day"
     },
     {
       "date": "2025-02-09",
-      "close": 84.7853,
-      "kind": "c"
+      "close": 84.7875,
+      "kind": "day"
     },
     {
       "date": "2025-02-10",
-      "close": 85.2768,
-      "kind": "c"
+      "close": 85.2793,
+      "kind": "day"
     },
     {
       "date": "2025-02-11",
-      "close": 86.1719,
-      "kind": "c"
+      "close": 86.1747,
+      "kind": "day"
     },
     {
       "date": "2025-02-12",
-      "close": 85.7493,
-      "kind": "c"
+      "close": 85.7524,
+      "kind": "day"
     },
     {
       "date": "2025-02-13",
-      "close": 86.6065,
-      "kind": "c"
+      "close": 86.6099,
+      "kind": "day"
     },
     {
       "date": "2025-02-14",
-      "close": 87.6888,
-      "kind": "c"
+      "close": 87.6926,
+      "kind": "day"
     },
     {
       "date": "2025-02-15",
-      "close": 87.6888,
-      "kind": "c"
+      "close": 87.6926,
+      "kind": "day"
     },
     {
       "date": "2025-02-16",
-      "close": 87.6797,
-      "kind": "c"
+      "close": 87.6838,
+      "kind": "day"
     },
     {
       "date": "2025-02-17",
-      "close": 87.5654,
-      "kind": "c"
+      "close": 87.5698,
+      "kind": "day"
     },
     {
       "date": "2025-02-18",
-      "close": 88.7648,
-      "kind": "c"
+      "close": 88.7695,
+      "kind": "day"
     },
     {
       "date": "2025-02-19",
-      "close": 88.8621,
-      "kind": "c"
+      "close": 88.8671,
+      "kind": "day"
     },
     {
       "date": "2025-02-20",
-      "close": 88.9862,
-      "kind": "c"
+      "close": 88.9916,
+      "kind": "day"
     },
     {
       "date": "2025-02-21",
-      "close": 89.2084,
-      "kind": "c"
+      "close": 89.214,
+      "kind": "day"
     },
     {
       "date": "2025-02-22",
-      "close": 89.217,
-      "kind": "c"
+      "close": 89.2229,
+      "kind": "day"
     },
     {
       "date": "2025-02-23",
-      "close": 89.2435,
-      "kind": "c"
+      "close": 89.2497,
+      "kind": "day"
     },
     {
       "date": "2025-02-24",
-      "close": 89.4842,
-      "kind": "c"
+      "close": 89.4907,
+      "kind": "day"
     },
     {
       "date": "2025-02-25",
-      "close": 90.2982,
-      "kind": "c"
+      "close": 90.3051,
+      "kind": "day"
     },
     {
       "date": "2025-02-26",
-      "close": 89.9547,
-      "kind": "c"
+      "close": 89.9619,
+      "kind": "day"
     },
     {
       "date": "2025-02-27",
-      "close": 87.9305,
-      "kind": "c"
+      "close": 87.9378,
+      "kind": "day"
     },
     {
       "date": "2025-02-28",
@@ -6983,153 +6949,153 @@
     },
     {
       "date": "2025-03-01",
-      "close": 87.9637,
-      "kind": "c"
+      "close": 87.9654,
+      "kind": "day"
     },
     {
       "date": "2025-03-02",
-      "close": 88.0501,
-      "kind": "c"
+      "close": 88.0534,
+      "kind": "day"
     },
     {
       "date": "2025-03-03",
-      "close": 88.3919,
-      "kind": "c"
+      "close": 88.3968,
+      "kind": "day"
     },
     {
       "date": "2025-03-04",
-      "close": 86.8346,
-      "kind": "c"
+      "close": 86.841,
+      "kind": "day"
     },
     {
       "date": "2025-03-05",
-      "close": 89.1862,
-      "kind": "c"
+      "close": 89.1944,
+      "kind": "day"
     },
     {
       "date": "2025-03-06",
-      "close": 90.237,
-      "kind": "c"
+      "close": 90.2469,
+      "kind": "day"
     },
     {
       "date": "2025-03-07",
-      "close": 90.8038,
-      "kind": "c"
+      "close": 90.8155,
+      "kind": "day"
     },
     {
       "date": "2025-03-08",
-      "close": 90.8038,
-      "kind": "c"
+      "close": 90.8155,
+      "kind": "day"
     },
     {
       "date": "2025-03-09",
-      "close": 90.8476,
-      "kind": "c"
+      "close": 90.8609,
+      "kind": "day"
     },
     {
       "date": "2025-03-10",
-      "close": 92.6901,
-      "kind": "c"
+      "close": 92.7054,
+      "kind": "day"
     },
     {
       "date": "2025-03-11",
-      "close": 89.6945,
-      "kind": "c"
+      "close": 89.711,
+      "kind": "day"
     },
     {
       "date": "2025-03-12",
-      "close": 89.5045,
-      "kind": "c"
+      "close": 89.5225,
+      "kind": "day"
     },
     {
       "date": "2025-03-13",
-      "close": 88.9837,
-      "kind": "c"
+      "close": 89.0033,
+      "kind": "day"
     },
     {
       "date": "2025-03-14",
-      "close": 88.6795,
-      "kind": "c"
+      "close": 88.7007,
+      "kind": "day"
     },
     {
       "date": "2025-03-15",
-      "close": 88.6795,
-      "kind": "c"
+      "close": 88.7007,
+      "kind": "day"
     },
     {
       "date": "2025-03-16",
-      "close": 88.6795,
-      "kind": "c"
+      "close": 88.7007,
+      "kind": "day"
     },
     {
       "date": "2025-03-17",
-      "close": 89.6623,
-      "kind": "c"
+      "close": 89.6853,
+      "kind": "day"
     },
     {
       "date": "2025-03-18",
-      "close": 90.378,
-      "kind": "c"
+      "close": 90.4028,
+      "kind": "day"
     },
     {
       "date": "2025-03-19",
-      "close": 89.0297,
-      "kind": "c"
+      "close": 89.0557,
+      "kind": "day"
     },
     {
       "date": "2025-03-20",
-      "close": 87.0249,
-      "kind": "c"
+      "close": 87.0519,
+      "kind": "day"
     },
     {
       "date": "2025-03-21",
-      "close": 88.0762,
-      "kind": "c"
+      "close": 88.1052,
+      "kind": "day"
     },
     {
       "date": "2025-03-22",
-      "close": 88.0762,
-      "kind": "c"
+      "close": 88.1052,
+      "kind": "day"
     },
     {
       "date": "2025-03-23",
-      "close": 88.1186,
-      "kind": "c"
+      "close": 88.1493,
+      "kind": "day"
     },
     {
       "date": "2025-03-24",
-      "close": 89.0158,
-      "kind": "c"
+      "close": 89.0484,
+      "kind": "day"
     },
     {
       "date": "2025-03-25",
-      "close": 89.664,
-      "kind": "c"
+      "close": 89.6984,
+      "kind": "day"
     },
     {
       "date": "2025-03-26",
-      "close": 88.8015,
-      "kind": "c"
+      "close": 88.8373,
+      "kind": "day"
     },
     {
       "date": "2025-03-27",
-      "close": 88.8798,
-      "kind": "c"
+      "close": 88.9173,
+      "kind": "day"
     },
     {
       "date": "2025-03-28",
-      "close": 88.2027,
-      "kind": "c"
+      "close": 88.2415,
+      "kind": "day"
     },
     {
       "date": "2025-03-29",
-      "close": 88.2027,
-      "kind": "c"
+      "close": 88.2415,
+      "kind": "day"
     },
     {
       "date": "2025-03-30",
-      "close": 88.1835,
-      "kind": "c"
+      "close": 88.2238,
+      "kind": "day"
     },
     {
       "date": "2025-03-31",
@@ -7138,148 +7104,148 @@
     },
     {
       "date": "2025-04-01",
-      "close": 85.8611,
-      "kind": "c"
+      "close": 85.8636,
+      "kind": "day"
     },
     {
       "date": "2025-04-02",
-      "close": 85.9702,
-      "kind": "c"
+      "close": 85.9753,
+      "kind": "day"
     },
     {
       "date": "2025-04-03",
-      "close": 83.0447,
-      "kind": "c"
+      "close": 83.0521,
+      "kind": "day"
     },
     {
       "date": "2025-04-04",
-      "close": 78.8819,
-      "kind": "c"
+      "close": 78.8912,
+      "kind": "day"
     },
     {
       "date": "2025-04-05",
-      "close": 78.8819,
-      "kind": "c"
+      "close": 78.8912,
+      "kind": "day"
     },
     {
       "date": "2025-04-06",
-      "close": 78.8819,
-      "kind": "c"
+      "close": 78.8912,
+      "kind": "day"
     },
     {
       "date": "2025-04-07",
-      "close": 78.6981,
-      "kind": "c"
+      "close": 78.7097,
+      "kind": "day"
     },
     {
       "date": "2025-04-08",
-      "close": 78.082,
-      "kind": "c"
+      "close": 78.0958,
+      "kind": "day"
     },
     {
       "date": "2025-04-09",
-      "close": 77.5409,
-      "kind": "c"
+      "close": 77.5569,
+      "kind": "day"
     },
     {
       "date": "2025-04-10",
-      "close": 78.2597,
-      "kind": "c"
+      "close": 78.2782,
+      "kind": "day"
     },
     {
       "date": "2025-04-11",
-      "close": 80.5739,
-      "kind": "c"
+      "close": 80.5953,
+      "kind": "day"
     },
     {
       "date": "2025-04-12",
-      "close": 80.5739,
-      "kind": "c"
+      "close": 80.5953,
+      "kind": "day"
     },
     {
       "date": "2025-04-13",
-      "close": 80.5635,
-      "kind": "c"
+      "close": 80.5873,
+      "kind": "day"
     },
     {
       "date": "2025-04-14",
-      "close": 82.8168,
-      "kind": "c"
+      "close": 82.8437,
+      "kind": "day"
     },
     {
       "date": "2025-04-15",
-      "close": 82.9717,
-      "kind": "c"
+      "close": 83.0011,
+      "kind": "day"
     },
     {
       "date": "2025-04-16",
-      "close": 82.878,
-      "kind": "c"
+      "close": 82.9098,
+      "kind": "day"
     },
     {
       "date": "2025-04-17",
-      "close": 82.801,
-      "kind": "c"
+      "close": 82.8352,
+      "kind": "day"
     },
     {
       "date": "2025-04-18",
-      "close": 82.8482,
-      "kind": "c"
+      "close": 82.8848,
+      "kind": "day"
     },
     {
       "date": "2025-04-19",
-      "close": 82.8482,
-      "kind": "c"
+      "close": 82.8848,
+      "kind": "day"
     },
     {
       "date": "2025-04-20",
-      "close": 82.9534,
-      "kind": "c"
+      "close": 82.9926,
+      "kind": "day"
     },
     {
       "date": "2025-04-21",
-      "close": 82.6524,
-      "kind": "c"
+      "close": 82.6938,
+      "kind": "day"
     },
     {
       "date": "2025-04-22",
-      "close": 82.7574,
-      "kind": "c"
+      "close": 82.8014,
+      "kind": "day"
     },
     {
       "date": "2025-04-23",
-      "close": 84.079,
-      "kind": "c"
+      "close": 84.1262,
+      "kind": "day"
     },
     {
       "date": "2025-04-24",
-      "close": 84.4885,
-      "kind": "c"
+      "close": 84.5384,
+      "kind": "day"
     },
     {
       "date": "2025-04-25",
-      "close": 84.6297,
-      "kind": "c"
+      "close": 84.6821,
+      "kind": "day"
     },
     {
       "date": "2025-04-26",
-      "close": 84.6297,
-      "kind": "c"
+      "close": 84.6821,
+      "kind": "day"
     },
     {
       "date": "2025-04-27",
-      "close": 84.6018,
-      "kind": "c"
+      "close": 84.6567,
+      "kind": "day"
     },
     {
       "date": "2025-04-28",
-      "close": 84.76,
-      "kind": "c"
+      "close": 84.8176,
+      "kind": "day"
     },
     {
       "date": "2025-04-29",
-      "close": 85.5712,
-      "kind": "c"
+      "close": 85.6318,
+      "kind": "day"
     },
     {
       "date": "2025-04-30",
@@ -7288,153 +7254,153 @@
     },
     {
       "date": "2025-05-01",
-      "close": 85.2416,
-      "kind": "c"
+      "close": 85.2439,
+      "kind": "day"
     },
     {
       "date": "2025-05-02",
-      "close": 85.4524,
-      "kind": "c"
+      "close": 85.457,
+      "kind": "day"
     },
     {
       "date": "2025-05-03",
-      "close": 85.4524,
-      "kind": "c"
+      "close": 85.457,
+      "kind": "day"
     },
     {
       "date": "2025-05-04",
-      "close": 85.5014,
-      "kind": "c"
+      "close": 85.5082,
+      "kind": "day"
     },
     {
       "date": "2025-05-05",
-      "close": 85.1827,
-      "kind": "c"
+      "close": 85.1918,
+      "kind": "day"
     },
     {
       "date": "2025-05-06",
-      "close": 84.6694,
-      "kind": "c"
+      "close": 84.6807,
+      "kind": "day"
     },
     {
       "date": "2025-05-07",
-      "close": 83.7865,
-      "kind": "c"
+      "close": 83.8,
+      "kind": "day"
     },
     {
       "date": "2025-05-08",
-      "close": 84.4964,
-      "kind": "c"
+      "close": 84.5122,
+      "kind": "day"
     },
     {
       "date": "2025-05-09",
-      "close": 84.8744,
-      "kind": "c"
+      "close": 84.8925,
+      "kind": "day"
     },
     {
       "date": "2025-05-10",
-      "close": 84.8744,
-      "kind": "c"
+      "close": 84.8925,
+      "kind": "day"
     },
     {
       "date": "2025-05-11",
-      "close": 84.8212,
-      "kind": "c"
+      "close": 84.8416,
+      "kind": "day"
     },
     {
       "date": "2025-05-12",
-      "close": 88.9157,
-      "kind": "c"
+      "close": 88.9395,
+      "kind": "day"
     },
     {
       "date": "2025-05-13",
-      "close": 89.0733,
-      "kind": "c"
+      "close": 89.0995,
+      "kind": "day"
     },
     {
       "date": "2025-05-14",
-      "close": 90.1398,
-      "kind": "c"
+      "close": 90.1687,
+      "kind": "day"
     },
     {
       "date": "2025-05-15",
-      "close": 89.5876,
-      "kind": "c"
+      "close": 89.6187,
+      "kind": "day"
     },
     {
       "date": "2025-05-16",
-      "close": 89.9435,
-      "kind": "c"
+      "close": 89.9772,
+      "kind": "day"
     },
     {
       "date": "2025-05-17",
-      "close": 89.9435,
-      "kind": "c"
+      "close": 89.9772,
+      "kind": "day"
     },
     {
       "date": "2025-05-18",
-      "close": 90.049,
-      "kind": "c"
+      "close": 90.0851,
+      "kind": "day"
     },
     {
       "date": "2025-05-19",
-      "close": 91.2623,
-      "kind": "c"
+      "close": 91.3013,
+      "kind": "day"
     },
     {
       "date": "2025-05-20",
-      "close": 91.9717,
-      "kind": "c"
+      "close": 92.0135,
+      "kind": "day"
     },
     {
       "date": "2025-05-21",
-      "close": 91.0495,
-      "kind": "c"
+      "close": 91.0933,
+      "kind": "day"
     },
     {
       "date": "2025-05-22",
-      "close": 90.6647,
-      "kind": "c"
+      "close": 90.7107,
+      "kind": "day"
     },
     {
       "date": "2025-05-23",
-      "close": 91.6233,
-      "kind": "c"
+      "close": 91.6723,
+      "kind": "day"
     },
     {
       "date": "2025-05-24",
-      "close": 91.6233,
-      "kind": "c"
+      "close": 91.6723,
+      "kind": "day"
     },
     {
       "date": "2025-05-25",
-      "close": 91.6392,
-      "kind": "c"
+      "close": 91.6906,
+      "kind": "day"
     },
     {
       "date": "2025-05-26",
-      "close": 91.6459,
-      "kind": "c"
+      "close": 91.6997,
+      "kind": "day"
     },
     {
       "date": "2025-05-27",
-      "close": 91.5335,
-      "kind": "c"
+      "close": 91.5897,
+      "kind": "day"
     },
     {
       "date": "2025-05-28",
-      "close": 90.0665,
-      "kind": "c"
+      "close": 90.1242,
+      "kind": "day"
     },
     {
       "date": "2025-05-29",
-      "close": 90.6045,
-      "kind": "c"
+      "close": 90.665,
+      "kind": "day"
     },
     {
       "date": "2025-05-30",
-      "close": 89.9497,
-      "kind": "c"
+      "close": 90.0122,
+      "kind": "day"
     },
     {
       "date": "2025-05-31",
@@ -7443,148 +7409,148 @@
     },
     {
       "date": "2025-06-01",
-      "close": 89.9851,
-      "kind": "c"
+      "close": 89.9857,
+      "kind": "day"
     },
     {
       "date": "2025-06-02",
-      "close": 90.0295,
-      "kind": "c"
+      "close": 90.0307,
+      "kind": "day"
     },
     {
       "date": "2025-06-03",
-      "close": 90.164,
-      "kind": "c"
+      "close": 90.1657,
+      "kind": "day"
     },
     {
       "date": "2025-06-04",
-      "close": 90.0642,
-      "kind": "c"
+      "close": 90.0665,
+      "kind": "day"
     },
     {
       "date": "2025-06-05",
-      "close": 89.9826,
-      "kind": "c"
+      "close": 89.9855,
+      "kind": "day"
     },
     {
       "date": "2025-06-06",
-      "close": 92.0246,
-      "kind": "c"
+      "close": 92.0282,
+      "kind": "day"
     },
     {
       "date": "2025-06-07",
-      "close": 92.0246,
-      "kind": "c"
+      "close": 92.0282,
+      "kind": "day"
     },
     {
       "date": "2025-06-08",
-      "close": 92.0516,
-      "kind": "c"
+      "close": 92.0557,
+      "kind": "day"
     },
     {
       "date": "2025-06-09",
-      "close": 92.5573,
-      "kind": "c"
+      "close": 92.5621,
+      "kind": "day"
     },
     {
       "date": "2025-06-10",
-      "close": 92.9177,
-      "kind": "c"
+      "close": 92.923,
+      "kind": "day"
     },
     {
       "date": "2025-06-11",
-      "close": 93.4746,
-      "kind": "c"
+      "close": 93.4806,
+      "kind": "day"
     },
     {
       "date": "2025-06-12",
-      "close": 93.1749,
-      "kind": "c"
+      "close": 93.1814,
+      "kind": "day"
     },
     {
       "date": "2025-06-13",
-      "close": 93.0904,
-      "kind": "c"
+      "close": 93.0976,
+      "kind": "day"
     },
     {
       "date": "2025-06-14",
-      "close": 93.0904,
-      "kind": "c"
+      "close": 93.0976,
+      "kind": "day"
     },
     {
       "date": "2025-06-15",
-      "close": 93.0805,
-      "kind": "c"
+      "close": 93.0882,
+      "kind": "day"
     },
     {
       "date": "2025-06-16",
-      "close": 93.0054,
-      "kind": "c"
+      "close": 93.0137,
+      "kind": "day"
     },
     {
       "date": "2025-06-17",
-      "close": 91.2563,
-      "kind": "c"
+      "close": 91.2651,
+      "kind": "day"
     },
     {
       "date": "2025-06-18",
-      "close": 90.8725,
-      "kind": "c"
+      "close": 90.8818,
+      "kind": "day"
     },
     {
       "date": "2025-06-19",
-      "close": 90.3539,
-      "kind": "c"
+      "close": 90.3637,
+      "kind": "day"
     },
     {
       "date": "2025-06-20",
-      "close": 90.1184,
-      "kind": "c"
+      "close": 90.1288,
+      "kind": "day"
     },
     {
       "date": "2025-06-21",
-      "close": 90.1184,
-      "kind": "c"
+      "close": 90.1288,
+      "kind": "day"
     },
     {
       "date": "2025-06-22",
-      "close": 90.0818,
-      "kind": "c"
+      "close": 90.0928,
+      "kind": "day"
     },
     {
       "date": "2025-06-23",
-      "close": 90.5046,
-      "kind": "c"
+      "close": 90.5162,
+      "kind": "day"
     },
     {
       "date": "2025-06-24",
-      "close": 90.8027,
-      "kind": "c"
+      "close": 90.8149,
+      "kind": "day"
     },
     {
       "date": "2025-06-25",
-      "close": 89.7398,
-      "kind": "c"
+      "close": 89.7524,
+      "kind": "day"
     },
     {
       "date": "2025-06-26",
-      "close": 90.6725,
-      "kind": "c"
+      "close": 90.6858,
+      "kind": "day"
     },
     {
       "date": "2025-06-27",
-      "close": 91.3791,
-      "kind": "c"
+      "close": 91.3932,
+      "kind": "day"
     },
     {
       "date": "2025-06-28",
-      "close": 91.3791,
-      "kind": "c"
+      "close": 91.3932,
+      "kind": "day"
     },
     {
       "date": "2025-06-29",
-      "close": 91.4059,
-      "kind": "c"
+      "close": 91.4205,
+      "kind": "day"
     },
     {
       "date": "2025-06-30",
@@ -7593,153 +7559,153 @@
     },
     {
       "date": "2025-07-01",
-      "close": 91.5036,
-      "kind": "c"
+      "close": 91.5029,
+      "kind": "day"
     },
     {
       "date": "2025-07-02",
-      "close": 93.8011,
-      "kind": "c"
+      "close": 93.7997,
+      "kind": "day"
     },
     {
       "date": "2025-07-03",
-      "close": 93.9237,
-      "kind": "c"
+      "close": 93.9217,
+      "kind": "day"
     },
     {
       "date": "2025-07-04",
-      "close": 93.4548,
-      "kind": "c"
+      "close": 93.452,
+      "kind": "day"
     },
     {
       "date": "2025-07-05",
-      "close": 93.4548,
-      "kind": "c"
+      "close": 93.452,
+      "kind": "day"
     },
     {
       "date": "2025-07-06",
-      "close": 93.4548,
-      "kind": "c"
+      "close": 93.452,
+      "kind": "day"
     },
     {
       "date": "2025-07-07",
-      "close": 93.1097,
-      "kind": "c"
+      "close": 93.1063,
+      "kind": "day"
     },
     {
       "date": "2025-07-08",
-      "close": 95.1774,
-      "kind": "c"
+      "close": 95.1732,
+      "kind": "day"
     },
     {
       "date": "2025-07-09",
-      "close": 95.3684,
-      "kind": "c"
+      "close": 95.3636,
+      "kind": "day"
     },
     {
       "date": "2025-07-10",
-      "close": 97.0476,
-      "kind": "c"
+      "close": 97.042,
+      "kind": "day"
     },
     {
       "date": "2025-07-11",
-      "close": 96.4369,
-      "kind": "c"
+      "close": 96.4306,
+      "kind": "day"
     },
     {
       "date": "2025-07-12",
-      "close": 96.4369,
-      "kind": "c"
+      "close": 96.4306,
+      "kind": "day"
     },
     {
       "date": "2025-07-13",
-      "close": 96.4369,
-      "kind": "c"
+      "close": 96.4306,
+      "kind": "day"
     },
     {
       "date": "2025-07-14",
-      "close": 95.8012,
-      "kind": "c"
+      "close": 95.7942,
+      "kind": "day"
     },
     {
       "date": "2025-07-15",
-      "close": 95.3325,
-      "kind": "c"
+      "close": 95.3249,
+      "kind": "day"
     },
     {
       "date": "2025-07-16",
-      "close": 96.1721,
-      "kind": "c"
+      "close": 96.1637,
+      "kind": "day"
     },
     {
       "date": "2025-07-17",
-      "close": 96.7306,
-      "kind": "c"
+      "close": 96.7215,
+      "kind": "day"
     },
     {
       "date": "2025-07-18",
-      "close": 96.6829,
-      "kind": "c"
+      "close": 96.6731,
+      "kind": "day"
     },
     {
       "date": "2025-07-19",
-      "close": 96.6829,
-      "kind": "c"
+      "close": 96.6731,
+      "kind": "day"
     },
     {
       "date": "2025-07-20",
-      "close": 96.6933,
-      "kind": "c"
+      "close": 96.6827,
+      "kind": "day"
     },
     {
       "date": "2025-07-21",
-      "close": 97.1098,
-      "kind": "c"
+      "close": 97.0985,
+      "kind": "day"
     },
     {
       "date": "2025-07-22",
-      "close": 98.4215,
-      "kind": "c"
+      "close": 98.4094,
+      "kind": "day"
     },
     {
       "date": "2025-07-23",
-      "close": 101.2962,
-      "kind": "c"
+      "close": 101.283,
+      "kind": "day"
     },
     {
       "date": "2025-07-24",
-      "close": 101.0234,
-      "kind": "c"
+      "close": 101.0095,
+      "kind": "day"
     },
     {
       "date": "2025-07-25",
-      "close": 101.802,
-      "kind": "c"
+      "close": 101.7872,
+      "kind": "day"
     },
     {
       "date": "2025-07-26",
-      "close": 101.802,
-      "kind": "c"
+      "close": 101.7872,
+      "kind": "day"
     },
     {
       "date": "2025-07-27",
-      "close": 101.8435,
-      "kind": "c"
+      "close": 101.8279,
+      "kind": "day"
     },
     {
       "date": "2025-07-28",
-      "close": 99.624,
-      "kind": "c"
+      "close": 99.6081,
+      "kind": "day"
     },
     {
       "date": "2025-07-29",
-      "close": 99.3558,
-      "kind": "c"
+      "close": 99.3392,
+      "kind": "day"
     },
     {
       "date": "2025-07-30",
-      "close": 97.7469,
-      "kind": "c"
+      "close": 97.7299,
+      "kind": "day"
     },
     {
       "date": "2025-07-31",
@@ -7748,153 +7714,153 @@
     },
     {
       "date": "2025-08-01",
-      "close": 92.9041,
-      "kind": "c"
+      "close": 92.9037,
+      "kind": "day"
     },
     {
       "date": "2025-08-02",
-      "close": 92.9041,
-      "kind": "c"
+      "close": 92.9037,
+      "kind": "day"
     },
     {
       "date": "2025-08-03",
-      "close": 92.9041,
-      "kind": "c"
+      "close": 92.9037,
+      "kind": "day"
     },
     {
       "date": "2025-08-04",
-      "close": 93.88,
-      "kind": "c"
+      "close": 93.8792,
+      "kind": "day"
     },
     {
       "date": "2025-08-05",
-      "close": 95.5608,
-      "kind": "c"
+      "close": 95.5596,
+      "kind": "day"
     },
     {
       "date": "2025-08-06",
-      "close": 96.8895,
-      "kind": "c"
+      "close": 96.8879,
+      "kind": "day"
     },
     {
       "date": "2025-08-07",
-      "close": 97.5875,
-      "kind": "c"
+      "close": 97.5855,
+      "kind": "day"
     },
     {
       "date": "2025-08-08",
-      "close": 97.3928,
-      "kind": "c"
+      "close": 97.3903,
+      "kind": "day"
     },
     {
       "date": "2025-08-09",
-      "close": 97.3928,
-      "kind": "c"
+      "close": 97.3903,
+      "kind": "day"
     },
     {
       "date": "2025-08-10",
-      "close": 97.4127,
-      "kind": "c"
+      "close": 97.4098,
+      "kind": "day"
     },
     {
       "date": "2025-08-11",
-      "close": 96.6338,
-      "kind": "c"
+      "close": 96.6305,
+      "kind": "day"
     },
     {
       "date": "2025-08-12",
-      "close": 98.7022,
-      "kind": "c"
+      "close": 98.6984,
+      "kind": "day"
     },
     {
       "date": "2025-08-13",
-      "close": 100.5089,
-      "kind": "c"
+      "close": 100.5046,
+      "kind": "day"
     },
     {
       "date": "2025-08-14",
-      "close": 98.2679,
-      "kind": "c"
+      "close": 98.2633,
+      "kind": "day"
     },
     {
       "date": "2025-08-15",
-      "close": 99.3689,
-      "kind": "c"
+      "close": 99.3638,
+      "kind": "day"
     },
     {
       "date": "2025-08-16",
-      "close": 99.3689,
-      "kind": "c"
+      "close": 99.3638,
+      "kind": "day"
     },
     {
       "date": "2025-08-17",
-      "close": 99.3689,
-      "kind": "c"
+      "close": 99.3638,
+      "kind": "day"
     },
     {
       "date": "2025-08-18",
-      "close": 99.0315,
-      "kind": "c"
+      "close": 99.026,
+      "kind": "day"
     },
     {
       "date": "2025-08-19",
-      "close": 99.0315,
-      "kind": "c"
+      "close": 99.026,
+      "kind": "day"
     },
     {
       "date": "2025-08-20",
-      "close": 98.8735,
-      "kind": "c"
+      "close": 98.8676,
+      "kind": "day"
     },
     {
       "date": "2025-08-21",
-      "close": 98.7453,
-      "kind": "c"
+      "close": 98.739,
+      "kind": "day"
     },
     {
       "date": "2025-08-22",
-      "close": 99.8319,
-      "kind": "c"
+      "close": 99.8251,
+      "kind": "day"
     },
     {
       "date": "2025-08-23",
-      "close": 99.8319,
-      "kind": "c"
+      "close": 99.8251,
+      "kind": "day"
     },
     {
       "date": "2025-08-24",
-      "close": 99.8124,
-      "kind": "c"
+      "close": 99.8052,
+      "kind": "day"
     },
     {
       "date": "2025-08-25",
-      "close": 98.7648,
-      "kind": "c"
+      "close": 98.7572,
+      "kind": "day"
     },
     {
       "date": "2025-08-26",
-      "close": 98.5282,
-      "kind": "c"
+      "close": 98.5202,
+      "kind": "day"
     },
     {
       "date": "2025-08-27",
-      "close": 98.1936,
-      "kind": "c"
+      "close": 98.1853,
+      "kind": "day"
     },
     {
       "date": "2025-08-28",
-      "close": 98.2726,
-      "kind": "c"
+      "close": 98.2639,
+      "kind": "day"
     },
     {
       "date": "2025-08-29",
-      "close": 97.251,
-      "kind": "c"
+      "close": 97.2419,
+      "kind": "day"
     },
     {
       "date": "2025-08-30",
-      "close": 97.251,
-      "kind": "c"
+      "close": 97.2419,
+      "kind": "day"
     },
     {
       "date": "2025-08-31",
@@ -7903,148 +7869,148 @@
     },
     {
       "date": "2025-09-01",
-      "close": 97.8159,
-      "kind": "c"
+      "close": 97.8154,
+      "kind": "day"
     },
     {
       "date": "2025-09-02",
-      "close": 96.8088,
-      "kind": "c"
+      "close": 96.8079,
+      "kind": "day"
     },
     {
       "date": "2025-09-03",
-      "close": 96.4994,
-      "kind": "c"
+      "close": 96.4981,
+      "kind": "day"
     },
     {
       "date": "2025-09-04",
-      "close": 97.5035,
-      "kind": "c"
+      "close": 97.5017,
+      "kind": "day"
     },
     {
       "date": "2025-09-05",
-      "close": 97.8744,
-      "kind": "c"
+      "close": 97.8722,
+      "kind": "day"
     },
     {
       "date": "2025-09-06",
-      "close": 97.8744,
-      "kind": "c"
+      "close": 97.8722,
+      "kind": "day"
     },
     {
       "date": "2025-09-07",
-      "close": 97.865,
-      "kind": "c"
+      "close": 97.8624,
+      "kind": "day"
     },
     {
       "date": "2025-09-08",
-      "close": 95.9669,
-      "kind": "c"
+      "close": 95.9638,
+      "kind": "day"
     },
     {
       "date": "2025-09-09",
-      "close": 94.9308,
-      "kind": "c"
+      "close": 94.9274,
+      "kind": "day"
     },
     {
       "date": "2025-09-10",
-      "close": 94.8174,
-      "kind": "c"
+      "close": 94.8135,
+      "kind": "day"
     },
     {
       "date": "2025-09-11",
-      "close": 96.1073,
-      "kind": "c"
+      "close": 96.103,
+      "kind": "day"
     },
     {
       "date": "2025-09-12",
-      "close": 95.089,
-      "kind": "c"
+      "close": 95.0843,
+      "kind": "day"
     },
     {
       "date": "2025-09-13",
-      "close": 95.089,
-      "kind": "c"
+      "close": 95.0843,
+      "kind": "day"
     },
     {
       "date": "2025-09-14",
-      "close": 95.0705,
-      "kind": "c"
+      "close": 95.0653,
+      "kind": "day"
     },
     {
       "date": "2025-09-15",
-      "close": 95.4036,
-      "kind": "c"
+      "close": 95.398,
+      "kind": "day"
     },
     {
       "date": "2025-09-16",
-      "close": 96.5203,
-      "kind": "c"
+      "close": 96.5142,
+      "kind": "day"
     },
     {
       "date": "2025-09-17",
-      "close": 96.2988,
-      "kind": "c"
+      "close": 96.2923,
+      "kind": "day"
     },
     {
       "date": "2025-09-18",
-      "close": 95.5384,
-      "kind": "c"
+      "close": 95.5316,
+      "kind": "day"
     },
     {
       "date": "2025-09-19",
-      "close": 93.886,
-      "kind": "c"
+      "close": 93.8789,
+      "kind": "day"
     },
     {
       "date": "2025-09-20",
-      "close": 93.886,
-      "kind": "c"
+      "close": 93.8789,
+      "kind": "day"
     },
     {
       "date": "2025-09-21",
-      "close": 93.8677,
-      "kind": "c"
+      "close": 93.8601,
+      "kind": "day"
     },
     {
       "date": "2025-09-22",
-      "close": 95.0227,
-      "kind": "c"
+      "close": 95.0146,
+      "kind": "day"
     },
     {
       "date": "2025-09-23",
-      "close": 96.1349,
-      "kind": "c"
+      "close": 96.1263,
+      "kind": "day"
     },
     {
       "date": "2025-09-24",
-      "close": 96.27,
-      "kind": "c"
+      "close": 96.2609,
+      "kind": "day"
     },
     {
       "date": "2025-09-25",
-      "close": 94.8745,
-      "kind": "c"
+      "close": 94.8651,
+      "kind": "day"
     },
     {
       "date": "2025-09-26",
-      "close": 94.5049,
-      "kind": "c"
+      "close": 94.4951,
+      "kind": "day"
     },
     {
       "date": "2025-09-27",
-      "close": 94.5049,
-      "kind": "c"
+      "close": 94.4951,
+      "kind": "day"
     },
     {
       "date": "2025-09-28",
-      "close": 94.5049,
-      "kind": "c"
+      "close": 94.4951,
+      "kind": "day"
     },
     {
       "date": "2025-09-29",
-      "close": 94.2502,
-      "kind": "c"
+      "close": 94.24,
+      "kind": "day"
     },
     {
       "date": "2025-09-30",
@@ -8053,153 +8019,153 @@
     },
     {
       "date": "2025-10-01",
-      "close": 95.0453,
-      "kind": "c"
+      "close": 95.0449,
+      "kind": "day"
     },
     {
       "date": "2025-10-02",
-      "close": 95.4543,
-      "kind": "c"
+      "close": 95.4536,
+      "kind": "day"
     },
     {
       "date": "2025-10-03",
-      "close": 95.8078,
-      "kind": "c"
+      "close": 95.8067,
+      "kind": "day"
     },
     {
       "date": "2025-10-04",
-      "close": 95.8078,
-      "kind": "c"
+      "close": 95.8067,
+      "kind": "day"
     },
     {
       "date": "2025-10-05",
-      "close": 95.7411,
-      "kind": "c"
+      "close": 95.7396,
+      "kind": "day"
     },
     {
       "date": "2025-10-06",
-      "close": 94.8607,
-      "kind": "c"
+      "close": 94.8589,
+      "kind": "day"
     },
     {
       "date": "2025-10-07",
-      "close": 94.0074,
-      "kind": "c"
+      "close": 94.0052,
+      "kind": "day"
     },
     {
       "date": "2025-10-08",
-      "close": 92.6916,
-      "kind": "c"
+      "close": 92.6891,
+      "kind": "day"
     },
     {
       "date": "2025-10-09",
-      "close": 91.9505,
-      "kind": "c"
+      "close": 91.9476,
+      "kind": "day"
     },
     {
       "date": "2025-10-10",
-      "close": 90.4888,
-      "kind": "c"
+      "close": 90.4856,
+      "kind": "day"
     },
     {
       "date": "2025-10-11",
-      "close": 90.4888,
-      "kind": "c"
+      "close": 90.4856,
+      "kind": "day"
     },
     {
       "date": "2025-10-12",
-      "close": 90.471,
-      "kind": "c"
+      "close": 90.4675,
+      "kind": "day"
     },
     {
       "date": "2025-10-13",
-      "close": 92.4074,
-      "kind": "c"
+      "close": 92.4035,
+      "kind": "day"
     },
     {
       "date": "2025-10-14",
-      "close": 92.1953,
-      "kind": "c"
+      "close": 92.191,
+      "kind": "day"
     },
     {
       "date": "2025-10-15",
-      "close": 93.4034,
-      "kind": "c"
+      "close": 93.3987,
+      "kind": "day"
     },
     {
       "date": "2025-10-16",
-      "close": 93.1795,
-      "kind": "c"
+      "close": 93.1745,
+      "kind": "day"
     },
     {
       "date": "2025-10-17",
-      "close": 92.9096,
-      "kind": "c"
+      "close": 92.9042,
+      "kind": "day"
     },
     {
       "date": "2025-10-18",
-      "close": 92.9096,
-      "kind": "c"
+      "close": 92.9042,
+      "kind": "day"
     },
     {
       "date": "2025-10-19",
-      "close": 92.9007,
-      "kind": "c"
+      "close": 92.895,
+      "kind": "day"
     },
     {
       "date": "2025-10-20",
-      "close": 94.2017,
-      "kind": "c"
+      "close": 94.1955,
+      "kind": "day"
     },
     {
       "date": "2025-10-21",
-      "close": 94.3151,
-      "kind": "c"
+      "close": 94.3085,
+      "kind": "day"
     },
     {
       "date": "2025-10-22",
-      "close": 92.8913,
-      "kind": "c"
+      "close": 92.8845,
+      "kind": "day"
     },
     {
       "date": "2025-10-23",
-      "close": 93.7834,
-      "kind": "c"
+      "close": 93.7761,
+      "kind": "day"
     },
     {
       "date": "2025-10-24",
-      "close": 94.7872,
-      "kind": "c"
+      "close": 94.7795,
+      "kind": "day"
     },
     {
       "date": "2025-10-25",
-      "close": 94.7872,
-      "kind": "c"
+      "close": 94.7795,
+      "kind": "day"
     },
     {
       "date": "2025-10-26",
-      "close": 94.7781,
-      "kind": "c"
+      "close": 94.7701,
+      "kind": "day"
     },
     {
       "date": "2025-10-27",
-      "close": 97.5935,
-      "kind": "c"
+      "close": 97.5848,
+      "kind": "day"
     },
     {
       "date": "2025-10-28",
-      "close": 98.0525,
-      "kind": "c"
+      "close": 98.0434,
+      "kind": "day"
     },
     {
       "date": "2025-10-29",
-      "close": 98.2491,
-      "kind": "c"
+      "close": 98.2395,
+      "kind": "day"
     },
     {
       "date": "2025-10-30",
-      "close": 98.0333,
-      "kind": "c"
+      "close": 98.0234,
+      "kind": "day"
     },
     {
       "date": "2025-10-31",
@@ -8209,147 +8175,147 @@
     {
       "date": "2025-11-01",
       "close": 98.7297,
-      "kind": "c"
+      "kind": "day"
     },
     {
       "date": "2025-11-02",
-      "close": 98.7202,
-      "kind": "c"
+      "close": 98.7199,
+      "kind": "day"
     },
     {
       "date": "2025-11-03",
-      "close": 97.4372,
-      "kind": "c"
+      "close": 97.4365,
+      "kind": "day"
     },
     {
       "date": "2025-11-04",
-      "close": 95.3134,
-      "kind": "c"
+      "close": 95.3124,
+      "kind": "day"
     },
     {
       "date": "2025-11-05",
-      "close": 97.5156,
-      "kind": "c"
+      "close": 97.5142,
+      "kind": "day"
     },
     {
       "date": "2025-11-06",
-      "close": 96.1994,
-      "kind": "c"
+      "close": 96.1977,
+      "kind": "day"
     },
     {
       "date": "2025-11-07",
-      "close": 96.8828,
-      "kind": "c"
+      "close": 96.8807,
+      "kind": "day"
     },
     {
       "date": "2025-11-08",
-      "close": 96.8828,
-      "kind": "c"
+      "close": 96.8807,
+      "kind": "day"
     },
     {
       "date": "2025-11-09",
-      "close": 96.8346,
-      "kind": "c"
+      "close": 96.8322,
+      "kind": "day"
     },
     {
       "date": "2025-11-10",
-      "close": 97.1932,
-      "kind": "c"
+      "close": 97.1904,
+      "kind": "day"
     },
     {
       "date": "2025-11-11",
-      "close": 97.6892,
-      "kind": "c"
+      "close": 97.6861,
+      "kind": "day"
     },
     {
       "date": "2025-11-12",
-      "close": 98.0998,
-      "kind": "c"
+      "close": 98.0963,
+      "kind": "day"
     },
     {
       "date": "2025-11-13",
-      "close": 96.0892,
-      "kind": "c"
+      "close": 96.0854,
+      "kind": "day"
     },
     {
       "date": "2025-11-14",
-      "close": 96.4834,
-      "kind": "c"
+      "close": 96.4793,
+      "kind": "day"
     },
     {
       "date": "2025-11-15",
-      "close": 96.4834,
-      "kind": "c"
+      "close": 96.4793,
+      "kind": "day"
     },
     {
       "date": "2025-11-16",
-      "close": 96.4645,
-      "kind": "c"
+      "close": 96.46,
+      "kind": "day"
     },
     {
       "date": "2025-11-17",
-      "close": 94.96,
-      "kind": "c"
+      "close": 94.9552,
+      "kind": "day"
     },
     {
       "date": "2025-11-18",
-      "close": 94.3905,
-      "kind": "c"
+      "close": 94.3855,
+      "kind": "day"
     },
     {
       "date": "2025-11-19",
-      "close": 94.1455,
-      "kind": "c"
+      "close": 94.1401,
+      "kind": "day"
     },
     {
       "date": "2025-11-20",
-      "close": 91.8675,
-      "kind": "c"
+      "close": 91.8619,
+      "kind": "day"
     },
     {
       "date": "2025-11-21",
-      "close": 92.5385,
-      "kind": "c"
+      "close": 92.5325,
+      "kind": "day"
     },
     {
       "date": "2025-11-22",
-      "close": 92.5385,
-      "kind": "c"
+      "close": 92.5325,
+      "kind": "day"
     },
     {
       "date": "2025-11-23",
-      "close": 92.5203,
-      "kind": "c"
+      "close": 92.514,
+      "kind": "day"
     },
     {
       "date": "2025-11-24",
-      "close": 93.0295,
-      "kind": "c"
+      "close": 93.0228,
+      "kind": "day"
     },
     {
       "date": "2025-11-25",
-      "close": 93.8206,
-      "kind": "c"
+      "close": 93.8135,
+      "kind": "day"
     },
     {
       "date": "2025-11-26",
-      "close": 94.7872,
-      "kind": "c"
+      "close": 94.7798,
+      "kind": "day"
     },
     {
       "date": "2025-11-27",
-      "close": 95.1478,
-      "kind": "c"
+      "close": 95.1399,
+      "kind": "day"
     },
     {
       "date": "2025-11-28",
-      "close": 95.9949,
-      "kind": "c"
+      "close": 95.9866,
+      "kind": "day"
     },
     {
       "date": "2025-11-29",
-      "close": 95.9949,
-      "kind": "c"
+      "close": 95.9866,
+      "kind": "day"
     },
     {
       "date": "2025-11-30",
@@ -8358,153 +8324,153 @@
     },
     {
       "date": "2025-12-01",
-      "close": 96.072,
-      "kind": "c"
+      "close": 96.0717,
+      "kind": "day"
     },
     {
       "date": "2025-12-02",
-      "close": 96.1011,
-      "kind": "c"
+      "close": 96.1005,
+      "kind": "day"
     },
     {
       "date": "2025-12-03",
-      "close": 97.1008,
-      "kind": "c"
+      "close": 97.1,
+      "kind": "day"
     },
     {
       "date": "2025-12-04",
-      "close": 98.7421,
-      "kind": "c"
+      "close": 98.741,
+      "kind": "day"
     },
     {
       "date": "2025-12-05",
-      "close": 99.5027,
-      "kind": "c"
+      "close": 99.5013,
+      "kind": "day"
     },
     {
       "date": "2025-12-06",
-      "close": 99.5027,
-      "kind": "c"
+      "close": 99.5013,
+      "kind": "day"
     },
     {
       "date": "2025-12-07",
-      "close": 99.493,
-      "kind": "c"
+      "close": 99.4914,
+      "kind": "day"
     },
     {
       "date": "2025-12-08",
-      "close": 99.563,
-      "kind": "c"
+      "close": 99.561,
+      "kind": "day"
     },
     {
       "date": "2025-12-09",
-      "close": 99.7723,
-      "kind": "c"
+      "close": 99.7701,
+      "kind": "day"
     },
     {
       "date": "2025-12-10",
-      "close": 100.8302,
-      "kind": "c"
+      "close": 100.8276,
+      "kind": "day"
     },
     {
       "date": "2025-12-11",
-      "close": 102.2017,
-      "kind": "c"
+      "close": 102.1989,
+      "kind": "day"
     },
     {
       "date": "2025-12-12",
-      "close": 101.4253,
-      "kind": "c"
+      "close": 101.4222,
+      "kind": "day"
     },
     {
       "date": "2025-12-13",
-      "close": 101.4253,
-      "kind": "c"
+      "close": 101.4222,
+      "kind": "day"
     },
     {
       "date": "2025-12-14",
-      "close": 101.4154,
-      "kind": "c"
+      "close": 101.412,
+      "kind": "day"
     },
     {
       "date": "2025-12-15",
-      "close": 101.1723,
-      "kind": "c"
+      "close": 101.1686,
+      "kind": "day"
     },
     {
       "date": "2025-12-16",
-      "close": 99.7055,
-      "kind": "c"
+      "close": 99.7017,
+      "kind": "day"
     },
     {
       "date": "2025-12-17",
-      "close": 98.5892,
-      "kind": "c"
+      "close": 98.5851,
+      "kind": "day"
     },
     {
       "date": "2025-12-18",
-      "close": 99.2007,
-      "kind": "c"
+      "close": 99.1963,
+      "kind": "day"
     },
     {
       "date": "2025-12-19",
-      "close": 99.9251,
-      "kind": "c"
+      "close": 99.9204,
+      "kind": "day"
     },
     {
       "date": "2025-12-20",
-      "close": 99.9251,
-      "kind": "c"
+      "close": 99.9204,
+      "kind": "day"
     },
     {
       "date": "2025-12-21",
-      "close": 99.9251,
-      "kind": "c"
+      "close": 99.9204,
+      "kind": "day"
     },
     {
       "date": "2025-12-22",
-      "close": 100.4649,
-      "kind": "c"
+      "close": 100.4599,
+      "kind": "day"
     },
     {
       "date": "2025-12-23",
-      "close": 99.762,
-      "kind": "c"
+      "close": 99.7567,
+      "kind": "day"
     },
     {
       "date": "2025-12-24",
-      "close": 100.271,
-      "kind": "c"
+      "close": 100.2655,
+      "kind": "day"
     },
     {
       "date": "2025-12-25",
-      "close": 100.2913,
-      "kind": "c"
+      "close": 100.2855,
+      "kind": "day"
     },
     {
       "date": "2025-12-26",
-      "close": 99.75,
-      "kind": "c"
+      "close": 99.7439,
+      "kind": "day"
     },
     {
       "date": "2025-12-27",
-      "close": 99.75,
-      "kind": "c"
+      "close": 99.7439,
+      "kind": "day"
     },
     {
       "date": "2025-12-28",
-      "close": 99.75,
-      "kind": "c"
+      "close": 99.7439,
+      "kind": "day"
     },
     {
       "date": "2025-12-29",
-      "close": 100.1892,
-      "kind": "c"
+      "close": 100.1828,
+      "kind": "day"
     },
     {
       "date": "2025-12-30",
-      "close": 99.6685,
-      "kind": "c"
+      "close": 99.6619,
+      "kind": "day"
     },
     {
       "date": "2025-12-31",
@@ -8513,153 +8479,153 @@
     },
     {
       "date": "2026-01-01",
-      "close": 99.2308,
-      "kind": "c"
+      "close": 99.2302,
+      "kind": "day"
     },
     {
       "date": "2026-01-02",
-      "close": 100.9481,
-      "kind": "c"
+      "close": 100.9469,
+      "kind": "day"
     },
     {
       "date": "2026-01-03",
-      "close": 100.9481,
-      "kind": "c"
+      "close": 100.9469,
+      "kind": "day"
     },
     {
       "date": "2026-01-04",
-      "close": 100.9083,
-      "kind": "c"
+      "close": 100.9065,
+      "kind": "day"
     },
     {
       "date": "2026-01-05",
-      "close": 102.251,
-      "kind": "c"
+      "close": 102.2486,
+      "kind": "day"
     },
     {
       "date": "2026-01-06",
-      "close": 103.5604,
-      "kind": "c"
+      "close": 103.5574,
+      "kind": "day"
     },
     {
       "date": "2026-01-07",
-      "close": 103.0121,
-      "kind": "c"
+      "close": 103.0085,
+      "kind": "day"
     },
     {
       "date": "2026-01-08",
-      "close": 101.8384,
-      "kind": "c"
+      "close": 101.8342,
+      "kind": "day"
     },
     {
       "date": "2026-01-09",
-      "close": 102.1546,
-      "kind": "c"
+      "close": 102.1499,
+      "kind": "day"
     },
     {
       "date": "2026-01-10",
-      "close": 102.1546,
-      "kind": "c"
+      "close": 102.1499,
+      "kind": "day"
     },
     {
       "date": "2026-01-11",
-      "close": 102.1246,
-      "kind": "c"
+      "close": 102.1192,
+      "kind": "day"
     },
     {
       "date": "2026-01-12",
-      "close": 103.2485,
-      "kind": "c"
+      "close": 103.2425,
+      "kind": "day"
     },
     {
       "date": "2026-01-13",
-      "close": 103.7035,
-      "kind": "c"
+      "close": 103.6968,
+      "kind": "day"
     },
     {
       "date": "2026-01-14",
-      "close": 104.907,
-      "kind": "c"
+      "close": 104.8996,
+      "kind": "day"
     },
     {
       "date": "2026-01-15",
-      "close": 103.0717,
-      "kind": "c"
+      "close": 103.0639,
+      "kind": "day"
     },
     {
       "date": "2026-01-16",
-      "close": 103.1754,
-      "kind": "c"
+      "close": 103.1669,
+      "kind": "day"
     },
     {
       "date": "2026-01-17",
-      "close": 103.1754,
-      "kind": "c"
+      "close": 103.1669,
+      "kind": "day"
     },
     {
       "date": "2026-01-18",
-      "close": 103.2276,
-      "kind": "c"
+      "close": 103.2186,
+      "kind": "day"
     },
     {
       "date": "2026-01-19",
-      "close": 102.103,
-      "kind": "c"
+      "close": 102.0935,
+      "kind": "day"
     },
     {
       "date": "2026-01-20",
-      "close": 102.0525,
-      "kind": "c"
+      "close": 102.0424,
+      "kind": "day"
     },
     {
       "date": "2026-01-21",
-      "close": 105.9414,
-      "kind": "c"
+      "close": 105.9303,
+      "kind": "day"
     },
     {
       "date": "2026-01-22",
-      "close": 106.4082,
-      "kind": "c"
+      "close": 106.3964,
+      "kind": "day"
     },
     {
       "date": "2026-01-23",
-      "close": 105.4086,
-      "kind": "c"
+      "close": 105.3963,
+      "kind": "day"
     },
     {
       "date": "2026-01-24",
-      "close": 105.4086,
-      "kind": "c"
+      "close": 105.3963,
+      "kind": "day"
     },
     {
       "date": "2026-01-25",
-      "close": 105.483,
-      "kind": "c"
+      "close": 105.4701,
+      "kind": "day"
     },
     {
       "date": "2026-01-26",
-      "close": 106.0954,
-      "kind": "c"
+      "close": 106.0818,
+      "kind": "day"
     },
     {
       "date": "2026-01-27",
-      "close": 107.5284,
-      "kind": "c"
+      "close": 107.5139,
+      "kind": "day"
     },
     {
       "date": "2026-01-28",
-      "close": 107.5935,
-      "kind": "c"
+      "close": 107.5784,
+      "kind": "day"
     },
     {
       "date": "2026-01-29",
-      "close": 109.434,
-      "kind": "c"
+      "close": 109.418,
+      "kind": "day"
     },
     {
       "date": "2026-01-30",
-      "close": 108.8546,
-      "kind": "c"
+      "close": 108.8381,
+      "kind": "day"
     },
     {
       "date": "2026-01-31",
@@ -8668,138 +8634,138 @@
     },
     {
       "date": "2026-02-01",
-      "close": 108.8445,
-      "kind": "c"
+      "close": 108.8437,
+      "kind": "day"
     },
     {
       "date": "2026-02-02",
-      "close": 109.346,
-      "kind": "c"
+      "close": 109.3444,
+      "kind": "day"
     },
     {
       "date": "2026-02-03",
-      "close": 108.5267,
-      "kind": "c"
+      "close": 108.5243,
+      "kind": "day"
     },
     {
       "date": "2026-02-04",
-      "close": 109.8407,
-      "kind": "c"
+      "close": 109.8375,
+      "kind": "day"
     },
     {
       "date": "2026-02-05",
-      "close": 106.8208,
-      "kind": "c"
+      "close": 106.8169,
+      "kind": "day"
     },
     {
       "date": "2026-02-06",
-      "close": 108.0073,
-      "kind": "c"
+      "close": 108.0026,
+      "kind": "day"
     },
     {
       "date": "2026-02-07",
-      "close": 108.0073,
-      "kind": "c"
+      "close": 108.0026,
+      "kind": "day"
     },
     {
       "date": "2026-02-08",
-      "close": 108.0189,
-      "kind": "c"
+      "close": 108.0134,
+      "kind": "day"
     },
     {
       "date": "2026-02-09",
-      "close": 109.0783,
-      "kind": "c"
+      "close": 109.0719,
+      "kind": "day"
     },
     {
       "date": "2026-02-10",
-      "close": 108.8718,
-      "kind": "c"
+      "close": 108.8646,
+      "kind": "day"
     },
     {
       "date": "2026-02-11",
-      "close": 109.9287,
-      "kind": "c"
+      "close": 109.9206,
+      "kind": "day"
     },
     {
       "date": "2026-02-12",
-      "close": 107.2032,
-      "kind": "c"
+      "close": 107.1945,
+      "kind": "day"
     },
     {
       "date": "2026-02-13",
-      "close": 109.8948,
-      "kind": "c"
+      "close": 109.8851,
+      "kind": "day"
     },
     {
       "date": "2026-02-14",
-      "close": 109.8948,
-      "kind": "c"
+      "close": 109.8851,
+      "kind": "day"
     },
     {
       "date": "2026-02-15",
-      "close": 109.8846,
-      "kind": "c"
+      "close": 109.8741,
+      "kind": "day"
     },
     {
       "date": "2026-02-16",
-      "close": 108.6987,
-      "kind": "c"
+      "close": 108.6875,
+      "kind": "day"
     },
     {
       "date": "2026-02-17",
-      "close": 109.7539,
-      "kind": "c"
+      "close": 109.7418,
+      "kind": "day"
     },
     {
       "date": "2026-02-18",
-      "close": 112.2461,
-      "kind": "c"
+      "close": 112.2329,
+      "kind": "day"
     },
     {
       "date": "2026-02-19",
-      "close": 113.7398,
-      "kind": "c"
+      "close": 113.7255,
+      "kind": "day"
     },
     {
       "date": "2026-02-20",
-      "close": 114.3775,
-      "kind": "c"
+      "close": 114.3624,
+      "kind": "day"
     },
     {
       "date": "2026-02-21",
-      "close": 114.3775,
-      "kind": "c"
+      "close": 114.3624,
+      "kind": "day"
     },
     {
       "date": "2026-02-22",
-      "close": 114.4927,
-      "kind": "c"
+      "close": 114.4767,
+      "kind": "day"
     },
     {
       "date": "2026-02-23",
-      "close": 112.5815,
-      "kind": "c"
+      "close": 112.565,
+      "kind": "day"
     },
     {
       "date": "2026-02-24",
-      "close": 114.3386,
-      "kind": "c"
+      "close": 114.3209,
+      "kind": "day"
     },
     {
       "date": "2026-02-25",
-      "close": 113.6306,
-      "kind": "c"
+      "close": 113.6122,
+      "kind": "day"
     },
     {
       "date": "2026-02-26",
-      "close": 113.2109,
-      "kind": "c"
+      "close": 113.1918,
+      "kind": "day"
     },
     {
       "date": "2026-02-27",
-      "close": 114.8307,
-      "kind": "c"
+      "close": 114.8104,
+      "kind": "day"
     },
     {
       "date": "2026-02-28",
@@ -8808,153 +8774,153 @@
     },
     {
       "date": "2026-03-01",
-      "close": 114.6816,
-      "kind": "c"
+      "close": 114.6814,
+      "kind": "day"
     },
     {
       "date": "2026-03-02",
-      "close": 114.8768,
-      "kind": "c"
+      "close": 114.8764,
+      "kind": "day"
     },
     {
       "date": "2026-03-03",
-      "close": 114.1878,
-      "kind": "c"
+      "close": 114.1872,
+      "kind": "day"
     },
     {
       "date": "2026-03-04",
-      "close": 115.0901,
-      "kind": "c"
+      "close": 115.0893,
+      "kind": "day"
     },
     {
       "date": "2026-03-05",
-      "close": 113.2373,
-      "kind": "c"
+      "close": 113.2363,
+      "kind": "day"
     },
     {
       "date": "2026-03-06",
-      "close": 113.3281,
-      "kind": "c"
+      "close": 113.3269,
+      "kind": "day"
     },
     {
       "date": "2026-03-07",
-      "close": 113.3281,
-      "kind": "c"
+      "close": 113.3269,
+      "kind": "day"
     },
     {
       "date": "2026-03-08",
-      "close": 113.079,
-      "kind": "c"
+      "close": 113.0776,
+      "kind": "day"
     },
     {
       "date": "2026-03-09",
-      "close": 113.0453,
-      "kind": "c"
+      "close": 113.0437,
+      "kind": "day"
     },
     {
       "date": "2026-03-10",
-      "close": 112.2316,
-      "kind": "c"
+      "close": 112.2298,
+      "kind": "day"
     },
     {
       "date": "2026-03-11",
-      "close": 113.2867,
-      "kind": "c"
+      "close": 113.2847,
+      "kind": "day"
     },
     {
       "date": "2026-03-12",
-      "close": 111.4857,
-      "kind": "c"
+      "close": 111.4834,
+      "kind": "day"
     },
     {
       "date": "2026-03-13",
-      "close": 112.3778,
-      "kind": "c"
+      "close": 112.3753,
+      "kind": "day"
     },
     {
       "date": "2026-03-14",
-      "close": 112.3778,
-      "kind": "c"
+      "close": 112.3753,
+      "kind": "day"
     },
     {
       "date": "2026-03-15",
-      "close": 112.4342,
-      "kind": "c"
+      "close": 112.4316,
+      "kind": "day"
     },
     {
       "date": "2026-03-16",
-      "close": 113.3114,
-      "kind": "c"
+      "close": 113.3086,
+      "kind": "day"
     },
     {
       "date": "2026-03-17",
-      "close": 115.5212,
-      "kind": "c"
+      "close": 115.518,
+      "kind": "day"
     },
     {
       "date": "2026-03-18",
-      "close": 115.7987,
-      "kind": "c"
+      "close": 115.7953,
+      "kind": "day"
     },
     {
       "date": "2026-03-19",
-      "close": 116.4358,
-      "kind": "c"
+      "close": 116.4322,
+      "kind": "day"
     },
     {
       "date": "2026-03-20",
-      "close": 113.4436,
-      "kind": "c"
+      "close": 113.4399,
+      "kind": "day"
     },
     {
       "date": "2026-03-21",
-      "close": 113.4436,
-      "kind": "c"
+      "close": 113.4399,
+      "kind": "day"
     },
     {
       "date": "2026-03-22",
-      "close": 113.4436,
-      "kind": "c"
+      "close": 113.4399,
+      "kind": "day"
     },
     {
       "date": "2026-03-23",
-      "close": 113.1489,
-      "kind": "c"
+      "close": 113.1449,
+      "kind": "day"
     },
     {
       "date": "2026-03-24",
-      "close": 114.1221,
-      "kind": "c"
+      "close": 114.118,
+      "kind": "day"
     },
     {
       "date": "2026-03-25",
-      "close": 114.4533,
-      "kind": "c"
+      "close": 114.4489,
+      "kind": "day"
     },
     {
       "date": "2026-03-26",
-      "close": 113.412,
-      "kind": "c"
+      "close": 113.4074,
+      "kind": "day"
     },
     {
       "date": "2026-03-27",
-      "close": 110.4861,
-      "kind": "c"
+      "close": 110.4815,
+      "kind": "day"
     },
     {
       "date": "2026-03-28",
-      "close": 110.4861,
-      "kind": "c"
+      "close": 110.4815,
+      "kind": "day"
     },
     {
       "date": "2026-03-29",
-      "close": 110.431,
-      "kind": "c"
+      "close": 110.4262,
+      "kind": "day"
     },
     {
       "date": "2026-03-30",
-      "close": 110.9171,
-      "kind": "c"
+      "close": 110.9121,
+      "kind": "day"
     },
     {
       "date": "2026-03-31",
@@ -8963,148 +8929,148 @@
     },
     {
       "date": "2026-04-01",
-      "close": 112.4841,
-      "kind": "c"
+      "close": 112.4842,
+      "kind": "day"
     },
     {
       "date": "2026-04-02",
-      "close": 112.0453,
-      "kind": "c"
+      "close": 112.0455,
+      "kind": "day"
     },
     {
       "date": "2026-04-03",
-      "close": 111.9892,
-      "kind": "c"
+      "close": 111.9895,
+      "kind": "day"
     },
     {
       "date": "2026-04-04",
-      "close": 111.9892,
-      "kind": "c"
+      "close": 111.9895,
+      "kind": "day"
     },
     {
       "date": "2026-04-05",
-      "close": 111.9667,
-      "kind": "c"
+      "close": 111.967,
+      "kind": "day"
     },
     {
       "date": "2026-04-06",
-      "close": 111.3508,
-      "kind": "c"
+      "close": 111.3513,
+      "kind": "day"
     },
     {
       "date": "2026-04-07",
-      "close": 111.863,
-      "kind": "c"
+      "close": 111.8635,
+      "kind": "day"
     },
     {
       "date": "2026-04-08",
-      "close": 113.6303,
-      "kind": "c"
+      "close": 113.6309,
+      "kind": "day"
     },
     {
       "date": "2026-04-09",
-      "close": 113.2894,
-      "kind": "c"
+      "close": 113.29,
+      "kind": "day"
     },
     {
       "date": "2026-04-10",
-      "close": 113.2327,
-      "kind": "c"
+      "close": 113.2334,
+      "kind": "day"
     },
     {
       "date": "2026-04-11",
-      "close": 113.2327,
-      "kind": "c"
+      "close": 113.2334,
+      "kind": "day"
     },
     {
       "date": "2026-04-12",
-      "close": 113.0967,
-      "kind": "c"
+      "close": 113.0976,
+      "kind": "day"
     },
     {
       "date": "2026-04-13",
-      "close": 113.7639,
-      "kind": "c"
+      "close": 113.7648,
+      "kind": "day"
     },
     {
       "date": "2026-04-14",
-      "close": 113.3315,
-      "kind": "c"
+      "close": 113.3325,
+      "kind": "day"
     },
     {
       "date": "2026-04-15",
-      "close": 113.9207,
-      "kind": "c"
+      "close": 113.9219,
+      "kind": "day"
     },
     {
       "date": "2026-04-16",
-      "close": 113.9435,
-      "kind": "c"
+      "close": 113.9447,
+      "kind": "day"
     },
     {
       "date": "2026-04-17",
-      "close": 114.0687,
-      "kind": "c"
+      "close": 114.07,
+      "kind": "day"
     },
     {
       "date": "2026-04-18",
-      "close": 114.0687,
-      "kind": "c"
+      "close": 114.07,
+      "kind": "day"
     },
     {
       "date": "2026-04-19",
-      "close": 114.0115,
-      "kind": "c"
+      "close": 114.0129,
+      "kind": "day"
     },
     {
       "date": "2026-04-20",
-      "close": 113.8747,
-      "kind": "c"
+      "close": 113.8761,
+      "kind": "day"
     },
     {
       "date": "2026-04-21",
-      "close": 113.829,
-      "kind": "c"
+      "close": 113.8306,
+      "kind": "day"
     },
     {
       "date": "2026-04-22",
-      "close": 113.2712,
-      "kind": "c"
+      "close": 113.2729,
+      "kind": "day"
     },
     {
       "date": "2026-04-23",
-      "close": 112.3423,
-      "kind": "c"
+      "close": 112.344,
+      "kind": "day"
     },
     {
       "date": "2026-04-24",
-      "close": 110.7581,
-      "kind": "c"
+      "close": 110.7599,
+      "kind": "day"
     },
     {
       "date": "2026-04-25",
-      "close": 110.7581,
-      "kind": "c"
+      "close": 110.7599,
+      "kind": "day"
     },
     {
       "date": "2026-04-26",
-      "close": 110.7248,
-      "kind": "c"
+      "close": 110.7267,
+      "kind": "day"
     },
     {
       "date": "2026-04-27",
-      "close": 110.603,
-      "kind": "c"
+      "close": 110.6049,
+      "kind": "day"
     },
     {
       "date": "2026-04-28",
-      "close": 110.0278,
-      "kind": "c"
+      "close": 110.0298,
+      "kind": "day"
     },
     {
       "date": "2026-04-29",
-      "close": 109.3785,
-      "kind": "c"
+      "close": 109.3806,
+      "kind": "day"
     },
     {
       "date": "2026-04-30",
@@ -9113,153 +9079,153 @@
     },
     {
       "date": "2026-05-01",
-      "close": 109.7879,
-      "kind": "c"
+      "close": 109.7881,
+      "kind": "day"
     },
     {
       "date": "2026-05-02",
-      "close": 109.7879,
-      "kind": "c"
+      "close": 109.7881,
+      "kind": "day"
     },
     {
       "date": "2026-05-03",
-      "close": 109.8097,
-      "kind": "c"
+      "close": 109.81,
+      "kind": "day"
     },
     {
       "date": "2026-05-04",
-      "close": 110.3805,
-      "kind": "c"
+      "close": 110.381,
+      "kind": "day"
     },
     {
       "date": "2026-05-05",
-      "close": 111.0756,
-      "kind": "c"
+      "close": 111.0764,
+      "kind": "day"
     },
     {
       "date": "2026-05-06",
-      "close": 112.2084,
-      "kind": "c"
+      "close": 112.2093,
+      "kind": "day"
     },
     {
       "date": "2026-05-07",
-      "close": 109.9079,
-      "kind": "c"
+      "close": 109.909,
+      "kind": "day"
     },
     {
       "date": "2026-05-08",
-      "close": 109.545,
-      "kind": "c"
+      "close": 109.5463,
+      "kind": "day"
     },
     {
       "date": "2026-05-09",
-      "close": 109.545,
-      "kind": "c"
+      "close": 109.5463,
+      "kind": "day"
     },
     {
       "date": "2026-05-10",
-      "close": 109.5119,
-      "kind": "c"
+      "close": 109.5135,
+      "kind": "day"
     },
     {
       "date": "2026-05-11",
-      "close": 109.9826,
-      "kind": "c"
+      "close": 109.9843,
+      "kind": "day"
     },
     {
       "date": "2026-05-12",
-      "close": 110.3674,
-      "kind": "c"
+      "close": 110.3693,
+      "kind": "day"
     },
     {
       "date": "2026-05-13",
-      "close": 109.5836,
-      "kind": "c"
+      "close": 109.5857,
+      "kind": "day"
     },
     {
       "date": "2026-05-14",
-      "close": 108.5753,
-      "kind": "c"
+      "close": 108.5775,
+      "kind": "day"
     },
     {
       "date": "2026-05-15",
-      "close": 107.3265,
-      "kind": "c"
+      "close": 107.3289,
+      "kind": "day"
     },
     {
       "date": "2026-05-16",
-      "close": 107.3265,
-      "kind": "c"
+      "close": 107.3289,
+      "kind": "day"
     },
     {
       "date": "2026-05-17",
-      "close": 107.3156,
-      "kind": "c"
+      "close": 107.3182,
+      "kind": "day"
     },
     {
       "date": "2026-05-18",
-      "close": 108.453,
-      "kind": "c"
+      "close": 108.4558,
+      "kind": "day"
     },
     {
       "date": "2026-05-19",
-      "close": 108.3118,
-      "kind": "c"
+      "close": 108.3149,
+      "kind": "day"
     },
     {
       "date": "2026-05-20",
-      "close": 109.6547,
-      "kind": "c"
+      "close": 109.658,
+      "kind": "day"
     },
     {
       "date": "2026-05-21",
-      "close": 110.466,
-      "kind": "c"
+      "close": 110.4694,
+      "kind": "day"
     },
     {
       "date": "2026-05-22",
-      "close": 109.582,
-      "kind": "c"
+      "close": 109.5856,
+      "kind": "day"
     },
     {
       "date": "2026-05-23",
-      "close": 109.582,
-      "kind": "c"
+      "close": 109.5856,
+      "kind": "day"
     },
     {
       "date": "2026-05-24",
-      "close": 109.6694,
-      "kind": "c"
+      "close": 109.6733,
+      "kind": "day"
     },
     {
       "date": "2026-05-25",
-      "close": 110.0969,
-      "kind": "c"
+      "close": 110.101,
+      "kind": "day"
     },
     {
       "date": "2026-05-26",
-      "close": 110.3169,
-      "kind": "c"
+      "close": 110.3212,
+      "kind": "day"
     },
     {
       "date": "2026-05-27",
-      "close": 112.126,
-      "kind": "c"
+      "close": 112.1305,
+      "kind": "day"
     },
     {
       "date": "2026-05-28",
-      "close": 112.0249,
-      "kind": "c"
+      "close": 112.0296,
+      "kind": "day"
     },
     {
       "date": "2026-05-29",
-      "close": 112.4168,
-      "kind": "c"
+      "close": 112.4217,
+      "kind": "day"
     },
     {
       "date": "2026-05-30",
-      "close": 112.4168,
-      "kind": "c"
+      "close": 112.4217,
+      "kind": "day"
     },
     {
       "date": "2026-05-31",
@@ -9268,148 +9234,148 @@
     },
     {
       "date": "2026-06-01",
-      "close": 113.0118,
-      "kind": "c"
+      "close": 113.0123,
+      "kind": "day"
     },
     {
       "date": "2026-06-02",
-      "close": 112.2089,
-      "kind": "c"
+      "close": 112.2099,
+      "kind": "day"
     },
     {
       "date": "2026-06-03",
-      "close": 112.7133,
-      "kind": "c"
+      "close": 112.7149,
+      "kind": "day"
     },
     {
       "date": "2026-06-04",
-      "close": 114.0766,
-      "kind": "c"
+      "close": 114.0787,
+      "kind": "day"
     },
     {
       "date": "2026-06-05",
-      "close": 112.1824,
-      "kind": "c"
+      "close": 112.185,
+      "kind": "day"
     },
     {
       "date": "2026-06-06",
-      "close": 112.1824,
-      "kind": "c"
+      "close": 112.185,
+      "kind": "day"
     },
     {
       "date": "2026-06-07",
-      "close": 112.1824,
-      "kind": "c"
+      "close": 112.185,
+      "kind": "day"
     },
     {
       "date": "2026-06-08",
-      "close": 112.698,
-      "kind": "c"
+      "close": 112.7011,
+      "kind": "day"
     },
     {
       "date": "2026-06-09",
-      "close": 112.4834,
-      "kind": "c"
+      "close": 112.487,
+      "kind": "day"
     },
     {
       "date": "2026-06-10",
-      "close": 112.6178,
-      "kind": "c"
+      "close": 112.622,
+      "kind": "day"
     },
     {
       "date": "2026-06-11",
-      "close": 115.185,
-      "kind": "c"
+      "close": 115.1898,
+      "kind": "day"
     },
     {
       "date": "2026-06-12",
-      "close": 114.4703,
-      "kind": "c"
+      "close": 114.4756,
+      "kind": "day"
     },
     {
       "date": "2026-06-13",
-      "close": 114.4703,
-      "kind": "c"
+      "close": 114.4756,
+      "kind": "day"
     },
     {
       "date": "2026-06-14",
-      "close": 114.4927,
-      "kind": "c"
+      "close": 114.4985,
+      "kind": "day"
     },
     {
       "date": "2026-06-15",
-      "close": 113.6335,
-      "kind": "c"
+      "close": 113.6398,
+      "kind": "day"
     },
     {
       "date": "2026-06-16",
-      "close": 113.7807,
-      "kind": "c"
+      "close": 113.7875,
+      "kind": "day"
     },
     {
       "date": "2026-06-17",
-      "close": 113.9736,
-      "kind": "c"
+      "close": 113.981,
+      "kind": "day"
     },
     {
       "date": "2026-06-18",
-      "close": 113.426,
-      "kind": "c"
+      "close": 113.4339,
+      "kind": "day"
     },
     {
       "date": "2026-06-19",
-      "close": 113.5616,
-      "kind": "c"
+      "close": 113.57,
+      "kind": "day"
     },
     {
       "date": "2026-06-20",
-      "close": 113.5616,
-      "kind": "c"
+      "close": 113.57,
+      "kind": "day"
     },
     {
       "date": "2026-06-21",
-      "close": 113.5497,
-      "kind": "c"
+      "close": 113.5586,
+      "kind": "day"
     },
     {
       "date": "2026-06-22",
-      "close": 111.369,
-      "kind": "c"
+      "close": 111.3783,
+      "kind": "day"
     },
     {
       "date": "2026-06-23",
-      "close": 112.3263,
-      "kind": "c"
+      "close": 112.3361,
+      "kind": "day"
     },
     {
       "date": "2026-06-24",
-      "close": 111.6293,
-      "kind": "c"
+      "close": 111.6396,
+      "kind": "day"
     },
     {
       "date": "2026-06-25",
-      "close": 111.4391,
-      "kind": "c"
+      "close": 111.4499,
+      "kind": "day"
     },
     {
       "date": "2026-06-26",
-      "close": 114.1354,
-      "kind": "c"
+      "close": 114.147,
+      "kind": "day"
     },
     {
       "date": "2026-06-27",
-      "close": 114.1354,
-      "kind": "c"
+      "close": 114.147,
+      "kind": "day"
     },
     {
       "date": "2026-06-28",
-      "close": 114.1354,
-      "kind": "c"
+      "close": 114.147,
+      "kind": "day"
     },
     {
       "date": "2026-06-29",
-      "close": 113.9636,
-      "kind": "c"
+      "close": 113.9757,
+      "kind": "day"
     },
     {
       "date": "2026-06-30",
@@ -9418,153 +9384,153 @@
     },
     {
       "date": "2026-07-01",
-      "close": 114.4598,
-      "kind": "c"
+      "close": 114.4602,
+      "kind": "day"
     },
     {
       "date": "2026-07-02",
-      "close": 116.8516,
-      "kind": "c"
+      "close": 116.8525,
+      "kind": "day"
     },
     {
       "date": "2026-07-03",
-      "close": 116.8862,
-      "kind": "c"
+      "close": 116.8875,
+      "kind": "day"
     },
     {
       "date": "2026-07-04",
-      "close": 116.8862,
-      "kind": "c"
+      "close": 116.8875,
+      "kind": "day"
     },
     {
       "date": "2026-07-05",
-      "close": 116.8862,
-      "kind": "c"
+      "close": 116.8875,
+      "kind": "day"
     },
     {
       "date": "2026-07-06",
-      "close": 117.1662,
-      "kind": "c"
+      "close": 117.168,
+      "kind": "day"
     },
     {
       "date": "2026-07-07",
-      "close": 116.4979,
-      "kind": "c"
+      "close": 116.5001,
+      "kind": "day"
     },
     {
       "date": "2026-07-08",
-      "close": 114.8432,
-      "kind": "c"
+      "close": 114.8458,
+      "kind": "day"
     },
     {
       "date": "2026-07-09",
-      "close": 115.7155,
-      "kind": "c"
+      "close": 115.7186,
+      "kind": "day"
     },
     {
       "date": "2026-07-10",
-      "close": 113.8752,
-      "kind": "c"
+      "close": 113.8786,
+      "kind": "day"
     },
     {
       "date": "2026-07-11",
-      "close": 113.8752,
-      "kind": "c"
+      "close": 113.8786,
+      "kind": "day"
     },
     {
       "date": "2026-07-12",
-      "close": 113.8752,
-      "kind": "c"
+      "close": 113.8786,
+      "kind": "day"
     },
     {
       "date": "2026-07-13",
-      "close": 113.6356,
-      "kind": "c"
+      "close": 113.6394,
+      "kind": "day"
     },
     {
       "date": "2026-07-14",
-      "close": 113.5215,
-      "kind": "c"
+      "close": 113.5258,
+      "kind": "day"
     },
     {
       "date": "2026-07-15",
-      "close": 114.293,
-      "kind": "c"
+      "close": 114.2978,
+      "kind": "day"
     },
     {
       "date": "2026-07-16",
-      "close": 112.5439,
-      "kind": "c"
+      "close": 112.5491,
+      "kind": "day"
     },
     {
       "date": "2026-07-17",
-      "close": 112.3522,
-      "kind": "c"
+      "close": 112.3577,
+      "kind": "day"
     },
     {
       "date": "2026-07-18",
-      "close": 112.3522,
-      "kind": "c"
+      "close": 112.3577,
+      "kind": "day"
     },
     {
       "date": "2026-07-19",
-      "close": 112.3522,
-      "kind": "c"
+      "close": 112.3577,
+      "kind": "day"
     },
     {
       "date": "2026-07-20",
-      "close": 111.3967,
-      "kind": "c"
+      "close": 111.4027,
+      "kind": "day"
     },
     {
       "date": "2026-07-21",
-      "close": 111.8419,
-      "kind": "c"
+      "close": 111.8483,
+      "kind": "day"
     },
     {
       "date": "2026-07-22",
-      "close": 111.5059,
-      "kind": "c"
+      "close": 111.5127,
+      "kind": "day"
     },
     {
       "date": "2026-07-23",
-      "close": 110.5466,
-      "kind": "c"
+      "close": 110.5537,
+      "kind": "day"
     },
     {
       "date": "2026-07-24",
-      "close": 110.0708,
-      "kind": "c"
+      "close": 110.0784,
+      "kind": "day"
     },
     {
       "date": "2026-07-25",
-      "close": 110.0708,
-      "kind": "c"
+      "close": 110.0784,
+      "kind": "day"
     },
     {
       "date": "2026-07-26",
-      "close": 110.0814,
-      "kind": "c"
+      "close": 110.0893,
+      "kind": "day"
     },
     {
       "date": "2026-07-27",
-      "close": 111.1818,
-      "kind": "c"
+      "close": 111.1902,
+      "kind": "day"
     },
     {
       "date": "2026-07-28",
-      "close": 111.8707,
-      "kind": "c"
+      "close": 111.8796,
+      "kind": "day"
     },
     {
       "date": "2026-07-29",
-      "close": 111.2326,
-      "kind": "c"
+      "close": 111.2418,
+      "kind": "day"
     },
     {
       "date": "2026-07-30",
-      "close": 112.8562,
-      "kind": "c"
+      "close": 112.866,
+      "kind": "day"
     },
     {
       "date": "2026-07-31",
@@ -9574,152 +9540,152 @@
     {
       "date": "2026-08-01",
       "close": 112.0319,
-      "kind": "c"
+      "kind": "day"
     },
     {
       "date": "2026-08-02",
       "close": 112.0319,
-      "kind": "c"
+      "kind": "day"
     },
     {
       "date": "2026-08-03",
-      "close": 113.3768,
-      "kind": "c"
+      "close": 113.3763,
+      "kind": "day"
     },
     {
       "date": "2026-08-04",
-      "close": 113.9216,
-      "kind": "c"
+      "close": 113.9205,
+      "kind": "day"
     },
     {
       "date": "2026-08-05",
-      "close": 113.8879,
-      "kind": "c"
+      "close": 113.8864,
+      "kind": "day"
     },
     {
       "date": "2026-08-06",
-      "close": 113.6493,
-      "kind": "c"
+      "close": 113.6472,
+      "kind": "day"
     },
     {
       "date": "2026-08-07",
-      "close": 116.0365,
-      "kind": "c"
+      "close": 116.0338,
+      "kind": "day"
     },
     {
       "date": "2026-08-08",
-      "close": 116.0365,
-      "kind": "c"
+      "close": 116.0338,
+      "kind": "day"
     },
     {
       "date": "2026-08-09",
-      "close": 116.0365,
-      "kind": "c"
+      "close": 116.0338,
+      "kind": "day"
     },
     {
       "date": "2026-08-10",
-      "close": 116.1762,
-      "kind": "c"
+      "close": 116.1731,
+      "kind": "day"
     },
     {
       "date": "2026-08-11",
-      "close": 116.2929,
-      "kind": "c"
+      "close": 116.2892,
+      "kind": "day"
     },
     {
       "date": "2026-08-12",
-      "close": 116.84,
-      "kind": "c"
+      "close": 116.8357,
+      "kind": "day"
     },
     {
       "date": "2026-08-13",
-      "close": 117.191,
-      "kind": "c"
+      "close": 117.1862,
+      "kind": "day"
     },
     {
       "date": "2026-08-14",
-      "close": 117.215,
-      "kind": "c"
+      "close": 117.2097,
+      "kind": "day"
     },
     {
       "date": "2026-08-15",
-      "close": 117.215,
-      "kind": "c"
+      "close": 117.2097,
+      "kind": "day"
     },
     {
       "date": "2026-08-16",
-      "close": 117.215,
-      "kind": "c"
+      "close": 117.2097,
+      "kind": "day"
     },
     {
       "date": "2026-08-17",
-      "close": 117.0398,
-      "kind": "c"
+      "close": 117.0339,
+      "kind": "day"
     },
     {
       "date": "2026-08-18",
-      "close": 116.5136,
-      "kind": "c"
+      "close": 116.5073,
+      "kind": "day"
     },
     {
       "date": "2026-08-19",
-      "close": 146.0388,
-      "kind": "c"
+      "close": 146.0302,
+      "kind": "day"
     },
     {
       "date": "2026-08-20",
-      "close": 135.5685,
-      "kind": "c"
+      "close": 135.5598,
+      "kind": "day"
     },
     {
       "date": "2026-08-21",
-      "close": 140.9648,
-      "kind": "c"
+      "close": 140.9551,
+      "kind": "day"
     },
     {
       "date": "2026-08-22",
-      "close": 140.9648,
-      "kind": "c"
+      "close": 140.9551,
+      "kind": "day"
     },
     {
       "date": "2026-08-23",
-      "close": 140.9648,
-      "kind": "c"
+      "close": 140.9551,
+      "kind": "day"
     },
     {
       "date": "2026-08-24",
-      "close": 138.6254,
-      "kind": "c"
+      "close": 138.6153,
+      "kind": "day"
     },
     {
       "date": "2026-08-25",
-      "close": 144.0879,
-      "kind": "c"
+      "close": 144.0767,
+      "kind": "day"
     },
     {
       "date": "2026-08-26",
-      "close": 140.9618,
-      "kind": "c"
+      "close": 140.9503,
+      "kind": "day"
     },
     {
       "date": "2026-08-27",
-      "close": 139.0172,
-      "kind": "c"
+      "close": 139.0051,
+      "kind": "day"
     },
     {
       "date": "2026-08-28",
-      "close": 138.7815,
-      "kind": "c"
+      "close": 138.7688,
+      "kind": "day"
     },
     {
       "date": "2026-08-29",
-      "close": 138.7815,
-      "kind": "c"
+      "close": 138.7688,
+      "kind": "day"
     },
     {
       "date": "2026-08-30",
-      "close": 138.7815,
-      "kind": "c"
+      "close": 138.7688,
+      "kind": "day"
     },
     {
       "date": "2026-08-31",
@@ -9728,148 +9694,148 @@
     },
     {
       "date": "2026-09-01",
-      "close": 142.6535,
-      "kind": "c"
+      "close": 142.6543,
+      "kind": "day"
     },
     {
       "date": "2026-09-02",
-      "close": 143.0806,
-      "kind": "c"
+      "close": 143.0822,
+      "kind": "day"
     },
     {
       "date": "2026-09-03",
-      "close": 140.5759,
-      "kind": "c"
+      "close": 140.5783,
+      "kind": "day"
     },
     {
       "date": "2026-09-04",
-      "close": 140.3221,
-      "kind": "c"
+      "close": 140.3253,
+      "kind": "day"
     },
     {
       "date": "2026-09-05",
-      "close": 140.3221,
-      "kind": "c"
+      "close": 140.3253,
+      "kind": "day"
     },
     {
       "date": "2026-09-06",
-      "close": 140.3221,
-      "kind": "c"
+      "close": 140.3253,
+      "kind": "day"
     },
     {
       "date": "2026-09-07",
-      "close": 140.3354,
-      "kind": "c"
+      "close": 140.3393,
+      "kind": "day"
     },
     {
       "date": "2026-09-08",
-      "close": 139.268,
-      "kind": "c"
+      "close": 139.2727,
+      "kind": "day"
     },
     {
       "date": "2026-09-09",
-      "close": 137.2897,
-      "kind": "c"
+      "close": 137.295,
+      "kind": "day"
     },
     {
       "date": "2026-09-10",
-      "close": 136.8359,
-      "kind": "c"
+      "close": 136.842,
+      "kind": "day"
     },
     {
       "date": "2026-09-11",
-      "close": 139.5718,
-      "kind": "c"
+      "close": 139.5787,
+      "kind": "day"
     },
     {
       "date": "2026-09-12",
-      "close": 139.5718,
-      "kind": "c"
+      "close": 139.5787,
+      "kind": "day"
     },
     {
       "date": "2026-09-13",
-      "close": 139.5718,
-      "kind": "c"
+      "close": 139.5787,
+      "kind": "day"
     },
     {
       "date": "2026-09-14",
-      "close": 140.2409,
-      "kind": "c"
+      "close": 140.2487,
+      "kind": "day"
     },
     {
       "date": "2026-09-15",
-      "close": 139.4408,
-      "kind": "c"
+      "close": 139.4493,
+      "kind": "day"
     },
     {
       "date": "2026-09-16",
-      "close": 139.203,
-      "kind": "c"
+      "close": 139.2123,
+      "kind": "day"
     },
     {
       "date": "2026-09-17",
-      "close": 142.7519,
-      "kind": "c"
+      "close": 142.7622,
+      "kind": "day"
     },
     {
       "date": "2026-09-18",
-      "close": 140.8668,
-      "kind": "c"
+      "close": 140.8778,
+      "kind": "day"
     },
     {
       "date": "2026-09-19",
-      "close": 140.8668,
-      "kind": "c"
+      "close": 140.8778,
+      "kind": "day"
     },
     {
       "date": "2026-09-20",
-      "close": 140.8519,
-      "kind": "c"
+      "close": 140.8636,
+      "kind": "day"
     },
     {
       "date": "2026-09-21",
-      "close": 146.5133,
-      "kind": "c"
+      "close": 146.5264,
+      "kind": "day"
     },
     {
       "date": "2026-09-22",
-      "close": 149.0765,
-      "kind": "c"
+      "close": 149.0906,
+      "kind": "day"
     },
     {
       "date": "2026-09-23",
-      "close": 148.7626,
-      "kind": "c"
+      "close": 148.7775,
+      "kind": "day"
     },
     {
       "date": "2026-09-24",
-      "close": 152.4362,
-      "kind": "c"
+      "close": 152.4523,
+      "kind": "day"
     },
     {
       "date": "2026-09-25",
-      "close": 153.2432,
-      "kind": "c"
+      "close": 153.2603,
+      "kind": "day"
     },
     {
       "date": "2026-09-26",
-      "close": 153.2432,
-      "kind": "c"
+      "close": 153.2603,
+      "kind": "day"
     },
     {
       "date": "2026-09-27",
-      "close": 153.2432,
-      "kind": "c"
+      "close": 153.2603,
+      "kind": "day"
     },
     {
       "date": "2026-09-28",
-      "close": 152.3689,
-      "kind": "c"
+      "close": 152.3867,
+      "kind": "day"
     },
     {
       "date": "2026-09-29",
-      "close": 153.3889,
-      "kind": "c"
+      "close": 153.4077,
+      "kind": "day"
     },
     {
       "date": "2026-09-30",
@@ -9878,153 +9844,153 @@
     },
     {
       "date": "2026-10-01",
-      "close": 149.4423,
-      "kind": "c"
+      "close": 149.4434,
+      "kind": "day"
     },
     {
       "date": "2026-10-02",
-      "close": 149.5756,
-      "kind": "c"
+      "close": 149.5779,
+      "kind": "day"
     },
     {
       "date": "2026-10-03",
-      "close": 149.5756,
-      "kind": "c"
+      "close": 149.5779,
+      "kind": "day"
     },
     {
       "date": "2026-10-04",
-      "close": 149.5756,
-      "kind": "c"
+      "close": 149.5779,
+      "kind": "day"
     },
     {
       "date": "2026-10-05",
-      "close": 153.269,
-      "kind": "c"
+      "close": 153.2724,
+      "kind": "day"
     },
     {
       "date": "2026-10-06",
-      "close": 149.1602,
-      "kind": "c"
+      "close": 149.1647,
+      "kind": "day"
     },
     {
       "date": "2026-10-07",
-      "close": 151.128,
-      "kind": "c"
+      "close": 151.1336,
+      "kind": "day"
     },
     {
       "date": "2026-10-08",
-      "close": 150.4468,
-      "kind": "c"
+      "close": 150.4535,
+      "kind": "day"
     },
     {
       "date": "2026-10-09",
-      "close": 158.5998,
-      "kind": "c"
+      "close": 158.6081,
+      "kind": "day"
     },
     {
       "date": "2026-10-10",
-      "close": 158.5998,
-      "kind": "c"
+      "close": 158.6081,
+      "kind": "day"
     },
     {
       "date": "2026-10-11",
-      "close": 158.5998,
-      "kind": "c"
+      "close": 158.6081,
+      "kind": "day"
     },
     {
       "date": "2026-10-12",
-      "close": 155.4583,
-      "kind": "c"
+      "close": 155.4676,
+      "kind": "day"
     },
     {
       "date": "2026-10-13",
-      "close": 156.3587,
-      "kind": "c"
+      "close": 156.3693,
+      "kind": "day"
     },
     {
       "date": "2026-10-14",
-      "close": 158.6247,
-      "kind": "c"
+      "close": 158.6366,
+      "kind": "day"
     },
     {
       "date": "2026-10-15",
-      "close": 162.1608,
-      "kind": "c"
+      "close": 162.1742,
+      "kind": "day"
     },
     {
       "date": "2026-10-16",
-      "close": 156.2732,
-      "kind": "c"
+      "close": 156.2872,
+      "kind": "day"
     },
     {
       "date": "2026-10-17",
-      "close": 156.2732,
-      "kind": "c"
+      "close": 156.2872,
+      "kind": "day"
     },
     {
       "date": "2026-10-18",
-      "close": 156.2732,
-      "kind": "c"
+      "close": 156.2872,
+      "kind": "day"
     },
     {
       "date": "2026-10-19",
-      "close": 159.71,
-      "kind": "c"
+      "close": 159.7255,
+      "kind": "day"
     },
     {
       "date": "2026-10-20",
-      "close": 164.1487,
-      "kind": "c"
+      "close": 164.1659,
+      "kind": "day"
     },
     {
       "date": "2026-10-21",
-      "close": 164.8533,
-      "kind": "c"
+      "close": 164.8718,
+      "kind": "day"
     },
     {
       "date": "2026-10-22",
-      "close": 150.7407,
-      "kind": "c"
+      "close": 150.7588,
+      "kind": "day"
     },
     {
       "date": "2026-10-23",
-      "close": 152.3977,
-      "kind": "c"
+      "close": 152.4171,
+      "kind": "day"
     },
     {
       "date": "2026-10-24",
-      "close": 152.3977,
-      "kind": "c"
+      "close": 152.4171,
+      "kind": "day"
     },
     {
       "date": "2026-10-25",
-      "close": 152.3977,
-      "kind": "c"
+      "close": 152.4171,
+      "kind": "day"
     },
     {
       "date": "2026-10-26",
-      "close": 150.8574,
-      "kind": "c"
+      "close": 150.8777,
+      "kind": "day"
     },
     {
       "date": "2026-10-27",
-      "close": 154.2958,
-      "kind": "c"
+      "close": 154.3177,
+      "kind": "day"
     },
     {
       "date": "2026-10-28",
-      "close": 156.177,
-      "kind": "c"
+      "close": 156.2004,
+      "kind": "day"
     },
     {
       "date": "2026-10-29",
-      "close": 158.2998,
-      "kind": "c"
+      "close": 158.3247,
+      "kind": "day"
     },
     {
       "date": "2026-10-30",
-      "close": 158.7893,
-      "kind": "c"
+      "close": 158.8154,
+      "kind": "day"
     },
     {
       "date": "2026-10-31",
