@@ -307,7 +307,7 @@ def test_series_ids_escribe_el_mapa_y_lo_imprime_a_mano(
 
     assert main(["series", "--ids", *argv]) == 0
 
-    mapa = tmp_path / "PP-ids.md"
+    mapa = tmp_path / "Mapas.md"
     assert mapa.is_file()
     assert "uno_ejemplo" in mapa.read_text(encoding="utf-8")
 
@@ -324,7 +324,7 @@ def test_series_ids_no_imprime_la_tabla_en_github_actions(
 
     assert main(["series", "--ids", *argv]) == 0
 
-    assert (tmp_path / "PP-ids.md").is_file()
+    assert (tmp_path / "Mapas.md").is_file()
     assert "uno_ejemplo" not in capsys.readouterr().out
 
 
@@ -332,7 +332,7 @@ def test_series_ids_en_dry_run_no_escribe_el_mapa(tmp_path, monkeypatch):
     argv = _entorno_series(tmp_path, monkeypatch)
 
     assert main(["series", "--ids", "--dry-run", *argv]) == 0
-    assert not (tmp_path / "PP-ids.md").exists()
+    assert not (tmp_path / "Mapas.md").exists()
 
 
 def test_series_con_lista_vacia_aborta_sin_crear_nada(tmp_path, monkeypatch):

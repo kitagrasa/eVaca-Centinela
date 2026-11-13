@@ -370,13 +370,13 @@ jobs:
             # Si has añadido (o quitado) a alguien en watchlist.md desde la web
             # de GitHub mientras esta ejecución estaba en marcha, este clon no
             # se ha enterado y el push --force de más abajo revertiría tu cambio
-            # en silencio. Lo mismo vale para PP-ids.md, que lo escribe el
+            # en silencio. Lo mismo vale para Mapas.md, que lo escribe el
             # workflow de las series: si los dos coinciden, este clon puede ser
             # anterior a su commit y la compactación borraría la fila nueva.
             # Se traen los dos ficheros del remoto antes de fotografiar el estado.
             git fetch --quiet --depth 1 origin "$STATE_BRANCH" || true
             git checkout --quiet FETCH_HEAD -- watchlist.md 2>/dev/null || true
-            git checkout --quiet FETCH_HEAD -- PP-ids.md 2>/dev/null || true
+            git checkout --quiet FETCH_HEAD -- Mapas.md 2>/dev/null || true
 
             git add -A
             if git diff --cached --quiet; then

@@ -184,7 +184,7 @@ def serie_id(usuario: str) -> str:
 
     Todo lo que se publica (`data/series/<id>.json`, `data/prices/<id>` y el
     resumen de `data/state.json`) se nombra con este id: el nombre del trader
-    solo existe en la lista privada y en el mapa privado (`PP-ids.md`).
+    solo existe en la lista privada y en el mapa privado (`Mapas.md`).
 
     Es determinista a propósito: el mismo usuario da siempre el mismo id, así
     que su serie no se pierde entre pasadas. Y no se puede leer al revés: con

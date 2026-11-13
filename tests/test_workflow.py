@@ -447,7 +447,7 @@ def test_el_push_no_revierte_una_edicion_de_la_lista(monitor):
     Si has editado watchlist.md en GitHub mientras la ejecución estaba en
     marcha, el clon no se ha enterado y la compactación del historial
     revertiría tu cambio sin decir nada. Por eso se refresca del remoto justo
-    antes de fotografiar el estado. Lo mismo vale para PP-ids.md, que lo
+    antes de fotografiar el estado. Lo mismo vale para Mapas.md, que lo
     escribe el workflow de las series: si los dos coinciden, el monitor puede
     borrar la fila nueva del mapa.
     """
@@ -460,7 +460,7 @@ def test_el_push_no_revierte_una_edicion_de_la_lista(monitor):
         "revertiría la edición"
     )
     assert "watchlist.md" in run[indice_fetch:indice_add]
-    assert "PP-ids.md" in run[indice_fetch:indice_add], (
+    assert "Mapas.md" in run[indice_fetch:indice_add], (
         "el mapa privado no se refresca antes de compactar: la fila nueva que "
         "acaba de escribir el workflow de las series se perdería"
     )

@@ -188,7 +188,7 @@ class SerieRun:
     # El mapa privado de ids
     # ------------------------------------------------------------------
     def run_ids(self, *, imprimir: bool = True) -> int:
-        """Regenera `PP-ids.md` (id, usuario y URL) y no pide nada.
+        """Regenera `Mapas.md` (id, usuario y URL) y no pide nada.
 
         Solo incluye a quien está activo en la lista: al borrar un trader, su
         fila desaparece del mapa. Con `--dry-run` no escribe el mapa.
@@ -206,7 +206,7 @@ class SerieRun:
             self._log.error(
                 "El mapa de ids es privado y no se puede escribir dentro del "
                 "repositorio público (%s). Ponlo en el repositorio de estado "
-                "(por ejemplo, .state-repo/PP-ids.md).",
+                "(por ejemplo, .state-repo/Mapas.md).",
                 ruta,
             )
             return 1
